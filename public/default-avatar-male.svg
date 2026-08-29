@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#dbeafe"/>
+  <!-- head -->
+  <circle cx="100" cy="72" r="36" fill="#3b82f6"/>
+  <!-- white coat body -->
+  <path d="M32 190 C32 145 60 122 100 122 C140 122 168 145 168 190 Z" fill="#f8fafc" stroke="#3b82f6" stroke-width="4"/>
+  <!-- coat lapels -->
+  <path d="M100 122 L84 160 L100 150 L116 160 Z" fill="#e2e8f0" stroke="#3b82f6" stroke-width="2"/>
+  <!-- stethoscope -->
+  <path d="M78 130 C78 150 78 162 100 168 C122 162 122 150 122 130"
+        fill="none" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="78" cy="128" r="6" fill="#334155"/>
+  <circle cx="122" cy="128" r="6" fill="#334155"/>
+  <circle cx="100" cy="170" r="8" fill="#334155"/>
+</svg>

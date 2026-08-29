@@ -1,0 +1,36 @@
+name: Critical Config Guard
+
+# Prevents an accidental `git reset --hard` / revert from silently removing
+# critical fixes again (e.g. the Cloudflare Pages /assets/* SPA-fallback fix
+# that once caused a full site white-screen due to MIME-type mismatch).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-critical-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify /assets/* is excluded from SPA fallback in _redirects
+        run: |
+          if [ ! -f public/_redirects ]; then
+            echo "::error::public/_redirects is missing entirely!"
+            exit 1
+          fi
+          if ! grep -q '^/assets/\*' public/_redirects; then
+            echo "::error::Critical rule missing from public/_redirects: '/assets/*' must be excluded from the SPA fallback, or asset 404s will be served as index.html (MIME-type mismatch, white-screen site)."
+            exit 1
+          fi
+          echo "OK: /assets/* exclusion rule present in _redirects"
+
+      - name: Verify signOut redirect-loop guard exists in AuthContext
+        run: |
+          if ! grep -q 'window.location.pathname === "/login"' src/contexts/AuthContext.tsx; then
+            echo "::error::Redirect-loop guard missing from src/contexts/AuthContext.tsx signOut(). Without it, a session-mismatch forced logout can re-trigger while already on /login, causing an infinite reload loop."
+            exit 1
+          fi
+          echo "OK: redirect-loop guard present in AuthContext.tsx"

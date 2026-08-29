@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#fce7f3"/>
+  <!-- hair back layer -->
+  <path d="M100 40 C124 40 140 60 140 84 C140 96 136 106 128 114 C128 114 128 120 128 120
+           L72 120 C72 120 72 114 72 114 C64 106 60 96 60 84 C60 60 76 40 100 40 Z" fill="#ec4899"/>
+  <!-- head -->
+  <circle cx="100" cy="78" r="32" fill="#f472b6"/>
+  <!-- white coat body -->
+  <path d="M34 190 C34 148 62 124 100 124 C138 124 166 148 166 190 Z" fill="#f8fafc" stroke="#ec4899" stroke-width="4"/>
+  <!-- coat lapels -->
+  <path d="M100 124 L85 160 L100 151 L115 160 Z" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+  <!-- stethoscope -->
+  <path d="M80 132 C80 150 80 161 100 167 C120 161 120 150 120 132"
+        fill="none" stroke="#831843" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="80" cy="130" r="6" fill="#831843"/>
+  <circle cx="120" cy="130" r="6" fill="#831843"/>
+  <circle cx="100" cy="169" r="8" fill="#831843"/>
+</svg>

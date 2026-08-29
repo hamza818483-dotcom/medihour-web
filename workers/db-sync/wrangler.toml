@@ -1,0 +1,14 @@
+name = "atlas-db-sync"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+# Runs every 6 hours. Adjust as needed (e.g. "0 */1 * * *" for hourly).
+[triggers]
+crons = ["0 */6 * * *"]
+
+# Set as secrets (not committed):
+#   wrangler secret put SOURCE_URL
+#   wrangler secret put SOURCE_KEY
+#   wrangler secret put TARGET_URL
+#   wrangler secret put TARGET_KEY
+#   wrangler secret put SYNC_API_KEY

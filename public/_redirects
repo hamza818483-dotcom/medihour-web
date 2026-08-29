@@ -1,0 +1,6 @@
+# CRITICAL: Do NOT remove the /assets/* rule below.
+# Without it, missing/stale JS-CSS asset requests get served index.html (200 OK)
+# instead of a real 404 -> browser MIME-type mismatch -> entire site breaks white-screen.
+# This was accidentally reverted once (regression) and had to be re-added. Keep it permanently.
+/assets/*  /assets/:splat  200!
+/* /index.html 200

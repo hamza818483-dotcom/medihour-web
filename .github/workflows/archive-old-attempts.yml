@@ -1,0 +1,41 @@
+name: Archive Old Attempts
+
+# ⚠️ PAUSED: Weakness/Class Report + Overall Suggestion features read directly
+# from exam_attempts and qp_attempts on the MAIN db with no fallback to the
+# archive db. Running this LIVE would silently remove 90+ day old data from
+# those reports. Do not enable "live" runs until the weakness-report RPCs are
+# updated to also read from the archive db, or a different cutoff/strategy is
+# agreed. Dry-run (workflow_dispatch without "live") remains safe to run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Run LIVE (actually move+delete). Leave unchecked for dry run. DO NOT ENABLE — see warning above."
+        type: boolean
+        default: false
+  # Scheduled run disabled until the conflict above is resolved.
+  # schedule:
+  #   - cron: "0 3 * * 0"
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install @supabase/supabase-js
+      - name: Run archive script
+        env:
+          MAIN_SUPABASE_URL: ${{ secrets.MAIN_SUPABASE_URL }}
+          MAIN_SUPABASE_SERVICE_KEY: ${{ secrets.MAIN_SUPABASE_SERVICE_KEY }}
+          ARCHIVE_SUPABASE_URL: ${{ secrets.ARCHIVE_SUPABASE_URL }}
+          ARCHIVE_SUPABASE_SERVICE_KEY: ${{ secrets.ARCHIVE_SUPABASE_SERVICE_KEY }}
+        run: |
+          if [ "${{ github.event.inputs.live }}" = "true" ]; then
+            node scripts/archive-old-attempts.mjs --live
+          else
+            node scripts/archive-old-attempts.mjs
+          fi
