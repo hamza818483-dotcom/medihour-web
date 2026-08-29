@@ -30,26 +30,30 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">প্রয়োজনীয় লিংক</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="hover:text-primary transition-colors">হোম</Link></li>
-              <li><Link to="/courses" className="hover:text-primary transition-colors">সকল কোর্স</Link></li>
-              <li><Link to="/login" className="hover:text-primary transition-colors">লগইন</Link></li>
-              <li><Link to="/register" className="hover:text-primary transition-colors">রেজিস্ট্রেশন</Link></li>
-            </ul>
-          </div>
-
-          {/* Resources (Placeholder) */}
-          <div>
-            <h4 className="text-lg font-semibold text-white mb-4">রিসোর্স</h4>
-            <ul className="space-y-2 text-sm">
-              <li><a href="/#free-resources" className="hover:text-primary transition-colors">ফ্রি এক্সাম</a></li>
-              <li><a href="/#free-resources" className="hover:text-primary transition-colors">ডেমো ক্লাস</a></li>
-              <li><a href="/#success-stories" className="hover:text-primary transition-colors">সাফল্যের গল্প</a></li>
-              <li><a href="/#reviews" className="hover:text-primary transition-colors">শিক্ষার্থীদের মতামত</a></li>
-            </ul>
+          {/* Quick Links + Resources (merged into one box, side by side) */}
+          <div className="md:col-span-2">
+            <div className="rounded-xl border border-slate-700/60 bg-white/5 p-5">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <h4 className="text-lg font-semibold text-white mb-4">প্রয়োজনীয় লিংক</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><Link to="/" className="hover:text-primary transition-colors">হোম</Link></li>
+                    <li><Link to="/courses" className="hover:text-primary transition-colors">সকল কোর্স</Link></li>
+                    <li><Link to="/login" className="hover:text-primary transition-colors">লগইন</Link></li>
+                    <li><Link to="/register" className="hover:text-primary transition-colors">রেজিস্ট্রেশন</Link></li>
+                  </ul>
+                </div>
+                <div className="border-l border-slate-700/60 pl-6">
+                  <h4 className="text-lg font-semibold text-white mb-4">রিসোর্স</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="/free-exam" className="hover:text-primary transition-colors">ফ্রি এক্সাম</a></li>
+                    <li><a href="/free-class" className="hover:text-primary transition-colors">ডেমো ক্লাস</a></li>
+                    <li><a href="/#success-stories" className="hover:text-primary transition-colors">সাফল্যের গল্প</a></li>
+                    <li><a href="/#reviews" className="hover:text-primary transition-colors">শিক্ষার্থীদের মতামত</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Contact Info */}
