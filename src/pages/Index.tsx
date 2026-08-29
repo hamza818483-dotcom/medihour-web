@@ -167,7 +167,7 @@ const Index = () => {
       <PublicHeader />
 
       {/* Hero Section (Full Width) */}
-      <div className="overflow-hidden w-full relative" ref={emblaRef}>
+      <div className="overflow-hidden w-full relative hero-glow" ref={emblaRef}>
           <div className="flex">
             {displayHeroes.map((hero: any, index: number) => (
               <HeroCarouselItem key={hero.id || index} hero={hero} />

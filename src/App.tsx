@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import SyllabusTracker from "./pages/public/SyllabusTracker";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
@@ -44,6 +45,7 @@ const App = () => {
                 <Route path="/register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
                 <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
                 <Route path="/reset-password" element={<ErrorBoundary><ResetPassword /></ErrorBoundary>} />
+                <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
               </Route>
               <Route path="*" element={<ErrorBoundary><NotFound /></ErrorBoundary>} />
             </Routes>

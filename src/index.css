@@ -86,38 +86,38 @@
   }
 
   .dark {
-    --background: 225 7.1429% 10.9804%;
-    --foreground: 0 0% 94.1176%;
-    --card: 228.0000 6.8493% 14.3137%;
-    --card-foreground: 0 0% 94.1176%;
-    --popover: 228.0000 6.8493% 14.3137%;
-    --popover-foreground: 0 0% 94.1176%;
-    --primary: 174.6 70% 42%; /* Medihour Teal */
+    --background: 252 45% 6%;
+    --foreground: 210 20% 96%;
+    --card: 250 35% 10%;
+    --card-foreground: 210 20% 96%;
+    --popover: 250 35% 10%;
+    --popover-foreground: 210 20% 96%;
+    --primary: 174.6 75% 45%; /* Medihour Teal (glow-enhanced) */
     --primary-foreground: 0 0% 100%;
-    --secondary: 226.6667 9.6774% 18.2353%;
-    --secondary-foreground: 0 0% 94.1176%;
-    --muted: 226.6667 9.6774% 18.2353%;
-    --muted-foreground: 0 0% 62.7451%;
-    --accent: 190.3 40% 17.5%;
-    --accent-foreground: 174.6 60% 75%;
-    --destructive: 0 90.6040% 70.7843%;
+    --secondary: 250 28% 16%;
+    --secondary-foreground: 210 20% 96%;
+    --muted: 250 25% 14%;
+    --muted-foreground: 240 15% 65%;
+    --accent: 262 70% 22%;
+    --accent-foreground: 262 90% 82%;
+    --destructive: 0 84% 65%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222.8571 6.4220% 21.3725%;
-    --input: 222.8571 6.4220% 21.3725%;
-    --ring: 212.9143 76.4192% 55.0980%;
-    --chart-1: 174.6 60% 55%;
-    --chart-2: 190.3 60% 45%;
-    --chart-3: 0 93.5484% 81.7647%;
-    --chart-4: 217.5484 87.5706% 65.2941%;
+    --border: 250 25% 20%;
+    --input: 250 25% 18%;
+    --ring: 174.6 75% 50%;
+    --chart-1: 174.6 75% 50%;
+    --chart-2: 262 83% 66%;
+    --chart-3: 38 92% 62%;
+    --chart-4: 0 84% 65%;
     --chart-5: 0 0% 62.7451%;
-    --sidebar: 240 4.3478% 9.0196%;
-    --sidebar-foreground: 0 0% 94.1176%;
-    --sidebar-primary: 174.6 70% 42%;
+    --sidebar: 252 48% 5%;
+    --sidebar-foreground: 210 20% 96%;
+    --sidebar-primary: 174.6 75% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 226.6667 9.6774% 18.2353%;
-    --sidebar-accent-foreground: 174.6 70% 42%;
-    --sidebar-border: 222.8571 6.4220% 21.3725%;
-    --sidebar-ring: 174.6 70% 42%;
+    --sidebar-accent: 250 28% 16%;
+    --sidebar-accent-foreground: 174.6 75% 65%;
+    --sidebar-border: 250 25% 20%;
+    --sidebar-ring: 174.6 75% 45%;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --font-serif: "Lora", serif;
     --font-mono: "IBM Plex Mono", monospace;
@@ -165,6 +165,19 @@
 }
 
 @layer components {
+  /* Dark-mode premium hero glow (inspired by dark-coaching-platform aesthetic) */
+  .dark .hero-glow {
+    background-image:
+      radial-gradient(60% 80% at 20% 0%, hsl(174.6 75% 45% / 0.22) 0%, transparent 70%),
+      radial-gradient(50% 70% at 85% 10%, hsl(262 83% 60% / 0.18) 0%, transparent 70%);
+  }
+  .dark .glow-border-primary {
+    box-shadow: 0 0 0 1px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15);
+  }
+  .dark .glow-border-gold {
+    box-shadow: 0 0 0 1px hsl(38 92% 55% / 0.3), 0 0 20px hsl(38 92% 55% / 0.12);
+  }
+
   /* Added specific card-like look as requested */
   .card-like {
       @apply bg-card text-card-foreground shadow-sm rounded-lg border;
