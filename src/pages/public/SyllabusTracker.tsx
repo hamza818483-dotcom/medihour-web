@@ -9,14 +9,9 @@ import {
   Trophy,
 } from "lucide-react";
 import PublicHeader from "@/components/PublicHeader";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-
-// NOTE: Supabase not yet connected in Medihour. Data layer below is stubbed
-// with empty results / no-op sync so the full UI/UX works standalone.
-// When Supabase is wired, replace fetchSubjects/syncProgress/leaderboard
-// fetch with real `st_subjects/st_chapters/st_topics` queries and
-// `st_sync_progress` / `st_leaderboard` RPC calls (see LMS reference impl).
 
 type Mode = "hsc" | "medical";
 
@@ -96,9 +91,35 @@ const SyllabusTracker = () => {
   }, [user?.id]);
 
   async function fetchSubjects(m: Mode): Promise<Subject[]> {
-    // Stub: Supabase not connected yet in Medihour. Returns empty until wired.
-    void m;
-    return [];
+    const { data: subs, error: e1 } = await (supabase.from as any)("st_subjects")
+      .select("id, name, short_name")
+      .eq("mode", m)
+      .order("sort_order", { ascending: true });
+    if (e1) throw e1;
+    if (!subs?.length) return [];
+    const subjIds = subs.map((s: any) => s.id);
+    const { data: chaps, error: e2 } = await (supabase.from as any)("st_chapters")
+      .select("id, name, subject_id")
+      .in("subject_id", subjIds)
+      .order("sort_order", { ascending: true });
+    if (e2) throw e2;
+    let topics: any[] = [];
+    if (chaps?.length) {
+      const chapIds = chaps.map((c: any) => c.id);
+      const { data: tps, error: e3 } = await (supabase.from as any)("st_topics")
+        .select("id, name, weight, chapter_id")
+        .in("chapter_id", chapIds)
+        .order("sort_order", { ascending: true });
+      if (e3) throw e3;
+      topics = tps || [];
+    }
+    const topicsByChap: Record<number, Topic[]> = {};
+    for (const t of topics) (topicsByChap[t.chapter_id] ||= []).push(t);
+    const chaptersBySubj: Record<number, Chapter[]> = {};
+    for (const c of chaps || []) {
+      (chaptersBySubj[c.subject_id] ||= []).push({ id: c.id, name: c.name, topics: topicsByChap[c.id] || [] });
+    }
+    return subs.map((s: any) => ({ ...s, chapters: chaptersBySubj[s.id] || [] }));
   }
 
   const { data: subjectsHsc, isLoading: loadingHsc } = useQuery({
@@ -118,9 +139,9 @@ const SyllabusTracker = () => {
     queryKey: ["st-leaderboard", lbMode],
     enabled: sylView === "leaderboard",
     queryFn: async () => {
-      // Stub: Supabase not connected yet. Returns empty leaderboard.
-      void lbMode;
-      return [] as any[];
+      const { data, error } = await supabase.rpc("st_leaderboard" as any, { p_mode: lbMode });
+      if (error) throw error;
+      return (data || []) as any[];
     },
   });
 
@@ -156,9 +177,20 @@ const SyllabusTracker = () => {
   }, [subjects, progress, mode]);
 
   const syncProgress = async (m: Mode, nextProgress: Record<string, boolean>) => {
-    // Stub: Supabase not connected yet. Progress persists locally only for now.
-    void m;
-    void nextProgress;
+    if (!user) return;
+    const subs = subjectsByMode[m];
+    if (!subs) return;
+    let t = 0, d = 0;
+    for (const s of subs) for (const c of s.chapters) for (const tp of c.topics) {
+      t++;
+      if (nextProgress[topicKey(m, s.id, c.id, tp.id)]) d++;
+    }
+    const pct = t ? Number(((d / t) * 100).toFixed(2)) : 0;
+    try {
+      await supabase.rpc("st_sync_progress" as any, { p_mode: m, p_pct: pct, p_done: d, p_total: t });
+    } catch {
+      /* ignore */
+    }
   };
 
   const toggleTopic = (s: Subject, c: Chapter, tp: Topic) => {
