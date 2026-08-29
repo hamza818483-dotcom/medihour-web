@@ -264,6 +264,17 @@ mjx-container[display="true"] {
   .markdown-body {
     @apply text-foreground leading-relaxed;
   }
+
+  /* Landing page: all decorative animations disabled per request */
+  .animate-border-chase::before,
+  .animate-icon-float,
+  .animate-pulse,
+  .animate-text-shine {
+    animation: none !important;
+  }
+  .animate-border-chase::before {
+    display: none !important;
+  }
   .markdown-body h1 { @apply text-4xl font-bold mt-8 mb-4 border-b pb-2; }
   .markdown-body h2 { @apply text-3xl font-semibold mt-8 mb-4; }
   .markdown-body h3 { @apply text-2xl font-semibold mt-6 mb-3; }
