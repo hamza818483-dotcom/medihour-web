@@ -16,8 +16,6 @@ import {
   MessageCircle,
   Smartphone,
   BarChart,
-  Flame,
-  Infinity as InfinityIcon,
   User,
   Send,
 } from "lucide-react";
@@ -341,61 +339,13 @@ const Index = () => {
 
 
         {/* Quick Actions (All Courses / Free Class / Free Exam / Quick Practice / Focus Timer / Pomodoro) */}
-        <div className="animate-border-chase rounded-2xl border py-1 px-1 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(160 84% 39%)" }}>
+        <div className="rounded-2xl border py-1 px-1 sm:p-3">
         <QuickActionsSection />
         </div>
 
         {/* Paid Courses Section (Grid View) */}
-        <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(217 91% 60%)" }}>
+        <div className="rounded-2xl border p-2.5 sm:p-3">
         <CourseSection />
-        </div>
-
-        {/* Free Service/Courses Section */}
-        <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(45 93% 55%)" }}>
-        <section id="free-resources" className="space-y-3">
-            <div className="text-center md:text-left">
-                <h2 className="text-2xl font-semibold tracking-tight">ফ্রি লার্নিং রিসোর্স</h2>
-                <p className="text-sm text-muted-foreground">আজই শুরু করুন সম্পূর্ণ ফ্রিতে।</p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2">
-                <Card className="animate-border-chase border-2 border-primary/20 bg-primary/5" style={{ ["--border-chase-color" as any]: "hsl(var(--primary))" }}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Flame className="h-5 w-5 text-primary" /> ফ্রি এক্সাম
-                        </CardTitle>
-                        <CardDescription>
-                            আমাদের সাবজেক্ট এবং টপিক ভিত্তিক ফ্রি এক্সাম দিয়ে নিজেকে যাচাই করুন।
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm">ফ্রি রেজিস্ট্রেশন করে প্র্যাকটিস এক্সামে অংশ নিন। কোনো কোর্স কেনার প্রয়োজন নেই।</p>
-                    </CardContent>
-                    <CardFooter>
-                        <Button asChild variant="default" className="w-full">
-                            <a href="/free-exam">ফ্রি এক্সাম দিন</a>
-                        </Button>
-                    </CardFooter>
-                </Card>
-                 <Card className="animate-border-chase border-2 border-primary/20 bg-primary/5" style={{ ["--border-chase-color" as any]: "hsl(45 93% 55%)" }}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <InfinityIcon className="h-5 w-5 text-primary" /> ফ্রি ক্লাস
-                        </CardTitle>
-                        <CardDescription>
-                            ক্লাস এবং নির্বাচিত টপিক আলোচনা দেখুন একদম ফ্রিতে।
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm">ভর্তির আগে আমাদের পড়ানোর স্টাইল এবং কনটেন্ট কোয়ালিটি যাচাই করুন।</p>
-                    </CardContent>
-                    <CardFooter>
-                         <Button asChild variant="outline" className="w-full">
-                            <a href="/free-class">ক্লাস সমূহ দেখুন</a>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </div>
-        </section>
         </div>
 
         {/* Unique Services Section */}
