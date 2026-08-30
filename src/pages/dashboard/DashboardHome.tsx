@@ -444,56 +444,6 @@ const DashboardHome = () => {
         </div>
       )}
 
-      {/* Smart Tracking System */}
-      <div className="border border-primary/30 rounded-lg px-3 sm:px-6 py-3 space-y-2 -mx-2 sm:mx-0">
-        <h2 className="text-base font-semibold tracking-tight text-center">Smart Tracking System</h2>
-        <div className="grid grid-cols-3 gap-2">
-          <Card
-            className="cursor-pointer border-blue-500/30 hover:border-blue-500 transition-all bg-blue-50/50 dark:bg-blue-950/20"
-            onClick={() => navigate("/dashboard/my-progress")}
-          >
-            <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
-              <TrendingUp className="h-6 w-6 text-blue-500 flex-shrink-0" />
-              <p className="font-semibold text-sm leading-snug">My Progress & History</p>
-            </CardContent>
-          </Card>
-          <Card
-            className="cursor-pointer border-sky-500/30 hover:border-sky-500 transition-all bg-sky-50/50 dark:bg-sky-950/20"
-            onClick={() => navigate("/syllabus-tracker")}
-          >
-            <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
-              <BarChart3 className="h-6 w-6 text-sky-600 flex-shrink-0" />
-              <p className="font-semibold text-sm leading-snug">Study Tracker</p>
-            </CardContent>
-          </Card>
-          <Card
-            className="cursor-pointer border-yellow-500/30 hover:border-yellow-500 transition-all bg-yellow-50/50 dark:bg-yellow-950/20"
-            onClick={() => navigate("/dashboard/top-performer")}
-          >
-            <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
-              <Trophy className="h-6 w-6 text-yellow-500 flex-shrink-0" />
-              <p className="font-semibold text-sm leading-snug">Top Performer</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      <div className="animate-border-chase border border-primary/30 rounded-lg px-3 sm:px-6 py-3 space-y-2 -mx-2 sm:mx-0" style={{ ["--border-chase-color" as any]: "hsl(var(--primary))" }}>
-        <h2 className="text-base font-semibold tracking-tight text-center">Best Practice Tool</h2>
-        <div className="grid grid-cols-1 gap-2">
-          <Card
-            className="animate-border-chase cursor-pointer border-violet-500/30 hover:border-violet-500 transition-all bg-violet-50/50 dark:bg-violet-950/20"
-            style={{ ["--border-chase-color" as any]: "hsl(262 83% 58%)" }}
-            onClick={() => navigate("/quick-practice")}
-          >
-            <CardContent className="px-2.5 py-1.5 flex flex-col items-center text-center gap-1">
-              <Zap className="h-6 w-6 text-violet-500 flex-shrink-0" />
-              <p className="font-semibold text-sm leading-snug">Quick Practice</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
       {/* Admin-only quick actions — collapsed by default behind a floating
           toggle so the 5 admin cards don't push down content other users
           see; nothing about the cards themselves changes, only visibility. */}
