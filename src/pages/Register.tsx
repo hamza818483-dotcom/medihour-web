@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
 import { Eye, EyeOff, AlertTriangle, PhoneCall, MessageCircle, Send, User } from "lucide-react";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ const Register = () => {
   const [hscBatch, setHscBatch] = useState("2025");
   const [hscGpa, setHscGpa] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const [gender, setGender] = useState("");
   const [duplicatePhone, setDuplicatePhone] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -134,6 +135,8 @@ const Register = () => {
       if (existingProfile) {
         setDuplicatePhone(phone);
         setLoading(false);
+        turnstileRef.current?.reset();
+        setCaptchaToken(undefined);
         return;
       }
       // 1. Determine Auth Email Strategy
@@ -221,6 +224,8 @@ const Register = () => {
         description: error.message || "An error occurred during registration",
         variant: "destructive",
       });
+      turnstileRef.current?.reset();
+      setCaptchaToken(undefined);
     } finally {
       setLoading(false);
     }
@@ -464,8 +469,11 @@ const Register = () => {
 
               <div className="flex justify-center py-2">
                 <Turnstile
+                  ref={turnstileRef}
                   siteKey="0x4AAAAAAEh9uwZCk2LnDkH7"
                   onSuccess={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(undefined)}
+                  onError={() => setCaptchaToken(undefined)}
                 />
               </div>
 
