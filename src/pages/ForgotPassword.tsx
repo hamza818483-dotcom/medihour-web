@@ -157,7 +157,7 @@ const ForgotPassword = () => {
                   />
                 </div>
                 <div className="flex justify-center py-2">
-                  <Turnstile siteKey="1x00000000000000000000AA" onSuccess={(token) => setCaptchaToken(token)} />
+                  <Turnstile siteKey="0x4AAAAAAEh9uwZCk2LnDkH7" onSuccess={(token) => setCaptchaToken(token)} />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading || !captchaToken}>
                   {loading ? "Sending Code..." : "Send Code"}

@@ -464,7 +464,7 @@ const Register = () => {
 
               <div className="flex justify-center py-2">
                 <Turnstile
-                  siteKey="1x00000000000000000000AA"
+                  siteKey="0x4AAAAAAEh9uwZCk2LnDkH7"
                   onSuccess={(token) => setCaptchaToken(token)}
                 />
               </div>
