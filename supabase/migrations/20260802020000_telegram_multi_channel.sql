@@ -11,10 +11,10 @@ ALTER TABLE public.telegram_channels ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Admins manage telegram_channels" ON public.telegram_channels
   FOR ALL USING (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.has_role(auth.uid(), 'admin'::public.app_role)
   )
   WITH CHECK (
-    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+    public.has_role(auth.uid(), 'admin'::public.app_role)
   );
 
 -- Seed existing channel from previous single-channel setup
