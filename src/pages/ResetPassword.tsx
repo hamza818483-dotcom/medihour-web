@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
 import { Eye, EyeOff } from "lucide-react";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   useEffect(() => {
     document.title = "Reset Password – Medihour";
@@ -82,6 +83,8 @@ const ResetPassword = () => {
         description: error.message,
         variant: "destructive",
       });
+      turnstileRef.current?.reset();
+      setCaptchaToken(undefined);
     } finally {
       setLoading(false);
     }
@@ -140,8 +143,11 @@ const ResetPassword = () => {
               </div>
               <div className="flex justify-center py-2">
                 <Turnstile
+                  ref={turnstileRef}
                   siteKey="0x4AAAAAAEh9uwZCk2LnDkH7"
                   onSuccess={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(undefined)}
+                  onError={() => setCaptchaToken(undefined)}
                 />
               </div>
 

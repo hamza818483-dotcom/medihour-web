@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,7 +20,7 @@ import {
   Calendar, User, Mail, Hash, Phone, School, GraduationCap, Users, Binary, Info, Camera
 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { startOfWeek, startOfMonth, format, isPast } from "date-fns";
 import { useEnrollments } from "@/hooks/useEnrollments";
 import { Link, useSearchParams } from "react-router-dom";
@@ -101,6 +101,7 @@ const StudentProfile = () => {
   const [newEmail, setNewEmail] = useState("");
   const [updatingEmail, setUpdatingEmail] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -359,6 +360,8 @@ const StudentProfile = () => {
         (profile as any).has_changed_email = true;
     } catch (e: any) {
         toast({ title: "Error changing email", description: e.message, variant: "destructive" });
+        turnstileRef.current?.reset();
+        setCaptchaToken(undefined);
     } finally {
         setUpdatingEmail(false);
     }
@@ -885,8 +888,11 @@ const StudentProfile = () => {
                 </div>
                 <div className="flex justify-center py-2">
                     <Turnstile
+                        ref={turnstileRef}
                         siteKey="0x4AAAAAAEh9uwZCk2LnDkH7"
                         onSuccess={(token) => setCaptchaToken(token)}
+                        onExpire={() => setCaptchaToken(undefined)}
+                        onError={() => setCaptchaToken(undefined)}
                     />
                 </div>
                 <Button onClick={handleEmailChange} disabled={updatingEmail || !captchaToken} className="w-full">

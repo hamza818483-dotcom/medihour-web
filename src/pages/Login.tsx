@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import PublicHeader from "@/components/PublicHeader";
 import { Eye, EyeOff, LayoutDashboard, LogOut, AlertTriangle, Send, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +34,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance>(null);
   const [loginError, setLoginError] = useState<{ message: string; identifier: string } | null>(null);
 
   useEffect(() => {
@@ -61,6 +62,8 @@ const Login = () => {
     if (error) {
       setLoginError({ message: error.message || "Invalid credentials", identifier });
       setLoading(false);
+      turnstileRef.current?.reset();
+      setCaptchaToken(undefined);
     } else {
       // Fetch user roles quickly to decide redirect
       const { data: profileData } = await supabase
@@ -150,8 +153,11 @@ const Login = () => {
                 </div>
                 <div className="flex justify-center py-2">
                   <Turnstile
+                    ref={turnstileRef}
                     siteKey="0x4AAAAAAEh9uwZCk2LnDkH7"
                     onSuccess={(token) => setCaptchaToken(token)}
+                    onExpire={() => setCaptchaToken(undefined)}
+                    onError={() => setCaptchaToken(undefined)}
                   />
                 </div>
 
