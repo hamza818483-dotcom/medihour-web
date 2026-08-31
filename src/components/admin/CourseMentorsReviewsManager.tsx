@@ -28,6 +28,8 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
   // ---------- Mentors ----------
   const [selectedMentorId, setSelectedMentorId] = useState("");
   const [experienceYears, setExperienceYears] = useState("");
+  const [showNewMentorForm, setShowNewMentorForm] = useState(false);
+  const [newMentor, setNewMentor] = useState({ name: "", role: "", description: "", image_url: "" });
 
   const { data: allMentors } = useQuery({
     queryKey: ["all-mentors"],
@@ -72,6 +74,39 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
     onError: (e: any) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
 
+  const createMentorMutation = useMutation({
+    mutationFn: async () => {
+      if (!newMentor.name.trim()) throw new Error("Mentor name is required");
+      const { data: mentor, error } = await supabase
+        .from("mentors")
+        .insert({
+          name: newMentor.name,
+          role: newMentor.role || null,
+          description: newMentor.description || null,
+          image_url: newMentor.image_url || null,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      const { error: linkError } = await supabase.from("course_mentors").insert({
+        course_id: courseId,
+        mentor_id: mentor.id,
+        experience_years: experienceYears || null,
+        display_order: courseMentors?.length || 0,
+      });
+      if (linkError) throw linkError;
+    },
+    onSuccess: () => {
+      toast({ title: "Mentor created and added to course" });
+      queryClient.invalidateQueries({ queryKey: ["course-mentors", courseId] });
+      queryClient.invalidateQueries({ queryKey: ["all-mentors"] });
+      setNewMentor({ name: "", role: "", description: "", image_url: "" });
+      setExperienceYears("");
+      setShowNewMentorForm(false);
+    },
+    onError: (e: any) => toast({ title: "Error", description: e.message, variant: "destructive" }),
+  });
+
   const removeMentorMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("course_mentors").delete().eq("id", id);
@@ -109,15 +144,15 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
 
   const addReviewMutation = useMutation({
     mutationFn: async () => {
-      if (!reviewForm.student_name.trim() || !reviewForm.review_text.trim()) {
-        throw new Error("Name and review text are required");
+      if (!reviewForm.image_url.trim() && !reviewForm.post_image_url.trim()) {
+        throw new Error("At least one image is required");
       }
       const { error } = await supabase.from("reviews").insert({
         course_id: courseId,
-        student_name: reviewForm.student_name,
+        student_name: reviewForm.student_name || null,
         college_name: reviewForm.college_name || null,
-        review_text: reviewForm.review_text,
-        rating: reviewForm.rating,
+        review_text: reviewForm.review_text || null,
+        rating: reviewForm.rating || null,
         image_url: reviewForm.image_url || null,
         post_image_url: reviewForm.post_image_url || null,
       });
@@ -177,6 +212,42 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
               <Plus className="h-4 w-4 mr-1" /> Add
             </Button>
           </div>
+
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm" onClick={() => setShowNewMentorForm((v) => !v)}>
+              <Plus className="h-4 w-4 mr-1" /> {showNewMentorForm ? "Cancel New Mentor" : "Create New Mentor"}
+            </Button>
+          </div>
+
+          {showNewMentorForm && (
+            <div className="grid sm:grid-cols-2 gap-3 border rounded-lg p-4">
+              <div className="space-y-1.5">
+                <Label>Name</Label>
+                <Input value={newMentor.name} onChange={(e) => setNewMentor({ ...newMentor, name: e.target.value })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Porichoy (Role)</Label>
+                <Input value={newMentor.role} onChange={(e) => setNewMentor({ ...newMentor, role: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label>Detail (Description)</Label>
+                <Textarea value={newMentor.description} onChange={(e) => setNewMentor({ ...newMentor, description: e.target.value })} rows={3} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Photo</Label>
+                <ImageUploader value={newMentor.image_url} onChange={(url) => setNewMentor({ ...newMentor, image_url: url })} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Experience (e.g. 5+ years)</Label>
+                <Input value={experienceYears} onChange={(e) => setExperienceYears(e.target.value)} />
+              </div>
+              <div className="sm:col-span-2">
+                <Button onClick={() => createMentorMutation.mutate()} disabled={createMentorMutation.isPending}>
+                  <Plus className="h-4 w-4 mr-1" /> Create & Add Mentor
+                </Button>
+              </div>
+            </div>
+          )}
 
           {loadingMentors ? (
             <p className="text-sm text-muted-foreground">Loading...</p>
