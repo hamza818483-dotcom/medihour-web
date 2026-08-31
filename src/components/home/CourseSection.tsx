@@ -284,7 +284,7 @@ export const CourseSection = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {isLoading ? (
                     <p className="text-sm text-muted-foreground col-span-full">লোড হচ্ছে...</p>
                 ) : !filteredCourses || filteredCourses.length === 0 ? (
