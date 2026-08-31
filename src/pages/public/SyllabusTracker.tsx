@@ -13,7 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
-type Mode = "hsc" | "medical";
+type Mode = "hsc" | "medical" | "varsity";
 
 interface Topic {
   id: number;
@@ -130,10 +130,14 @@ const SyllabusTracker = () => {
     queryKey: ["public-st-subjects", "medical"],
     queryFn: () => fetchSubjects("medical"),
   });
+  const { data: subjectsVarsity, isLoading: loadingVarsity } = useQuery({
+    queryKey: ["public-st-subjects", "varsity"],
+    queryFn: () => fetchSubjects("varsity"),
+  });
 
-  const subjectsByMode: Record<Mode, Subject[] | undefined> = { hsc: subjectsHsc, medical: subjectsMedical };
+  const subjectsByMode: Record<Mode, Subject[] | undefined> = { hsc: subjectsHsc, medical: subjectsMedical, varsity: subjectsVarsity };
   const subjects = subjectsByMode[mode];
-  const isLoading = mode === "hsc" ? loadingHsc : loadingMedical;
+  const isLoading = mode === "hsc" ? loadingHsc : mode === "varsity" ? loadingVarsity : loadingMedical;
 
   const { data: leaderboard } = useQuery({
     queryKey: ["st-leaderboard", lbMode],
@@ -284,9 +288,10 @@ const SyllabusTracker = () => {
 
         {!openSubject && sylView === "dashboard" && (
           <>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => setMode("medical")} className={cn("py-2.5 rounded-xl text-sm font-bold border-2", mode === "medical" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Medical Admission</button>
-              <button onClick={() => setMode("hsc")} className={cn("py-2.5 rounded-xl text-sm font-bold border-2", mode === "hsc" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>HSC সিলেবাস</button>
+            <div className="grid grid-cols-3 gap-2">
+              <button onClick={() => setMode("medical")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "medical" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Medical</button>
+              <button onClick={() => setMode("hsc")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "hsc" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>HSC</button>
+              <button onClick={() => setMode("varsity")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "varsity" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Varsity</button>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black">{subjects?.length ?? "—"}</div><div className="text-[10px] text-muted-foreground font-bold">বিষয়</div></div>
@@ -335,6 +340,7 @@ function LeaderboardView({ lbMode, setLbMode, leaderboard, currentUserId }: { lb
       <div className="flex gap-2">
         <button onClick={() => setLbMode("medical")} className={cn("flex-1 py-2 rounded-xl text-xs font-bold border-2", lbMode === "medical" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Medical</button>
         <button onClick={() => setLbMode("hsc")} className={cn("flex-1 py-2 rounded-xl text-xs font-bold border-2", lbMode === "hsc" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>HSC</button>
+        <button onClick={() => setLbMode("varsity")} className={cn("flex-1 py-2 rounded-xl text-xs font-bold border-2", lbMode === "varsity" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Varsity</button>
       </div>
       <div className="space-y-1.5">
         {(!leaderboard || leaderboard.length === 0) && <p className="text-center text-xs text-muted-foreground py-8">এখনো কেউ এই মোডে অগ্রগতি রেকর্ড করেনি।</p>}
