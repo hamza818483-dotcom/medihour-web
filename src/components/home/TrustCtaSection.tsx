@@ -13,7 +13,7 @@ export const TrustCtaSection = () => {
 
             <h2 className="m-0 max-w-[620px] text-[clamp(24px,3.4vw,40px)] font-extrabold leading-[1.25] text-[#252525] dark:text-white">
               মেডিকেল ভর্তি প্রস্তুতিতে{" "}
-              <span className="text-[#e83283]">Medihour</span> একটি আস্থার নাম
+              <span className="text-[#e83283]">MediHour</span> একটি আস্থার নাম
             </h2>
 
             <p className="my-3 max-w-[500px] text-[clamp(13px,1.4vw,16px)] leading-relaxed text-[#777] dark:text-slate-300">

@@ -28,7 +28,7 @@ const ForgotPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    document.title = "Recover Account – Medihour";
+    document.title = "Recover Account – MediHour";
   }, []);
 
   const handleSendCode = async (e: React.FormEvent) => {
@@ -135,7 +135,7 @@ const ForgotPassword = () => {
               <Button variant="ghost" size="icon" className="-ml-3 h-8 w-8" onClick={goBack} type="button">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
-              <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
+              <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">MediHour</p>
             </div>
             <CardTitle className="text-xl font-semibold">{titles[step]}</CardTitle>
             <CardDescription>

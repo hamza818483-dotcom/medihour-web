@@ -94,7 +94,7 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
             </div>
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-secondary/50 text-muted-foreground">
-              <span className="opacity-20 text-4xl font-bold italic uppercase">Medihour Banner</span>
+              <span className="opacity-20 text-4xl font-bold italic uppercase">MediHour Banner</span>
             </div>
           )}
         </a>

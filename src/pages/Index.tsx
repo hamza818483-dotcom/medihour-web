@@ -53,7 +53,7 @@ const STATS = [
 const Index = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Medihour - Best Coaching & Exam Platform";
+    document.title = "MediHour - Best Coaching & Exam Platform";
   }, []);
 
   const { data: mentors } = useQuery({
@@ -158,7 +158,7 @@ const Index = () => {
   // Default hero content if no custom heroes are found
   const defaultHero = {
       hero_type: "welcome",
-      title: "Medihour-এ স্বাগতম",
+      title: "MediHour-এ স্বাগতম",
       subtitle: "সেরা মেন্টর ও রিসোর্সের সাথে নিয়ে মেডিকেল-ভার্সিটি ভর্তি প্রস্তুতিতে এগিয়ে যাও। লাইভ ক্লাস, তাৎক্ষণিক রেজাল্ট এবং সম্পূর্ণ কোর্স ম্যানেজমেন্টের এক অনন্য আয়োজন।",
       cta_text: "শুরু করুন",
       cta_link: "/login",
@@ -442,7 +442,7 @@ const Index = () => {
                 <div className="absolute left-1/2 top-6 h-64 w-64 -translate-x-1/2 rounded-full bg-gradient-to-br from-[rgba(255,119,55,0.22)] to-[rgba(255,45,130,0.1)]" />
                 <div className="absolute left-4 top-4 z-[7] flex items-center gap-1.5 rounded-full border border-white/95 bg-white/90 px-3 py-2 text-[10px] font-extrabold text-[#333] shadow-[0_7px_20px_rgba(0,0,0,0.08)] backdrop-blur-md">
                   <span className="h-[7px] w-[7px] flex-shrink-0 rounded-full bg-[#ff397d] shadow-[0_0_0_4px_rgba(255,57,125,0.12)]" />
-                  Medihour
+                  MediHour
                 </div>
                 {mentors && mentors.length > 0 && mentors[0].image_url ? (
                   <img src={mentors[0].image_url} alt={mentors[0].name} className="relative z-[2] max-h-[380px] w-auto max-w-full object-contain transition-transform duration-500 hover:-translate-y-1.5 hover:scale-[1.02]" />
@@ -459,10 +459,10 @@ const Index = () => {
               </div>
               <h3 className="mb-3.5 text-[22px] font-black leading-snug text-[#1f2328] dark:text-white sm:text-[30px]">
                 স্বপ্ন ছোঁয়ার আশা থাকলে সেই স্বপ্নের ভিত তৈরিতে সাথে আছে{" "}
-                <span className="bg-gradient-to-r from-[#ff6b35] to-[#f72585] bg-clip-text text-transparent">"Medihour"</span>
+                <span className="bg-gradient-to-r from-[#ff6b35] to-[#f72585] bg-clip-text text-transparent">"MediHour"</span>
               </h3>
               <p className="mb-5 max-w-[650px] text-sm font-medium leading-[1.85] text-[#626870] dark:text-slate-300">
-                মেডিকেল ও ভার্সিটি ভর্তি পরীক্ষার প্রস্তুতির জন্য দেশের অন্যতম সেরা প্ল্যাটফর্ম <strong className="text-[#1f2328] dark:text-white">"Medihour"</strong>।
+                মেডিকেল ও ভার্সিটি ভর্তি পরীক্ষার প্রস্তুতির জন্য দেশের অন্যতম সেরা প্ল্যাটফর্ম <strong className="text-[#1f2328] dark:text-white">"MediHour"</strong>।
                 ভর্তি প্রস্তুতি নেওয়া শিক্ষার্থীদের সঠিক দিকনির্দেশনা, নিয়মিত পরীক্ষা, মানসম্মত ক্লাস এবং ধারাবাহিক প্রস্তুতির মাধ্যমে নিজেদের লক্ষ্যে পৌঁছাতে আমরা কাজ করে যাচ্ছি।
               </p>
 

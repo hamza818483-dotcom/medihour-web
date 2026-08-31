@@ -45,7 +45,7 @@ export function PWASplash() {
       <div className="medihour-splash__logo-wrap">
         <img
           src="/logo.png"
-          alt="Medihour"
+          alt="MediHour"
           className="medihour-splash__logo"
           onError={(e) => {
             // If the logo fails to load for any reason, hide it rather than

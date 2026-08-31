@@ -382,7 +382,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               if (decoded.toLowerCase().includes('confirmation') || decoded.toLowerCase().includes('confirmed')) {
                   toast({
                       title: "Welcome Aboard! ✨",
-                      description: "Your account is now verified. Welcome to Medihour.",
+                      description: "Your account is now verified. Welcome to MediHour.",
                       variant: "default",
                   });
               } else if (decoded.toLowerCase().includes('email')) {

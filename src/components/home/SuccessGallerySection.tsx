@@ -28,7 +28,7 @@ export const SuccessGallerySection = () => {
         <div className="hidden h-px w-[70px] flex-none bg-gradient-to-r from-transparent to-[#ff4081] sm:block" />
         <div className="max-w-[850px]">
           <h2 className="m-0 text-[clamp(24px,4vw,40px)] font-extrabold leading-[1.35] tracking-[-0.4px] text-white">
-            Medihour-এর হাত ধরে{" "}
+            MediHour-এর হাত ধরে{" "}
             <span className="bg-gradient-to-r from-[#ff5a91] via-[#ef55d7] to-[#6978ff] bg-clip-text text-transparent">
               সাফল্যের পথে এগিয়ে চলেছে
             </span>
@@ -50,7 +50,7 @@ export const SuccessGallerySection = () => {
             >
               <img
                 src={photo.image_url}
-                alt={photo.caption || "Medihour Success Story"}
+                alt={photo.caption || "MediHour Success Story"}
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
                 loading="lazy"
                 draggable={false}
@@ -72,7 +72,7 @@ export const SuccessGallerySection = () => {
               >
                 <img
                   src={photo.image_url}
-                  alt={photo.caption || "Medihour Success Story"}
+                  alt={photo.caption || "MediHour Success Story"}
                   className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.04]"
                   loading="lazy"
                   draggable={false}

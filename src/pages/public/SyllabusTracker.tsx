@@ -86,7 +86,7 @@ const SyllabusTracker = () => {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    document.title = "Syllabus Tracker — Medihour";
+    document.title = "Syllabus Tracker — MediHour";
     setProgress(loadMap(progressKey(user?.id)));
   }, [user?.id]);
 

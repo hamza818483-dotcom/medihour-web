@@ -33,10 +33,10 @@ const Footer = () => {
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <a href="/" className="flex h-12 w-12 items-center justify-center rounded-[13px] border border-white/10 bg-white/[0.07] transition-transform hover:-translate-y-0.5 hover:bg-white/[0.11]">
-              <img src="/logo.png" alt="Medihour Logo" className="h-[34px] w-[34px] object-contain" />
+              <img src="/logo.png" alt="MediHour Logo" className="h-[34px] w-[34px] object-contain" />
             </a>
             <div>
-              <h3 className="m-0 text-lg font-extrabold leading-tight text-white sm:text-xl">Medihour</h3>
+              <h3 className="m-0 text-lg font-extrabold leading-tight text-white sm:text-xl">MediHour</h3>
               <span className="mt-0.5 block text-[11px] font-medium text-white/50">মেডিকেল-ভার্সিটি প্ল্যাটফর্ম</span>
             </div>
           </div>
@@ -44,7 +44,7 @@ const Footer = () => {
           <div className="flex max-w-[470px] items-center gap-2.5 rounded-xl border border-white/[0.07] bg-white/[0.043] px-4 py-3">
             <span className="h-[7px] w-[7px] flex-shrink-0 rounded-full bg-[#f33b7c] shadow-[0_0_12px_rgba(243,59,124,0.65)]" />
             <p className="m-0 text-xs leading-relaxed text-white/65">
-              উন্নত শিক্ষা ও তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে <strong className="font-bold text-white">'Medihour'</strong> একটি আস্থার নাম।
+              উন্নত শিক্ষা ও তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে <strong className="font-bold text-white">'MediHour'</strong> একটি আস্থার নাম।
             </p>
           </div>
         </div>
@@ -117,7 +117,7 @@ const Footer = () => {
 
         {/* Bottom: Copyright */}
         <div className="mt-9 border-t border-white/[0.07] pt-5 text-center">
-          <p className="m-0 text-[9.5px] leading-relaxed text-white/40">© {currentYear} Medihour. সর্বস্বত্ব সংরক্ষিত।</p>
+          <p className="m-0 text-[9.5px] leading-relaxed text-white/40">© {currentYear} MediHour. সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>

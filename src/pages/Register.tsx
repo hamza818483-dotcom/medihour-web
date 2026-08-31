@@ -39,7 +39,7 @@ const Register = () => {
   }, [hscBatch]);
 
   useEffect(() => {
-    document.title = "Register – Medihour";
+    document.title = "Register – MediHour";
   }, []);
 
   const convertToEnglishDigits = (str: string) => {
@@ -240,11 +240,11 @@ const Register = () => {
           <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#e9287a]" />
           <CardHeader className="space-y-3 pb-2 pt-7 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#e9287a] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
-              <img src="/logo.png" alt="Medihour" className="h-9 w-9 object-contain brightness-0 invert" />
+              <img src="/logo.png" alt="MediHour" className="h-9 w-9 object-contain brightness-0 invert" />
             </div>
             <div>
               <CardTitle className="text-2xl font-black tracking-tight text-[#1f2328] dark:text-white">নতুন অ্যাকাউন্ট তৈরি করুন</CardTitle>
-              <CardDescription className="mt-1 text-[13px] text-muted-foreground">Medihour পরিবারে যুক্ত হও</CardDescription>
+              <CardDescription className="mt-1 text-[13px] text-muted-foreground">MediHour পরিবারে যুক্ত হও</CardDescription>
             </div>
           </CardHeader>
           <CardContent>

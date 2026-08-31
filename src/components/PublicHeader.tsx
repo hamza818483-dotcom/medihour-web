@@ -35,7 +35,7 @@ export const PublicHeader = () => {
         <nav className="flex h-[62px] items-center gap-5 rounded-[18px] border border-white/85 bg-white/[0.88] pl-4 pr-3 backdrop-blur-xl shadow-[0_8px_35px_rgba(30,40,70,0.09)] dark:bg-slate-900/85 dark:border-white/10">
           {/* Logo */}
           <a href="/" className="flex flex-shrink-0 items-center">
-            <img src="/logo.png" alt="Medihour" className="h-[45px] w-[135px] object-contain" />
+            <img src="/logo.png" alt="MediHour" className="h-[45px] w-[135px] object-contain" />
           </a>
 
           {/* Desktop Nav */}

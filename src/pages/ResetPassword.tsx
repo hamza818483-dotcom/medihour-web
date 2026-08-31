@@ -21,7 +21,7 @@ const ResetPassword = () => {
   const turnstileRef = useRef<TurnstileInstance>(null);
 
   useEffect(() => {
-    document.title = "Reset Password – Medihour";
+    document.title = "Reset Password – MediHour";
 
     // Check if we have a session (handled by Supabase Auth automatically on redirect)
     // or if we are in the recovery flow.
@@ -96,7 +96,7 @@ const ResetPassword = () => {
       <main className="flex min-h-screen items-center justify-center px-4 pt-[92px] pb-10">
         <Card className="w-full max-w-md border-[3px] border-foreground">
           <CardHeader className="space-y-2 pb-4">
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
+            <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">MediHour</p>
             <CardTitle className="text-xl font-semibold">Set New Password</CardTitle>
             <CardDescription>
               Enter your new password below.

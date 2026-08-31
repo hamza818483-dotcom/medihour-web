@@ -22,7 +22,7 @@ export const ContactSection = () => {
     {
       href: facebookPage,
       icon: Facebook,
-      name: "Medihour - মেডিহাওয়ার পেজে মেসেজ করো",
+      name: "MediHour - মেডিহাওয়ার পেজে মেসেজ করো",
       sub: "আমাদের Facebook Page-এ যোগাযোগ করো",
       primary: true,
       iconBg: "bg-[#e8edff] dark:bg-blue-500/10 border-[#d5ddff] dark:border-blue-500/20",
@@ -31,7 +31,7 @@ export const ContactSection = () => {
     {
       href: facebookGroup,
       icon: Users,
-      name: "Medihour Group এ যুক্ত হও",
+      name: "MediHour Group এ যুক্ত হও",
       sub: "কমিউনিটির সাথে যুক্ত থাকো",
       iconBg: "bg-[#f0efff] dark:bg-indigo-500/10 border-[#dedcff] dark:border-indigo-500/20",
       iconColor: "text-[#656cff] dark:text-indigo-400",
@@ -84,7 +84,7 @@ export const ContactSection = () => {
               </span>
             </h2>
             <p className="mt-4 max-w-[410px] text-[13px] font-medium leading-[1.8] text-[#777b85] dark:text-slate-400">
-              Medihour-এর সাথে যুক্ত থাকো, নতুন ক্লাস, আপডেট ও প্রয়োজনীয় তথ্য সবার আগে পেতে।
+              MediHour-এর সাথে যুক্ত থাকো, নতুন ক্লাস, আপডেট ও প্রয়োজনীয় তথ্য সবার আগে পেতে।
             </p>
           </div>
 

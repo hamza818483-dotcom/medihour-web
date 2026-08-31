@@ -28,10 +28,10 @@ self.addEventListener("push", (event: PushEvent) => {
   try {
     data = event.data ? event.data.json() : {};
   } catch {
-    data = { title: "Medihour", body: event.data ? event.data.text() : "" };
+    data = { title: "MediHour", body: event.data ? event.data.text() : "" };
   }
 
-  const title = data.title || "Medihour";
+  const title = data.title || "MediHour";
   const options: NotificationOptions = {
     body: data.body || "",
     icon: data.icon || "/pwa-192x192.png",

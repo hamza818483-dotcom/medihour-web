@@ -40,7 +40,7 @@ const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   useEffect(() => {
-    document.title = "Login – Medihour";
+    document.title = "Login – MediHour";
 
     const params = new URLSearchParams(location.search);
     const reason = params.get("reason");
@@ -89,7 +89,7 @@ const Login = () => {
         {user ? (
           <Card className="w-full max-w-md border-[3px] border-foreground animate-in zoom-in-95 duration-200">
             <CardHeader className="space-y-2 pb-4 text-center">
-              <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
+              <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">MediHour</p>
               <CardTitle className="text-xl font-semibold">Welcome Back!</CardTitle>
               <CardDescription>
                 You are already logged in as <span className="font-semibold text-foreground">{profile?.full_name || profile?.registration_id || "User"}</span>.
@@ -113,11 +113,11 @@ const Login = () => {
 
             <CardHeader className="space-y-3 pb-2 pt-7 text-center">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#e9287a] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
-                <img src="/logo.png" alt="Medihour" className="h-9 w-9 object-contain brightness-0 invert" />
+                <img src="/logo.png" alt="MediHour" className="h-9 w-9 object-contain brightness-0 invert" />
               </div>
               <div>
                 <CardTitle className="text-2xl font-black tracking-tight text-[#1f2328] dark:text-white">
-                  Medihour-এ স্বাগতম
+                  MediHour-এ স্বাগতম
                 </CardTitle>
                 <CardDescription className="mt-1 text-[13px] text-muted-foreground">
                   চালিয়ে যেতে লগইন করুন

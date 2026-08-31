@@ -9,12 +9,12 @@ interface SEOProps {
 }
 
 export default function SEO({ title, description, name, type, keywords }: SEOProps) {
-  const defaultDesc = "Medihour provides top-tier educational content, specializing in medical admission preparation, HSC, and GST in Bangladesh.";
-  const defaultKeywords = "medical, admission, bangladesh, hsc, gst, DMC, education, online courses, medihour";
+  const defaultDesc = "MediHour provides top-tier educational content, specializing in medical admission preparation, HSC, and GST in Bangladesh.";
+  const defaultKeywords = "medical, admission, bangladesh, hsc, gst, DMC, education, online courses, MediHour";
   
   return (
     <Helmet>
-      <title>{title} | Medihour</title>
+      <title>{title} | MediHour</title>
       <meta name='description' content={description || defaultDesc} />
       <meta name='keywords' content={keywords || defaultKeywords} />
       
@@ -22,7 +22,7 @@ export default function SEO({ title, description, name, type, keywords }: SEOPro
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description || defaultDesc} />
       
-      <meta name="twitter:creator" content={name || "Medihour"} />
+      <meta name="twitter:creator" content={name || "MediHour"} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description || defaultDesc} />
