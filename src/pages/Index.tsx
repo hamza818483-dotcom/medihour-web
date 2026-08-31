@@ -360,32 +360,32 @@ const Index = () => {
         {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
         <TrustCtaSection />
 
-        {/* Unique Services Section */}
-        <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(271 81% 60%)" }}>
-        <section className="space-y-3">
-            <div className="text-center md:text-left">
-                <h2 className="text-2xl font-semibold tracking-tight">আমাদের বিশেষত্ব</h2>
-                <p className="text-sm text-muted-foreground">কেন বাছবেন এটলাস?</p>
-            </div>
-            <div>
-                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Benefits Section (PhysicsHunters-style dark cards) */}
+        <section className="overflow-hidden py-2">
+            <div className="mx-auto w-full max-w-[1180px] px-1">
+                <h2 className="relative mx-auto mb-6 table px-3.5 pb-2.5 text-center text-[22px] sm:text-[25px] font-black leading-tight tracking-tight text-[#202124] dark:text-white before:absolute before:-z-10 before:left-[3%] before:right-[3%] before:bottom-[3px] before:h-[10px] before:-skew-x-12 before:rounded-[20px] before:bg-gradient-to-r before:from-[rgba(255,178,56,0.2)] before:via-[rgba(255,105,55,0.2)] before:to-[rgba(221,38,117,0.2)] after:absolute after:left-[30%] after:right-[30%] after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-[#ffb238] after:via-[#ff6937] after:to-[#dd2675]">
+                    আমাদের বিশেষত্ব
+                </h2>
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                     {FEATURES.map((feature, i) => (
-                        <Card key={i} className="animate-border-chase border-2 border-primary/10 hover:border-primary/30 transition-colors" style={{ ["--border-chase-color" as any]: ["hsl(217 91% 60%)","hsl(0 84% 60%)","hsl(271 81% 60%)","hsl(45 93% 55%)","hsl(160 84% 39%)","hsl(24 95% 53%)","hsl(199 89% 48%)","hsl(330 81% 60%)"][i % 8] as any }}>
-                            <CardContent className="flex flex-col items-center text-center p-4 gap-2">
-                                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <div
+                            key={i}
+                            className="group relative isolate overflow-hidden rounded-[22px] border border-white/[0.16] bg-[radial-gradient(130%_130%_at_0%_0%,_#383838_0%,_#1b1b1b_42%,_#0d0d0d_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_7px_22px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.28] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07),0_15px_35px_rgba(0,0,0,0.32),0_0_28px_rgba(221,38,117,0.08)]"
+                        >
+                            <div className="relative z-[5] flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center">
+                                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-white/[0.12]">
                                     <feature.icon className="h-5 w-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-xs md:text-sm">{feature.title}</h3>
-                                    <p className="text-[10px] md:text-xs text-muted-foreground">{feature.desc}</p>
+                                    <h3 className="text-[13px] font-black leading-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)] sm:text-[15px]">{feature.title}</h3>
+                                    <p className="mt-1 max-w-[220px] text-[10px] font-medium leading-snug text-white/80 sm:text-xs">{feature.desc}</p>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     ))}
-                 </div>
+                </div>
             </div>
         </section>
-        </div>
 
         {/* Success Stats Section */}
         <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(0 84% 60%)" }}>
