@@ -14,20 +14,20 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 98.8235%;
     --popover-foreground: 0 0% 0%;
-    --primary: 174.6 82.7% 31.8%; /* Medihour Teal */
+    --primary: 336.3 83.7% 56.7%; /* Medihour Pink (PhysicsHunters-matched) */
     --primary-foreground: 0 0% 100%;
-    --secondary: 190.3 30% 94.3%;
-    --secondary-foreground: 190.3 72.5% 15.7%;
+    --secondary: 340 100% 97.1%;
+    --secondary-foreground: 336.3 60% 25%;
     --muted: 0 0% 96.0784%;
     --muted-foreground: 0 0% 32.1569%;
-    --accent: 174.6 60% 94%;
-    --accent-foreground: 190.3 72.5% 15.7%; /* Medihour Navy */
+    --accent: 340 100% 97.6%;
+    --accent-foreground: 336.3 60% 20%; /* Medihour Pink-dark */
     --destructive: 358.4416 74.7573% 59.6078%;
     --destructive-foreground: 0 0% 100%;
     --border: 240 17.0732% 91.9608%;
     --input: 0 0% 92.1569%;
     --ring: 0 0% 0%;
-    --chart-1: 174.6 60% 45%;
+    --chart-1: 336.3 60% 50%;
     --chart-2: 190.3 72.5% 25%;
     --chart-3: 24.8571 98.1308% 58.0392%;
     --chart-4: 217.0787 76.7241% 54.5098%;
@@ -68,19 +68,19 @@
     :root:not(.dark) {
       --background: 210 40% 98%;
       --card: 0 0% 100%;
-      --primary: 174.6 82.7% 31.8%; /* Medihour Teal */
+      --primary: 336.3 83.7% 56.7%; /* Medihour Pink */
       --primary-foreground: 0 0% 100%;
-      --accent: 174.6 60% 94%;
-      --accent-foreground: 190.3 72.5% 20%;
+      --accent: 340 100% 97.6%;
+      --accent-foreground: 336.3 60% 20%;
       --radius: 1rem;
     }
     :root.dark {
       --background: 222 47% 8%;
       --card: 222 40% 12%;
-      --primary: 174.6 70% 42%;
+      --primary: 336.3 80% 62%;
       --primary-foreground: 0 0% 100%;
-      --accent: 190.3 50% 20%;
-      --accent-foreground: 174.6 60% 80%;
+      --accent: 336.3 50% 20%;
+      --accent-foreground: 340 60% 85%;
       --radius: 1rem;
     }
   }
@@ -92,32 +92,32 @@
     --card-foreground: 210 20% 96%;
     --popover: 250 35% 10%;
     --popover-foreground: 210 20% 96%;
-    --primary: 174.6 75% 45%; /* Medihour Teal (glow-enhanced) */
+    --primary: 336.3 80% 62%; /* Medihour Pink (glow-enhanced) */
     --primary-foreground: 0 0% 100%;
     --secondary: 250 28% 16%;
     --secondary-foreground: 210 20% 96%;
     --muted: 250 25% 14%;
     --muted-foreground: 240 15% 65%;
-    --accent: 262 70% 22%;
-    --accent-foreground: 262 90% 82%;
+    --accent: 336.3 55% 24%;
+    --accent-foreground: 336.3 90% 82%;
     --destructive: 0 84% 65%;
     --destructive-foreground: 0 0% 100%;
     --border: 250 25% 20%;
     --input: 250 25% 18%;
-    --ring: 174.6 75% 50%;
-    --chart-1: 174.6 75% 50%;
+    --ring: 336.3 80% 62%;
+    --chart-1: 336.3 80% 62%;
     --chart-2: 262 83% 66%;
     --chart-3: 38 92% 62%;
     --chart-4: 0 84% 65%;
     --chart-5: 0 0% 62.7451%;
     --sidebar: 252 48% 5%;
     --sidebar-foreground: 210 20% 96%;
-    --sidebar-primary: 174.6 75% 45%;
+    --sidebar-primary: 336.3 80% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 250 28% 16%;
-    --sidebar-accent-foreground: 174.6 75% 65%;
+    --sidebar-accent-foreground: 336.3 80% 72%;
     --sidebar-border: 250 25% 20%;
-    --sidebar-ring: 174.6 75% 45%;
+    --sidebar-ring: 336.3 80% 62%;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --font-serif: "Lora", serif;
     --font-mono: "IBM Plex Mono", monospace;
@@ -168,7 +168,7 @@
   /* Dark-mode premium hero glow (inspired by dark-coaching-platform aesthetic) */
   .dark .hero-glow {
     background-image:
-      radial-gradient(60% 80% at 20% 0%, hsl(174.6 75% 45% / 0.22) 0%, transparent 70%),
+      radial-gradient(60% 80% at 20% 0%, hsl(336.3 80% 55% / 0.22) 0%, transparent 70%),
       radial-gradient(50% 70% at 85% 10%, hsl(262 83% 60% / 0.18) 0%, transparent 70%);
   }
   .dark .glow-border-primary {
