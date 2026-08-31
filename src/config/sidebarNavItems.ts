@@ -64,7 +64,6 @@ export const studentItems: SidebarNavItem[] = [
   { title: "Bookmarks", url: "/dashboard/bookmarks", icon: Bookmark, color: "text-emerald-500" },
   { title: "FB & Telegram Group", url: "/dashboard/community", icon: Users, color: "text-cyan-500" },
   { title: "Exam Analytics", url: "/dashboard/analytics", icon: Settings2, color: "text-slate-500" },
-  { title: "Study Tools", url: "/dashboard/program", icon: Sparkles, color: "text-amber-500" },
   { title: "Exam Routine", url: "/dashboard/calendar", icon: CalendarClock, color: "text-indigo-500" },
 ];
 
