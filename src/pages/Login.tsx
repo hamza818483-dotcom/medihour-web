@@ -259,16 +259,24 @@ const Login = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
-              Login failed
+              লগইন ব্যর্থ হয়েছে
             </DialogTitle>
             <DialogDescription className="text-sm text-foreground pt-1">
               {loginError?.message}
             </DialogDescription>
           </DialogHeader>
           <div className="text-xs text-muted-foreground">
-            সমস্যা সমাধান না হলে আমাদের সাপোর্টে যোগাযোগ করো:
+            পাসওয়ার্ড ভুল হতে পারে, অথবা এই Email/Phone দিয়ে কোনো অ্যাকাউন্ট নেই। নতুন হলে নিচে থেকে অ্যাকাউন্ট খুলুন, অথবা সমস্যা হলে সাপোর্টে যোগাযোগ করো:
           </div>
           <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <Button
+              asChild
+              className="w-full gap-2 bg-gradient-to-r from-[#f5327a] to-[#e9287a] text-white hover:opacity-90"
+            >
+              <Link to="/register" state={{ from: location.state?.from }} onClick={() => setLoginError(null)}>
+                নতুন অ্যাকাউন্ট খুলুন
+              </Link>
+            </Button>
             <Button
               asChild
               className="w-full gap-2 bg-[#229ED9] hover:bg-[#1b87bd] text-white"
