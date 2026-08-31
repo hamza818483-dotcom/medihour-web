@@ -83,7 +83,7 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
   if (isImageOnly) {
     return (
       <section className="min-w-0 flex-[0_0_100%]">
-        <a href={hero.cta_link || "#"} className="block relative w-full h-auto aspect-video md:h-[700px] overflow-hidden bg-background cursor-pointer hover:opacity-95 transition-opacity">
+        <a href={hero.cta_link || "#"} className="block relative w-full h-auto aspect-video md:aspect-[21/9] lg:aspect-[2.4/1] overflow-hidden bg-background cursor-pointer hover:opacity-95 transition-opacity">
           {hero.image_url ? (
             <div className="h-full w-full relative flex items-center justify-center">
               <img
