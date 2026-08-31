@@ -17,6 +17,8 @@ import ResetPassword from "./pages/ResetPassword";
 import SyllabusTracker from "./pages/public/SyllabusTracker";
 import CourseDetails from "./pages/public/CourseDetails";
 import CourseBuy from "./pages/public/CourseBuy";
+import FreeClass from "./pages/public/FreeClass";
+import FreeExam from "./pages/public/FreeExam";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -118,6 +120,8 @@ const App = () => {
                 <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
                 <Route path="/courses/:courseId" element={<ErrorBoundary><CourseDetails /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/buy" element={<ErrorBoundary><CourseBuy /></ErrorBoundary>} />
+                <Route path="/free-class" element={<ErrorBoundary><FreeClass /></ErrorBoundary>} />
+                <Route path="/free-exam" element={<ErrorBoundary><FreeExam /></ErrorBoundary>} />
               </Route>
 
               <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
