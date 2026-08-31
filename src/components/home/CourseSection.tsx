@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Tag, Users } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
 // Configuration: Add category names here to restrict the buttons shown on the landing page.
@@ -297,64 +295,81 @@ export const CourseSection = () => {
                     filteredCourses.map((course: any) => {
                         const image = course.image_url || "/placeholder.svg";
                         const idOrSlug = course.slug || course.id;
-
-                        // Handle array or string display
-                        const categoryBadges = Array.isArray(course.category)
-                            ? course.category
-                            : (course.category ? [course.category] : []);
+                        const enrollCount = enrollmentCounts?.[course.id] || 0;
 
                         return (
-                            <Card key={course.id} className="overflow-hidden flex flex-col h-full min-w-0 w-full max-w-full rounded-2xl border-2 hover:border-primary/40 hover:shadow-xl transition-all duration-300">
-                                {/* Course Image */}
-                                <div className="w-full aspect-video relative">
-                                    <img
-                                        src={image}
-                                        alt={`${course.name} cover`}
-                                        className="absolute inset-0 h-full w-full object-cover"
-                                    />
-                                    {activeDiscounts?.some((d: any) => d.course_id === course.id) && (
-                                        <div className="absolute top-0 left-0 w-24 h-24 overflow-hidden z-20">
-                                            <div className="absolute top-4 -left-7 w-32 bg-red-600 shadow-lg text-white font-bold text-[10px] py-1 text-center truncate rotate-[-45deg] flex items-center justify-center gap-1 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite] border-y border-red-400">
-                                                <Tag className="w-3 h-3 fill-white" /> SALE
+                            <article
+                                key={course.id}
+                                className="group relative w-full rounded-[24px] p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.85),0_8px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-[7px] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.95),0_15px_35px_rgba(237,60,124,0.16)]"
+                                style={{
+                                    background: "linear-gradient(120deg, #111 0%, #ff3f78 25%, #111 50%, #ff6b8d 75%, #111 100%)",
+                                    backgroundSize: "350% 350%",
+                                    animation: "phStrongBorderMove 5s linear infinite",
+                                }}
+                            >
+                                <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[22px] bg-white shadow-[inset_0_0_0_1px_rgba(20,20,20,0.1)] dark:bg-slate-900">
+                                    {/* Thumbnail */}
+                                    <div className="relative w-full overflow-hidden bg-[#f1f2f4]" style={{ aspectRatio: "16/9" }}>
+                                        <img
+                                            src={image}
+                                            alt={course.name}
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.045]"
+                                        />
+                                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/[0.02] via-transparent to-black/[0.12]" />
+                                        {activeDiscounts?.some((d: any) => d.course_id === course.id) && (
+                                            <div className="absolute top-0 left-0 z-20 h-24 w-24 overflow-hidden">
+                                                <div className="absolute top-4 -left-7 flex w-32 rotate-[-45deg] animate-pulse items-center justify-center gap-1 truncate border-y border-red-400 bg-red-600 py-1 text-center text-[10px] font-bold text-white shadow-lg">
+                                                    <Tag className="h-3 w-3 fill-white" /> SALE
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                    <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-                                        {categoryBadges.map((cat: string) => (
-                                            <Badge key={cat} className="bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white border-0">
-                                                {cat}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </div>
-                                {/* Content */}
-                                <div className="flex-1 p-4 flex flex-col justify-between gap-3">
-                                    <div>
-                                        <h3 className="text-[15px] font-bold mb-2 leading-snug line-clamp-2">{course.name}</h3>
-                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                            <Users className="h-3.5 w-3.5 text-green-500" />
-                                            <span className="font-semibold text-green-600">{(enrollmentCounts?.[course.id] || 0).toLocaleString("en-BD")}</span> জন ভর্তি হয়েছে
-                                        </div>
+                                        )}
                                     </div>
 
-                                    <div className="flex flex-col gap-3 mt-auto pt-3 border-t border-dashed">
-                                        <div className="text-sm">
-                                            <span className="text-muted-foreground">মূল্য: </span>
-                                            {course.original_price != null && Number(course.original_price) > Number(course.price) && (
-                                                <span className="text-muted-foreground line-through mr-1.5">
-                                                    ৳{Number(course.original_price).toLocaleString("en-BD")}
+                                    {/* Body */}
+                                    <div className="flex flex-1 flex-col px-5 pb-[19px] pt-6">
+                                        <h3 className="mb-[15px] min-h-[57px] text-[19px] font-extrabold leading-[1.5] tracking-[-0.15px] text-[#171b1c] line-clamp-2 dark:text-white">
+                                            {course.name}
+                                        </h3>
+
+                                        {/* Enrollment meta */}
+                                        <div className="mb-[17px] flex w-full items-center">
+                                            <div className="inline-flex items-center gap-2.5 rounded-[13px] border border-[#e8dce1] bg-gradient-to-br from-[#fff8fa] to-white py-[7px] pl-[7px] pr-[15px] shadow-[0_4px_14px_rgba(0,0,0,0.055)] transition-transform hover:-translate-y-0.5 dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
+                                                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-[#ffd0df] bg-[#fff0f5] shadow-[0_3px_10px_rgba(237,59,112,0.08)]">
+                                                    <Users className="h-[18px] w-[18px] text-[#ed347d]" />
                                                 </span>
-                                            )}
-                                            <span className="font-bold text-primary">
-                                                {course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}
-                                            </span>
+                                                <span className="flex items-baseline gap-1.5 whitespace-nowrap">
+                                                    <span className="text-[18px] font-black leading-none text-[#e92f68]">{enrollCount.toLocaleString("en-BD")}</span>
+                                                    <span className="text-[13px] font-bold text-[#45484d] dark:text-slate-300">জন ভর্তি</span>
+                                                </span>
+                                            </div>
                                         </div>
-                                        <Button asChild size="sm" className="h-9 w-full text-sm font-bold bg-gradient-to-br from-[#e52b80] to-[#f05463] hover:opacity-90">
-                                            <a href={`/courses/${idOrSlug}`}>বিস্তারিত</a>
-                                        </Button>
+
+                                        {/* Divider */}
+                                        <div className="mb-[17px] h-px w-full bg-gradient-to-r from-[#eee] via-[#f5dbe4] to-[#eee]" />
+
+                                        {/* Price + Button */}
+                                        <div className="mt-auto flex w-full items-center justify-between gap-3.5">
+                                            <div className="flex min-w-0 flex-col gap-[3px]">
+                                                <p className="m-0 text-[11px] font-semibold text-[#858a91]">কোর্স ফি</p>
+                                                <p className="m-0 flex flex-wrap items-baseline gap-1.5 text-[26px] font-black leading-[1.15] tracking-[-0.4px] text-[#ed3068]">
+                                                    {course.original_price != null && Number(course.original_price) > Number(course.price) && (
+                                                        <del className="text-[13px] font-semibold text-[#a5a8ad]">৳{Number(course.original_price).toLocaleString("en-BD")}</del>
+                                                    )}
+                                                    <span>{course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}</span>
+                                                </p>
+                                            </div>
+                                            <a
+                                                href={`/courses/${idOrSlug}`}
+                                                className="group/btn relative flex min-w-[125px] flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[13px] bg-gradient-to-br from-[#ff6872] to-[#ed3c7c] px-[17px] py-[13px] text-[13px] font-extrabold text-white shadow-[0_8px_20px_rgba(237,60,124,0.22)] transition-all hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(237,60,124,0.32)]"
+                                            >
+                                                <span className="absolute -left-[120%] top-0 h-full w-4/5 -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/35 to-transparent transition-all duration-500 group-hover/btn:left-[140%]" />
+                                                <span className="relative z-[1]">বিস্তারিত</span>
+                                                <span className="relative z-[1] text-base font-black transition-transform group-hover/btn:translate-x-1">→</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </Card>
+                            </article>
                         );
                     })
                 )}

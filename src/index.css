@@ -442,6 +442,11 @@ mjx-container[display="true"] {
   100% { background-position: -200% 0%; }
 }
 
+@keyframes phStrongBorderMove {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 350% 350%; }
+}
+
 /* Success gallery marquee rows (PhysicsHunters-style) */
 @keyframes gallery-scroll-left {
   0% { transform: translate3d(0, 0, 0); }
