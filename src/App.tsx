@@ -28,6 +28,7 @@ import LiveExam from "./pages/dashboard/LiveExam";
 import ExamResults from "./pages/dashboard/ExamResults";
 import PastExamCatalog from "./pages/dashboard/PastExamCatalog";
 import TakeExam from "./pages/dashboard/TakeExam";
+import QuickPractice from "./pages/dashboard/QuickPractice";
 import TakeMistakeExam from "./pages/dashboard/TakeMistakeExam";
 import ExamReview from "./pages/dashboard/ExamReview";
 import Leaderboard from "./pages/dashboard/Leaderboard";
@@ -188,6 +189,7 @@ const App = () => {
               </Route>
 
               <Route path="/take-exam/:examId" element={<ErrorBoundary><TakeExam /></ErrorBoundary>} />
+              <Route path="/quick-practice" element={<ErrorBoundary><QuickPractice /></ErrorBoundary>} />
               <Route path="/exam-review/:attemptId" element={<ErrorBoundary><ExamReview /></ErrorBoundary>} />
 
               <Route path="*" element={<ErrorBoundary><NotFound /></ErrorBoundary>} />
