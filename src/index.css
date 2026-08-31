@@ -441,3 +441,19 @@ mjx-container[display="true"] {
   0% { background-position: 0% 0%; }
   100% { background-position: -200% 0%; }
 }
+
+/* Success gallery marquee rows (PhysicsHunters-style) */
+@keyframes gallery-scroll-left {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes gallery-scroll-right {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+.animate-gallery-scroll-left {
+  animation: gallery-scroll-left 38s linear infinite;
+}
+.animate-gallery-scroll-right {
+  animation: gallery-scroll-right 42s linear infinite;
+}

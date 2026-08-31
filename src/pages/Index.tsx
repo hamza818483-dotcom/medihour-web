@@ -31,6 +31,8 @@ import { TrustCtaSection } from "@/components/home/TrustCtaSection";
 import { HelpCtaSection } from "@/components/home/HelpCtaSection";
 import HeroCarouselItem from "@/components/home/HeroCarouselItem";
 import Footer from "@/components/Footer";
+import { ContactSection } from "@/components/home/ContactSection";
+import { SuccessGallerySection } from "@/components/home/SuccessGallerySection";
 
 const FEATURES = [
     { icon: Monitor, title: "অনলাইন প্রোগ্রাম", desc: "ঘরে বসেই সেরা প্রস্তুতি।" },
@@ -420,6 +422,9 @@ const Index = () => {
 
       </main>
 
+      {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
+      <SuccessGallerySection />
+
       {/* About Section (PhysicsHunters-style spotlight card) */}
       <section className="w-full overflow-hidden bg-white dark:bg-slate-950 py-10 sm:py-14" id="about">
         <div className="mx-auto w-full max-w-[1180px] px-4">
@@ -477,6 +482,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Contact Section (PhysicsHunters-style) */}
+      <ContactSection />
 
       {/* Founder & Teacher Panel (Footer Top) */}
       <section className="bg-card border-t py-12 px-4 mt-auto">
