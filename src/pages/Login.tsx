@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 
 const TELEGRAM_SUPPORT_BOT = "https://t.me/MedihourWeb_Robot";
-const WHATSAPP_HELPLINE = "https://wa.me/8801999681290";
+const WHATSAPP_HELPLINE = "https://wa.me/8801639787547";
 
 function buildTelegramSupportLink(errorMessage: string, identifier: string) {
   const text = `আসসালামু আলাইকুম, আমি লগইন করতে সমস্যায় পড়েছি।\nEmail/ID: ${identifier || "(দেওয়া হয়নি)"}\nError: ${errorMessage}\nদয়া করে সাহায্য করুন।`;

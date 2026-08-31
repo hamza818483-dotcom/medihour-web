@@ -18,13 +18,13 @@ const Footer = () => {
               উন্নত শিক্ষা, লাইভ ক্লাস এবং তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে শিক্ষার্থীদের পাশে আমরা। নিজের সম্ভাবনাকে বিকশিত করতে আমাদের সাথে যুক্ত হোন।
             </p>
             <div className="flex gap-4">
-              <a href="https://www.facebook.com/share/1ZsxAaL8zN" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/share/1EX8RkwBoP/" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-primary transition-colors">
                 <Facebook size={18} />
               </a>
               <a href="https://t.me/MediHour" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-blue-400 transition-colors">
                 <Send size={18} />
               </a>
-              <a href="https://www.youtube.com/@MedihourMedical_Preparation" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-red-600 transition-colors">
+              <a href="https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-red-600 transition-colors">
                 <Youtube size={18} />
               </a>
             </div>
@@ -62,11 +62,11 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <Mail size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href="mailto:hamza818483@gmail.com" className="hover:text-white transition-colors">hamza818483@gmail.com</a>
+                <a href="mailto:medihourofficial@gmail.com" className="hover:text-white transition-colors">medihourofficial@gmail.com</a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href="tel:+8801999681290" className="hover:text-white transition-colors">+8801999681290</a>
+                <a href="tel:+8801639787547" className="hover:text-white transition-colors">+8801639787547</a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-primary shrink-0 mt-0.5" />

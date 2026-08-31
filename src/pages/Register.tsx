@@ -257,7 +257,7 @@ const Register = () => {
                     </p>
                     <div className="flex flex-wrap gap-2 pt-1">
                       <a
-                        href="https://wa.me/8801999681290"
+                        href="https://wa.me/8801639787547"
                         target="_blank" rel="noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366] text-white text-xs font-semibold px-3 py-1.5 hover:opacity-90 transition-opacity"
                       >

@@ -250,7 +250,7 @@ const DashboardHome = () => {
       {/* Fixed floating WhatsApp + Telegram support buttons, bottom-left corner */}
       <div className="fixed bottom-4 left-4 z-40 flex flex-col gap-2">
         <a
-          href="https://wa.me/8801999681290"
+          href="https://wa.me/8801639787547"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="WhatsApp Support"
@@ -515,7 +515,7 @@ const DashboardHome = () => {
                                 </p>
                                 <p>এক্সেস পেলে নোটিশ এ মেসেজ আসবে।</p>
                                 <p>
-                                    ২৪ ঘন্টার মাঝে এক্সেস না পেলে মেসেজ দিন এই নাম্বারে <a href="http://wa.me/8801999681290" target="_blank" rel="noreferrer" className="underline font-bold hover:text-yellow-900">01999681290</a> (WhatsApp)
+                                    ২৪ ঘন্টার মাঝে এক্সেস না পেলে মেসেজ দিন এই নাম্বারে <a href="http://wa.me/8801639787547" target="_blank" rel="noreferrer" className="underline font-bold hover:text-yellow-900">01639787547</a> (WhatsApp)
                                 </p>
                             </div>
                         </div>

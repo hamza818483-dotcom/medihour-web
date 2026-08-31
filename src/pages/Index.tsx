@@ -442,7 +442,7 @@ const Index = () => {
       {/* Floating Contact Buttons */}
       <div className="fixed bottom-6 right-5 z-50 flex flex-col gap-3">
         <a
-          href="https://wa.me/8801999681290"
+          href="https://wa.me/8801639787547"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center justify-center h-12 w-12 rounded-full bg-[#25D366] shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
