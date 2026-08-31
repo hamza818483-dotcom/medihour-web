@@ -15,6 +15,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import SyllabusTracker from "./pages/public/SyllabusTracker";
+import CourseDetails from "./pages/public/CourseDetails";
+import CourseBuy from "./pages/public/CourseBuy";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -113,6 +115,8 @@ const App = () => {
                 <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
                 <Route path="/reset-password" element={<ErrorBoundary><ResetPassword /></ErrorBoundary>} />
                 <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
+                <Route path="/courses/:courseId" element={<ErrorBoundary><CourseDetails /></ErrorBoundary>} />
+                <Route path="/courses/:courseId/buy" element={<ErrorBoundary><CourseBuy /></ErrorBoundary>} />
               </Route>
 
               <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
