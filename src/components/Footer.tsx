@@ -99,16 +99,16 @@ const Footer = () => {
               <h4 className="m-0 text-sm font-bold text-white">সোশ্যাল</h4>
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
-              <a href={facebookPage} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+              <a href={facebookPage} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
                 <Facebook size={15} />
               </a>
-              <a href={facebookGroup} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+              <a href={facebookGroup} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
                 <Users size={15} />
               </a>
-              <a href={telegram} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+              <a href={telegram} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#35aeea]">
                 <Send size={15} />
               </a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+              <a href={youtube} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#ff4d62]">
                 <Youtube size={15} />
               </a>
             </div>
