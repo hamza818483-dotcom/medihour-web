@@ -157,11 +157,12 @@ const Index = () => {
 
   // Default hero content if no custom heroes are found
   const defaultHero = {
-      title: "এটলাসে স্বাগতম",
-      subtitle: "সেরা রিসোর্স এবং মেন্টরদের সাথে নিয়ে এক্সিলেন্স অর্জনের পথে আপনাকে স্বাগতম। লাইভ ক্লাস, তাৎক্ষণিক রেজাল্ট এবং সম্পূর্ণ কোর্স ম্যানেজমেন্টের এক অনন্য আয়োজন।",
+      hero_type: "welcome",
+      title: "Medihour-এ স্বাগতম",
+      subtitle: "সেরা মেন্টর ও রিসোর্সের সাথে নিয়ে মেডিকেল-ভার্সিটি ভর্তি প্রস্তুতিতে এগিয়ে যাও। লাইভ ক্লাস, তাৎক্ষণিক রেজাল্ট এবং সম্পূর্ণ কোর্স ম্যানেজমেন্টের এক অনন্য আয়োজন।",
       cta_text: "শুরু করুন",
       cta_link: "/login",
-      image_url: "https://pub-48488a27fc9244d9b86fec8da3eb89f4.r2.dev/99deffc5-66ec-46c4-a582-f02d9c07a0de.webp"
+      background_config: { type: "gradient", from: "#f5327a", to: "#8b1552" },
   };
 
   const displayHeroes = heroes && heroes.length > 0 ? heroes : [defaultHero];
