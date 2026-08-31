@@ -445,7 +445,7 @@ const Index = () => {
                   Medihour
                 </div>
                 {mentors && mentors.length > 0 && mentors[0].image_url ? (
-                  <img src={mentors[0].image_url} alt={mentors[0].name} className="relative z-[2] h-auto max-h-[380px] w-full max-w-[400px] object-contain transition-transform duration-500 hover:-translate-y-1.5 hover:scale-[1.02]" />
+                  <img src={mentors[0].image_url} alt={mentors[0].name} className="relative z-[2] max-h-[380px] w-auto max-w-full object-contain transition-transform duration-500 hover:-translate-y-1.5 hover:scale-[1.02]" />
                 ) : (
                   <User className="relative z-[2] h-40 w-40 text-muted-foreground" />
                 )}
