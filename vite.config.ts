@@ -23,9 +23,9 @@ export default defineConfig(({ mode }) => ({
       },
       includeAssets: ["favicon.png", "robots.txt"],
       manifest: {
-        name: "Medihour - Best Coaching & Exam Platform in BD",
-        short_name: "Medihour",
-        description: "Medihour - Best Live Coaching & Exam Platform in BD",
+        name: "MediHour - Best Coaching & Exam Platform in BD",
+        short_name: "MediHour",
+        description: "MediHour - Best Live Coaching & Exam Platform in BD",
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",

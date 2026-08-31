@@ -14,14 +14,14 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 98.8235%;
     --popover-foreground: 0 0% 0%;
-    --primary: 336.3 83.7% 56.7%; /* Medihour Pink (PhysicsHunters-matched) */
+    --primary: 336.3 83.7% 56.7%; /* MediHour Pink (PhysicsHunters-matched) */
     --primary-foreground: 0 0% 100%;
     --secondary: 340 100% 97.1%;
     --secondary-foreground: 336.3 60% 25%;
     --muted: 0 0% 96.0784%;
     --muted-foreground: 0 0% 32.1569%;
     --accent: 340 100% 97.6%;
-    --accent-foreground: 336.3 60% 20%; /* Medihour Pink-dark */
+    --accent-foreground: 336.3 60% 20%; /* MediHour Pink-dark */
     --destructive: 358.4416 74.7573% 59.6078%;
     --destructive-foreground: 0 0% 100%;
     --border: 240 17.0732% 91.9608%;
@@ -68,7 +68,7 @@
     :root:not(.dark) {
       --background: 210 40% 98%;
       --card: 0 0% 100%;
-      --primary: 336.3 83.7% 56.7%; /* Medihour Pink */
+      --primary: 336.3 83.7% 56.7%; /* MediHour Pink */
       --primary-foreground: 0 0% 100%;
       --accent: 340 100% 97.6%;
       --accent-foreground: 336.3 60% 20%;
@@ -92,7 +92,7 @@
     --card-foreground: 210 20% 96%;
     --popover: 250 35% 10%;
     --popover-foreground: 210 20% 96%;
-    --primary: 336.3 80% 62%; /* Medihour Pink (glow-enhanced) */
+    --primary: 336.3 80% 62%; /* MediHour Pink (glow-enhanced) */
     --primary-foreground: 0 0% 100%;
     --secondary: 250 28% 16%;
     --secondary-foreground: 210 20% 96%;
