@@ -44,24 +44,24 @@ export const PublicHeader = () => {
           </a>
 
           {/* Desktop Nav */}
-          <nav className="ml-auto hidden items-center gap-1 sm:flex">
+          <nav className="ml-auto hidden items-center gap-1 md:flex">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-1.5 rounded-[11px] px-3 py-2 text-[13px] font-semibold text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-500 dark:text-slate-300 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
+                className="flex flex-col items-center gap-0.5 rounded-[11px] px-3 py-1.5 text-[11px] font-semibold text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-500 dark:text-slate-300 dark:hover:bg-rose-500/10 dark:hover:text-rose-400"
               >
-                <item.icon className="h-[13px] w-[13px]" />
+                <item.icon className="h-4 w-4" />
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <div className="ml-auto flex flex-shrink-0 items-center gap-2 sm:ml-0">
+          <div className="ml-auto flex flex-shrink-0 items-center gap-2 md:ml-0">
             {/* Hotline box (PhysicsHunters-style) */}
             <a
               href={`tel:${hotline}`}
-              className="hidden lg:flex items-center gap-2 rounded-[13px] border border-[#eee] dark:border-white/10 bg-white dark:bg-slate-800/70 py-[5px] pl-[7px] pr-[11px] transition-all hover:-translate-y-0.5 hover:border-rose-200 hover:bg-rose-50 hover:shadow-[0_5px_15px_rgba(237,52,125,0.1)] dark:hover:bg-rose-500/10"
+              className="hidden md:flex items-center gap-2 rounded-[13px] border border-[#eee] dark:border-white/10 bg-white dark:bg-slate-800/70 py-[5px] pl-[7px] pr-[11px] transition-all hover:-translate-y-0.5 hover:border-rose-200 hover:bg-rose-50 hover:shadow-[0_5px_15px_rgba(237,52,125,0.1)] dark:hover:bg-rose-500/10"
             >
               <span className="flex h-[31px] w-[31px] flex-shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#F5327A] to-[#E9287A] text-white shadow-[0_4px_10px_rgba(239,45,117,0.2)]">
                 <Phone className="h-3 w-3" />
@@ -94,7 +94,7 @@ export const PublicHeader = () => {
             </a>
 
             {/* Mobile Menu */}
-            <div className="sm:hidden">
+            <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon" aria-label="Menu">
