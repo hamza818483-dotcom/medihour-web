@@ -77,6 +77,7 @@ export const adminItems: AdminSidebarNavItem[] = [
   { title: "Content Creator", url: "/admin/content-creator", icon: StickyNote, roles: ["admin", "teacher"], color: "text-teal-600" },
   { title: "Question Bank", url: "/admin/question-bank", icon: Database, roles: ["admin", "teacher"], color: "text-blue-500" },
   { title: "Notice", url: "/admin/announcements", icon: Megaphone, roles: ["admin", "teacher"], color: "text-yellow-600" },
+  { title: "Official Links", url: "/admin/official-links", icon: Send, roles: ["admin"], color: "text-cyan-700" },
   { title: "Community Manager", url: "/admin/community", icon: Users, roles: ["admin", "teacher"], color: "text-teal-600" },
   { title: "Notes Manager", url: "/admin/notes", icon: StickyNote, roles: ["admin", "teacher"], color: "text-pink-600" },
   { title: "Archive Manager", url: "/admin/archive", icon: BookOpen, roles: ["admin", "teacher"], color: "text-purple-500" },

@@ -59,6 +59,7 @@ import AdminRoutines from "./pages/dashboard/admin/AdminRoutines";
 import AdminExams from "./pages/dashboard/admin/AdminExams";
 import AdminAnnouncements from "./pages/dashboard/admin/AdminAnnouncements";
 import AdminCommunity from "./pages/dashboard/admin/AdminCommunity";
+import AdminOfficialLinks from "./pages/dashboard/admin/AdminOfficialLinks";
 import AdminPayments from "./pages/dashboard/admin/AdminPayments";
 import AdminPaymentHistory from "./pages/dashboard/admin/AdminPaymentHistory";
 import AdminNotes from "./pages/dashboard/admin/AdminNotes";
@@ -159,6 +160,7 @@ const App = () => {
                 <Route path="question-bank" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><QuestionBank /></ProtectedRoute>} />
                 <Route path="announcements" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminAnnouncements /></ProtectedRoute>} />
                 <Route path="community" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminCommunity /></ProtectedRoute>} />
+                <Route path="official-links" element={<ProtectedRoute allowedRoles={['admin']}><AdminOfficialLinks /></ProtectedRoute>} />
                 <Route path="notes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminNotes /></ProtectedRoute>} />
                 <Route path="archive" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminArchiveManager /></ProtectedRoute>} />
                 <Route path="calendar" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminExamCalendar /></ProtectedRoute>} />

@@ -1,8 +1,25 @@
 import { Link } from "react-router-dom";
 import { Facebook, Youtube, Mail, Phone, MapPin, Send } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+
+  const { data: links } = useQuery({
+    queryKey: ["official-links-public"],
+    queryFn: async () => {
+      const { data } = await supabase.from("official_links").select("*").eq("id", 1).maybeSingle();
+      return data;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const email = links?.email || "medihourofficial@gmail.com";
+  const whatsapp = links?.whatsapp || "+8801639787547";
+  const facebookPage = links?.facebook_page || "https://www.facebook.com/share/1EX8RkwBoP/";
+  const telegram = links?.telegram || "https://t.me/MediHour";
+  const youtube = links?.youtube || "https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C";
 
   return (
     <footer className="bg-[#052e16] text-slate-100 border-t border-primary/20">
@@ -18,13 +35,13 @@ const Footer = () => {
               উন্নত শিক্ষা, লাইভ ক্লাস এবং তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে শিক্ষার্থীদের পাশে আমরা। নিজের সম্ভাবনাকে বিকশিত করতে আমাদের সাথে যুক্ত হোন।
             </p>
             <div className="flex gap-4">
-              <a href="https://www.facebook.com/share/1EX8RkwBoP/" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-primary transition-colors">
+              <a href={facebookPage} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-primary transition-colors">
                 <Facebook size={18} />
               </a>
-              <a href="https://t.me/MediHour" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-blue-400 transition-colors">
+              <a href={telegram} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-blue-400 transition-colors">
                 <Send size={18} />
               </a>
-              <a href="https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C" className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-red-600 transition-colors">
+              <a href={youtube} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-red-600 transition-colors">
                 <Youtube size={18} />
               </a>
             </div>
@@ -62,11 +79,11 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <Mail size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href="mailto:medihourofficial@gmail.com" className="hover:text-white transition-colors">medihourofficial@gmail.com</a>
+                <a href={`mailto:${email}`} className="hover:text-white transition-colors">{email}</a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href="tel:+8801639787547" className="hover:text-white transition-colors">+8801639787547</a>
+                <a href={`tel:${whatsapp}`} className="hover:text-white transition-colors">{whatsapp}</a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-primary shrink-0 mt-0.5" />

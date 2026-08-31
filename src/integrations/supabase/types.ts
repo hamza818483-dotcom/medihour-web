@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      official_links: {
+        Row: {
+          email: string | null
+          facebook_group: string | null
+          facebook_page: string | null
+          id: number
+          telegram: string | null
+          updated_at: string
+          whatsapp: string | null
+          youtube: string | null
+        }
+        Insert: {
+          email?: string | null
+          facebook_group?: string | null
+          facebook_page?: string | null
+          id?: number
+          telegram?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          youtube?: string | null
+        }
+        Update: {
+          email?: string | null
+          facebook_group?: string | null
+          facebook_page?: string | null
+          id?: number
+          telegram?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          youtube?: string | null
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           body: string
