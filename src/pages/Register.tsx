@@ -30,6 +30,7 @@ const Register = () => {
   const [duplicatePhone, setDuplicatePhone] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [passwordLength, setPasswordLength] = useState(0);
 
   useEffect(() => {
     if (hscBatch === "2026" || hscBatch === "2027") {
@@ -235,13 +236,16 @@ const Register = () => {
     <div className="min-h-screen bg-background text-foreground">
       <PublicHeader />
       <main className="flex min-h-screen items-center justify-center px-4 pt-[92px] pb-10">
-        <Card className="w-full max-w-xl border-[3px] border-foreground">
-          <CardHeader className="space-y-2 pb-4">
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
-            <CardTitle className="text-xl font-semibold">Create an Account</CardTitle>
-            <CardDescription className="text-xs text-muted-foreground">
-              Register a new student account.
-            </CardDescription>
+        <Card className="w-full max-w-xl overflow-hidden rounded-[26px] border border-[#f3d9e3] bg-gradient-to-br from-white via-white to-[#fff7fa] shadow-[0_25px_60px_rgba(237,52,125,0.14)] dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
+          <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#e9287a]" />
+          <CardHeader className="space-y-3 pb-2 pt-7 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#e9287a] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
+              <img src="/logo.png" alt="Medihour" className="h-9 w-9 object-contain brightness-0 invert" />
+            </div>
+            <div>
+              <CardTitle className="text-2xl font-black tracking-tight text-[#1f2328] dark:text-white">নতুন অ্যাকাউন্ট তৈরি করুন</CardTitle>
+              <CardDescription className="mt-1 text-[13px] text-muted-foreground">Medihour পরিবারে যুক্ত হও</CardDescription>
+            </div>
           </CardHeader>
           <CardContent>
             {/* Duplicate Phone Alert */}
@@ -300,12 +304,12 @@ const Register = () => {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label htmlFor="fullName">Own Full Name</Label>
-                  <Input id="fullName" name="fullName" required placeholder="Your full name" />
+                  <Input id="fullName" name="fullName" required placeholder="Your full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide your full name.</p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" name="phone" required placeholder="01XXXXXXXXX" />
+                  <Input id="phone" name="phone" required placeholder="01XXXXXXXXX" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                 </div>
 
                 <div className="space-y-2">
@@ -324,22 +328,22 @@ const Register = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
-                  <Input id="email" name="email" type="email" required placeholder="user@example.com" />
+                  <Input id="email" name="email" type="email" required placeholder="user@example.com" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label htmlFor="fatherName">Father's Full Name</Label>
-                  <Input id="fatherName" name="fatherName" required placeholder="Father's full name" />
+                  <Input id="fatherName" name="fatherName" required placeholder="Father's full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide father's full name.</p>
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="motherName">Mother's Full Name</Label>
-                  <Input id="motherName" name="motherName" required placeholder="Mother's full name" />
+                  <Input id="motherName" name="motherName" required placeholder="Mother's full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide mother's full name.</p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="collegeName">Full College Name</Label>
-                  <Input id="collegeName" name="collegeName" required placeholder="Your full college name" />
+                  <Input id="collegeName" name="collegeName" required placeholder="Your full college name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide your full college name.</p>
                 </div>
                 <div className="space-y-2">
@@ -350,7 +354,7 @@ const Register = () => {
                     value={hscBatch}
                     onChange={(e) => setHscBatch(e.target.value)}
                     required
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 w-full rounded-xl border border-[#e8dde3] bg-background px-3 py-2 text-[15px] shadow-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-[#ed347d] focus-visible:ring-2 focus-visible:ring-[#ed347d]/20 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10"
                   >
                     <option value="2025">2025</option>
                     <option value="2026">2026</option>
@@ -361,7 +365,7 @@ const Register = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="sscGpa">SSC GPA (Out of 5)</Label>
-                  <Input id="sscGpa" name="sscGpa" type="number" step="0.01" max="5.00" min="1.00" required placeholder="5.00" />
+                  <Input id="sscGpa" name="sscGpa" type="number" step="0.01" max="5.00" min="1.00" required placeholder="5.00" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="hscGpa">HSC GPA (Optional)</Label>
@@ -375,6 +379,7 @@ const Register = () => {
                     placeholder="5.00"
                     value={hscGpa}
                     onChange={(e) => setHscGpa(e.target.value)}
+                    className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
                   />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">If you have not given HSC exam yet, please fill 5.00</p>
                 </div>
@@ -403,14 +408,15 @@ const Register = () => {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Password <span className="font-normal text-muted-foreground">(কমপক্ষে ৬ অক্ষর)</span></Label>
                   <div className="relative">
                     <Input
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
                       required
-                      className="pr-10"
+                      onChange={(e) => setPasswordLength(e.target.value.length)}
+                      className="login-caret h-11 rounded-xl border-[#e8dde3] pr-10 text-[15px] tracking-wide shadow-sm transition-all focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
                     />
                     <Button
                       type="button"
@@ -427,6 +433,11 @@ const Register = () => {
                       <span className="sr-only">Toggle password visibility</span>
                     </Button>
                   </div>
+                  <div className="flex items-center justify-end gap-1.5 pr-0.5">
+                    <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#ed347d]"}`}>
+                      {passwordLength} অক্ষর
+                    </span>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -436,7 +447,7 @@ const Register = () => {
                       name="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       required
-                      className="pr-10"
+                      className="login-caret h-11 rounded-xl border-[#e8dde3] pr-10 text-[15px] tracking-wide shadow-sm transition-all focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
                     />
                     <Button
                       type="button"
@@ -456,13 +467,15 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-900/50 dark:bg-yellow-900/20">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
-                  <div className="text-sm text-yellow-800 dark:text-yellow-400 space-y-1">
-                    <p className="font-bold mb-1 text-base">সতর্কবার্তা!</p>
-                    <p>আপনার ফোন নম্বর এবং পাসওয়ার্ড মনে রাখুন এবং কোথাও লিখে রাখুন।</p>
-                    <p className="font-semibold text-red-600 dark:text-red-400">অবশ্যই নিজের সচল ইমেইল দিবেন।</p>
+              <div className="overflow-hidden rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50 via-orange-50/60 to-white shadow-[0_8px_25px_rgba(245,158,11,0.1)] dark:border-amber-500/20 dark:from-amber-950/30 dark:via-amber-900/10 dark:to-transparent">
+                <div className="flex items-start gap-3 p-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-[0_6px_16px_rgba(245,158,11,0.3)]">
+                    <AlertTriangle className="h-4.5 w-4.5 text-white" />
+                  </div>
+                  <div className="space-y-1 text-[13px] text-amber-900 dark:text-amber-200">
+                    <p className="mb-1 text-sm font-black tracking-tight">সতর্কবার্তা!</p>
+                    <p className="leading-relaxed text-amber-800/90 dark:text-amber-200/80">আপনার ফোন নম্বর এবং পাসওয়ার্ড মনে রাখুন এবং কোথাও লিখে রাখুন।</p>
+                    <p className="font-bold text-red-600 dark:text-red-400">অবশ্যই নিজের সচল ইমেইল দিবেন।</p>
                   </div>
                 </div>
               </div>
@@ -487,8 +500,12 @@ const Register = () => {
                 </Label>
               </div>
 
-              <Button type="submit" className="mt-4 w-full" disabled={loading || !captchaToken}>
-                {loading ? "Creating Account..." : "Register"}
+              <Button
+                type="submit"
+                className="mt-4 h-12 w-full rounded-xl bg-gradient-to-r from-[#f5327a] to-[#e9287a] text-[15px] font-bold shadow-[0_10px_25px_rgba(239,45,117,0.28)] transition-transform hover:scale-[1.015] hover:shadow-[0_14px_30px_rgba(239,45,117,0.36)]"
+                disabled={loading || !captchaToken}
+              >
+                {loading ? "একাউন্ট তৈরি হচ্ছে..." : "রেজিস্ট্রেশন করুন"}
               </Button>
             </form>
           </CardContent>

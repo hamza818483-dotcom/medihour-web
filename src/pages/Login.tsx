@@ -216,18 +216,20 @@ const Login = () => {
                 </div>
               </form>
 
-              <div className="mt-6 rounded-xl border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-900/50 dark:bg-yellow-900/20">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
-                  <div className="text-sm text-yellow-800 dark:text-yellow-400 w-full">
-                    <p className="font-bold mb-1">সতর্কবার্তা!</p>
-                    <p>আপনার ফোন নম্বর এবং পাসওয়ার্ড মনে রাখুন এবং কোথাও লিখে রাখুন।</p>
-                    <p className="mt-2">লগইন সংক্রান্ত সমস্যা হলে নিচে মেসেজ করুন:</p>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
+              <div className="mt-6 overflow-hidden rounded-2xl border border-amber-200/70 bg-gradient-to-br from-amber-50 via-orange-50/60 to-white shadow-[0_8px_25px_rgba(245,158,11,0.1)] dark:border-amber-500/20 dark:from-amber-950/30 dark:via-amber-900/10 dark:to-transparent">
+                <div className="flex items-start gap-3 p-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-[0_6px_16px_rgba(245,158,11,0.3)]">
+                    <AlertTriangle className="h-4.5 w-4.5 text-white" />
+                  </div>
+                  <div className="w-full text-[13px] text-amber-900 dark:text-amber-200">
+                    <p className="mb-1 text-sm font-black tracking-tight">সতর্কবার্তা!</p>
+                    <p className="leading-relaxed text-amber-800/90 dark:text-amber-200/80">আপনার ফোন নম্বর এবং পাসওয়ার্ড মনে রাখুন এবং কোথাও লিখে রাখুন।</p>
+                    <p className="mt-2 font-medium text-amber-800/90 dark:text-amber-200/80">লগইন সংক্রান্ত সমস্যা হলে নিচে মেসেজ করুন:</p>
+                    <div className="mt-3 grid grid-cols-2 gap-2">
                       <Button
                         asChild
                         size="sm"
-                        className="w-full gap-1.5 bg-[#229ED9] hover:bg-[#1b87bd] text-white"
+                        className="w-full gap-1.5 rounded-lg bg-[#229ED9] font-bold shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#1b87bd] text-white"
                       >
                         <a href={TELEGRAM_SUPPORT_BOT} target="_blank" rel="noopener noreferrer">
                           <Send className="h-3.5 w-3.5" />
@@ -238,7 +240,7 @@ const Login = () => {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="w-full gap-1.5 border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 hover:text-[#25D366]"
+                        className="w-full gap-1.5 rounded-lg border-[#25D366] font-bold text-[#25D366] shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#25D366]/10 hover:text-[#25D366]"
                       >
                         <a href={WHATSAPP_HELPLINE} target="_blank" rel="noopener noreferrer">
                           <MessageCircle className="h-3.5 w-3.5" />
