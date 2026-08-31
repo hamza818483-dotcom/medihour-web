@@ -28,6 +28,7 @@ import { StudentReviews } from "@/components/StudentReviews";
 import { CourseSection } from "@/components/home/CourseSection";
 import { QuickActionsSection } from "@/components/home/QuickActionsSection";
 import { TrustCtaSection } from "@/components/home/TrustCtaSection";
+import { HelpCtaSection } from "@/components/home/HelpCtaSection";
 import HeroCarouselItem from "@/components/home/HeroCarouselItem";
 
 const FEATURES = [
@@ -401,6 +402,9 @@ const Index = () => {
              </div>
         </section>
         </div>
+
+        {/* Help / Support CTA (PhysicsHunters-style) */}
+        <HelpCtaSection />
 
         {/* Student Reviews */}
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
