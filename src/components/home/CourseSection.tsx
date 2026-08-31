@@ -351,11 +351,11 @@ export const CourseSection = () => {
                                         <div className="mt-auto flex w-full items-center justify-between gap-3.5">
                                             <div className="flex min-w-0 flex-col gap-[3px]">
                                                 <p className="m-0 text-[11px] font-semibold text-[#858a91]">কোর্স ফি</p>
-                                                <p className="m-0 flex flex-wrap items-baseline gap-1.5 text-[26px] font-black leading-[1.15] tracking-[-0.4px] text-[#ed3068]">
-                                                    {course.original_price != null && Number(course.original_price) > Number(course.price) && (
-                                                        <del className="text-[13px] font-semibold text-[#a5a8ad]">৳{Number(course.original_price).toLocaleString("en-BD")}</del>
-                                                    )}
-                                                    <span>{course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}</span>
+                                                {course.original_price != null && Number(course.original_price) > Number(course.price) && (
+                                                    <del className="text-[13px] font-semibold leading-none text-[#a5a8ad]">৳{Number(course.original_price).toLocaleString("en-BD")}</del>
+                                                )}
+                                                <p className="m-0 text-[26px] font-black leading-[1.15] tracking-[-0.4px] text-[#ed3068]">
+                                                    {course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}
                                                 </p>
                                             </div>
                                             <a
