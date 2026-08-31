@@ -36,6 +36,8 @@ const Login = () => {
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
   const turnstileRef = useRef<TurnstileInstance>(null);
   const [loginError, setLoginError] = useState<{ message: string; identifier: string } | null>(null);
+  const [passwordLength, setPasswordLength] = useState(0);
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   useEffect(() => {
     document.title = "Login – Medihour";
@@ -72,11 +74,11 @@ const Login = () => {
         .eq('id', (await supabase.auth.getUser()).data.user?.id)
         .single();
 
-      if (profileData && (profileData.role === 'admin' || profileData.role === 'teacher')) {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
+      const destination = profileData && (profileData.role === 'admin' || profileData.role === 'teacher') ? "/admin" : "/dashboard";
+
+      setLoading(false);
+      setLoginSuccess(true);
+      setTimeout(() => navigate(destination), 1400);
     }
   };
 
@@ -105,25 +107,48 @@ const Login = () => {
             </CardFooter>
           </Card>
         ) : (
-          <Card className="w-full max-w-md border-[3px] border-foreground">
-            <CardHeader className="space-y-2 pb-4">
-              <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
-              <CardTitle className="text-xl font-semibold">Student &amp; Admin Login</CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">
-                Enter your Email to login.
-              </CardDescription>
+          <Card className="w-full max-w-md overflow-hidden rounded-[26px] border border-[#f3d9e3] bg-gradient-to-br from-white via-white to-[#fff7fa] shadow-[0_25px_60px_rgba(237,52,125,0.14)] dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
+            {/* Top accent bar */}
+            <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#e9287a]" />
+
+            <CardHeader className="space-y-3 pb-2 pt-7 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#e9287a] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
+                <img src="/logo.png" alt="Medihour" className="h-9 w-9 object-contain brightness-0 invert" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl font-black tracking-tight text-[#1f2328] dark:text-white">
+                  Medihour-এ স্বাগতম
+                </CardTitle>
+                <CardDescription className="mt-1 text-[13px] text-muted-foreground">
+                  চালিয়ে যেতে লগইন করুন
+                </CardDescription>
+              </div>
             </CardHeader>
-            <CardContent>
+
+            <CardContent className="pt-3">
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                  <Label htmlFor="identifier">ইমেইল / ফোন নম্বর</Label>
-                  <Input id="identifier" name="identifier" type="text" required autoComplete="username" placeholder="Email অথবা Phone Number" />
+                <div className="space-y-1.5">
+                  <Label htmlFor="identifier" className="text-xs font-semibold text-[#555]">Gmail অথবা Phone Number</Label>
+                  <div className="relative">
+                    <Input
+                      id="identifier"
+                      name="identifier"
+                      type="text"
+                      required
+                      autoComplete="username"
+                      placeholder="Gmail বা Phone Number লিখুন"
+                      className="h-12 rounded-xl border-[#e8dde3] pl-4 pr-4 text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
+
+                <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Link to="/forgot-password" tabIndex={-1} className="text-xs text-primary font-medium hover:underline">
-                      Forgot Password?
+                    <Label htmlFor="password" className="text-xs font-semibold text-[#555]">
+                      Password <span className="font-normal text-muted-foreground">(কমপক্ষে ৬ অক্ষর)</span>
+                    </Label>
+                    <Link to="/forgot-password" tabIndex={-1} className="text-xs font-semibold text-[#ed347d] hover:underline">
+                      পাসওয়ার্ড ভুলে গেছেন?
                     </Link>
                   </div>
                   <div className="relative">
@@ -133,7 +158,8 @@ const Login = () => {
                       type={showPassword ? "text" : "password"}
                       required
                       autoComplete="current-password"
-                      className="pr-10"
+                      onChange={(e) => setPasswordLength(e.target.value.length)}
+                      className="login-caret h-12 rounded-xl border-[#e8dde3] pl-4 pr-10 text-[15px] tracking-wide shadow-sm transition-all focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
                     />
                     <Button
                       type="button"
@@ -150,7 +176,20 @@ const Login = () => {
                       <span className="sr-only">Toggle password visibility</span>
                     </Button>
                   </div>
+                  <div className="flex items-center justify-end gap-1.5 pr-0.5 pt-0.5">
+                    <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#ed347d]"}`}>
+                      {passwordLength} অক্ষর
+                    </span>
+                    {passwordLength > 0 && (
+                      passwordLength >= 6 ? (
+                        <span className="text-[11px] font-semibold text-emerald-500">✓ ঠিক আছে</span>
+                      ) : (
+                        <span className="text-[11px] text-muted-foreground">আরও {6 - passwordLength} লাগবে</span>
+                      )
+                    )}
+                  </div>
                 </div>
+
                 <div className="flex justify-center py-2">
                   <Turnstile
                     ref={turnstileRef}
@@ -161,19 +200,23 @@ const Login = () => {
                   />
                 </div>
 
-                <Button type="submit" className="mt-2 w-full" disabled={loading || !captchaToken}>
-                  {loading ? "Logging in..." : "Login"}
+                <Button
+                  type="submit"
+                  className="mt-1 h-12 w-full rounded-xl bg-gradient-to-r from-[#f5327a] to-[#e9287a] text-[15px] font-bold shadow-[0_10px_25px_rgba(239,45,117,0.28)] transition-transform hover:scale-[1.015] hover:shadow-[0_14px_30px_rgba(239,45,117,0.36)]"
+                  disabled={loading || !captchaToken}
+                >
+                  {loading ? "লগইন হচ্ছে..." : "লগইন করুন"}
                 </Button>
 
                 <div className="mt-4 text-center text-sm">
-                  Don&apos;t have an account?{" "}
-                  <Link to="/register" state={{ from: location.state?.from }} className="font-semibold text-primary hover:underline">
-                    Create new account
+                  অ্যাকাউন্ট নেই?{" "}
+                  <Link to="/register" state={{ from: location.state?.from }} className="font-bold text-[#ed347d] hover:underline">
+                    নতুন অ্যাকাউন্ট তৈরি করুন
                   </Link>
                 </div>
               </form>
 
-              <div className="mt-6 rounded-md border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-900/50 dark:bg-yellow-900/20">
+              <div className="mt-6 rounded-xl border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-900/50 dark:bg-yellow-900/20">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 mt-0.5" />
                   <div className="text-sm text-yellow-800 dark:text-yellow-400 w-full">
@@ -250,6 +293,31 @@ const Login = () => {
               </a>
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={loginSuccess}>
+        <DialogContent className="max-w-xs border-none bg-transparent p-0 shadow-none [&>button]:hidden">
+          <div className="flex flex-col items-center gap-4 rounded-3xl bg-white p-8 text-center shadow-[0_25px_60px_rgba(0,0,0,0.25)] dark:bg-slate-900">
+            <div className="relative flex h-20 w-20 items-center justify-center">
+              <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400/40" />
+              <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_10px_25px_rgba(16,185,129,0.4)]">
+                <svg viewBox="0 0 24 24" className="h-10 w-10 text-white" fill="none">
+                  <path
+                    d="M4 12.5L9.5 18L20 6"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ strokeDasharray: 30, strokeDashoffset: 30, animation: "loginCheckDraw 0.5s ease-out 0.15s forwards" }}
+                  />
+                </svg>
+              </span>
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-[#1f2328] dark:text-white">লগইন সফল হয়েছে!</h3>
+              <p className="mt-1 text-sm text-muted-foreground">ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে...</p>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

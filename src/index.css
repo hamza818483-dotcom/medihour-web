@@ -447,6 +447,20 @@ mjx-container[display="true"] {
   100% { background-position: 350% 350%; }
 }
 
+/* Vibrant blinking text cursor for login password field */
+.login-caret {
+  caret-color: #ed347d;
+  animation: login-caret-pulse 1s step-end infinite;
+}
+@keyframes login-caret-pulse {
+  0%, 100% { caret-color: #ed347d; }
+  50% { caret-color: transparent; }
+}
+
+@keyframes loginCheckDraw {
+  to { stroke-dashoffset: 0; }
+}
+
 /* Success gallery marquee rows (PhysicsHunters-style) */
 @keyframes gallery-scroll-left {
   0% { transform: translate3d(0, 0, 0); }
