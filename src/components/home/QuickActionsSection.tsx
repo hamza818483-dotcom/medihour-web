@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LayoutGrid, Video, FileQuestion, Zap, BookMarked, Star } from "lucide-react";
+import { LayoutGrid, Video, FileQuestion, Timer, BookMarked, Star } from "lucide-react";
 
 const scrollToId = (id: string) => {
   const el = document.getElementById(id);
@@ -47,16 +47,16 @@ export const QuickActionsSection = () => {
         </button>
       </div>
 
-      {/* Row 3: Quick Practice / Syllabus Tracker */}
+      {/* Row 3: Focus Timer / Syllabus Tracker */}
       <div className="grid grid-cols-2 gap-2">
         <button
-          onClick={() => navigate("/quick-practice")}
+          onClick={() => navigate("/focus-timer")}
           className="group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 bg-white/20 backdrop-blur-sm border border-violet-500/20 hover:border-violet-500/50 hover:shadow-md transition-all dark:bg-white/5"
         >
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-sm">
-            <Zap className="h-4 w-4 text-white" />
+            <Timer className="h-4 w-4 text-white" />
           </div>
-          <span className="text-xs sm:text-sm font-bold text-center leading-tight px-0.5">Quick Practice</span>
+          <span className="text-xs sm:text-sm font-bold text-center leading-tight px-0.5">Focus Timer</span>
         </button>
         <button
           onClick={() => navigate("/syllabus-tracker")}
