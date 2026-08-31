@@ -70,7 +70,6 @@ const AdminDashboardHome = () => {
     { title: "Payments", icon: CreditCard, url: "/admin/payments", color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950" },
     { title: "Archive", icon: BookOpen, url: "/admin/archive", color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-950" },
     { title: "Routines", icon: Flag, url: "/admin/routines", color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950" },
-    { title: "Exam Routine", icon: CalendarClock, url: "/admin/calendar", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950" },
     { title: "Reviews", icon: PenTool, url: "/admin/reviews", color: "text-pink-600", bg: "bg-pink-50 dark:bg-pink-950" },
     { title: "Promo Codes", icon: DollarSign, url: "/admin/promo-codes", color: "text-lime-600", bg: "bg-lime-50 dark:bg-lime-950" },
     { title: "Mentors", icon: GraduationCap, url: "/admin/mentors", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950" },
