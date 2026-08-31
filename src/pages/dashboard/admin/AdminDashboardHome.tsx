@@ -78,6 +78,7 @@ const AdminDashboardHome = () => {
     { title: "Community", icon: Megaphone, url: "/admin/community", color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-950" },
     { title: "Reports", icon: Flag, url: "/admin/reports", color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950" },
     { title: "Quick Practice", icon: Zap, url: "/admin/quick-practice", color: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-950" },
+    { title: "Mock Test", icon: ListChecks, url: "/admin/exams", color: "text-fuchsia-600", bg: "bg-fuchsia-50 dark:bg-fuchsia-950" },
   ];
 
   return (
