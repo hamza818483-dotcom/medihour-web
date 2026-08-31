@@ -19,6 +19,7 @@ import CourseDetails from "./pages/public/CourseDetails";
 import CourseBuy from "./pages/public/CourseBuy";
 import FreeClass from "./pages/public/FreeClass";
 import FreeExam from "./pages/public/FreeExam";
+import Reviews from "./pages/public/Reviews";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -123,6 +124,7 @@ const App = () => {
                 <Route path="/courses/:courseId/buy" element={<ErrorBoundary><CourseBuy /></ErrorBoundary>} />
                 <Route path="/free-class" element={<ErrorBoundary><FreeClass /></ErrorBoundary>} />
                 <Route path="/free-exam" element={<ErrorBoundary><FreeExam /></ErrorBoundary>} />
+                <Route path="/reviews" element={<ErrorBoundary><Reviews /></ErrorBoundary>} />
               </Route>
 
               <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
