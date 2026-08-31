@@ -296,7 +296,6 @@ export const CourseSection = () => {
                 ) : (
                     filteredCourses.map((course: any) => {
                         const image = course.image_url || "/placeholder.svg";
-                        const description = course.short_description || "";
                         const idOrSlug = course.slug || course.id;
 
                         // Handle array or string display
@@ -305,7 +304,7 @@ export const CourseSection = () => {
                             : (course.category ? [course.category] : []);
 
                         return (
-                            <Card key={course.id} className="overflow-hidden flex flex-col h-full min-w-0 w-full max-w-full hover:-translate-y-1 transition-all duration-300">
+                            <Card key={course.id} className="overflow-hidden flex flex-col h-full min-w-0 w-full max-w-full rounded-2xl border-2 hover:border-primary/40 hover:shadow-xl transition-all duration-300">
                                 {/* Course Image */}
                                 <div className="w-full aspect-video relative">
                                     <img
@@ -329,38 +328,30 @@ export const CourseSection = () => {
                                     </div>
                                 </div>
                                 {/* Content */}
-                                <div className="flex-1 p-5 flex flex-col justify-between gap-4">
+                                <div className="flex-1 p-4 flex flex-col justify-between gap-3">
                                     <div>
-                                        <div className="flex justify-between items-start gap-2">
-                                             <h3 className="text-lg font-bold mb-2 leading-tight">{course.name}</h3>
-                                        </div>
-
-                                        <p className="text-muted-foreground text-xs mb-4 line-clamp-3">{description}</p>
-                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                            <Users className="h-3 w-3 text-green-500" />
-                                            {(enrollmentCounts?.[course.id] || 0).toLocaleString("en-BD")} জন ভর্তি
+                                        <h3 className="text-[15px] font-bold mb-2 leading-snug line-clamp-2">{course.name}</h3>
+                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                            <Users className="h-3.5 w-3.5 text-green-500" />
+                                            <span className="font-semibold text-green-600">{(enrollmentCounts?.[course.id] || 0).toLocaleString("en-BD")}</span> জন ভর্তি হয়েছে
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-2 mt-auto pt-4 border-t border-dashed">
-                                        <div className="flex flex-col items-start">
+                                    <div className="flex flex-col gap-3 mt-auto pt-3 border-t border-dashed">
+                                        <div className="text-sm">
+                                            <span className="text-muted-foreground">মূল্য: </span>
                                             {course.original_price != null && Number(course.original_price) > Number(course.price) && (
-                                                <span className="text-[10px] text-muted-foreground line-through">
+                                                <span className="text-muted-foreground line-through mr-1.5">
                                                     ৳{Number(course.original_price).toLocaleString("en-BD")}
                                                 </span>
                                             )}
-                                            <div className="text-base font-bold text-primary">
+                                            <span className="font-bold text-primary">
                                                 {course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}
-                                            </div>
+                                            </span>
                                         </div>
-                                        <div className="flex gap-2 w-full">
-                                            <Button asChild variant="outline" size="sm" className="h-8 px-2 text-xs flex-1">
-                                                <a href={`/courses/${idOrSlug}`}>বিস্তারিত</a>
-                                            </Button>
-                                            <Button asChild size="sm" className="h-8 px-2 text-xs flex-1">
-                                                <a href={`/courses/${idOrSlug}/buy`}>ভর্তি হন</a>
-                                            </Button>
-                                        </div>
+                                        <Button asChild size="sm" className="h-9 w-full text-sm font-bold bg-gradient-to-br from-[#e52b80] to-[#f05463] hover:opacity-90">
+                                            <a href={`/courses/${idOrSlug}`}>বিস্তারিত</a>
+                                        </Button>
                                     </div>
                                 </div>
                             </Card>
