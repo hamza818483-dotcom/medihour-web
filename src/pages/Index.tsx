@@ -30,6 +30,7 @@ import { QuickActionsSection } from "@/components/home/QuickActionsSection";
 import { TrustCtaSection } from "@/components/home/TrustCtaSection";
 import { HelpCtaSection } from "@/components/home/HelpCtaSection";
 import HeroCarouselItem from "@/components/home/HeroCarouselItem";
+import Footer from "@/components/Footer";
 
 const FEATURES = [
     { icon: Monitor, title: "অনলাইন প্রোগ্রাম", desc: "ঘরে বসেই সেরা প্রস্তুতি।" },
@@ -511,6 +512,8 @@ const Index = () => {
                </div>
           </div>
       </section>
+
+      <Footer />
 
       {/* Floating Contact Buttons */}
       <div className="fixed bottom-6 right-5 z-50 flex flex-col gap-3">
