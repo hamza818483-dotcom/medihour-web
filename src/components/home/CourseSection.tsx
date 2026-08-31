@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Tag } from "lucide-react";
+import { Check, Tag, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
@@ -24,10 +24,30 @@ export const CourseSection = () => {
             .from("courses")
             .select("id, name, short_description, price, original_price, image_url, slug, is_active, category, sub_category, priority, sub_category_order")
             .eq("is_public", true)
+            .eq("is_active", true)
             .order("priority", { ascending: true })
             .order("created_at", { ascending: false });
           if (error) throw error;
           return data || [];
+        },
+        staleTime: 5 * 60 * 1000,
+    });
+
+    const { data: enrollmentCounts } = useQuery({
+        queryKey: ["course-enrollment-counts"],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from("enrollments")
+                .select("course_id");
+            if (error) {
+                console.error("Error fetching enrollment counts:", error);
+                return {} as Record<string, number>;
+            }
+            const counts: Record<string, number> = {};
+            (data || []).forEach((row: any) => {
+                counts[row.course_id] = (counts[row.course_id] || 0) + 1;
+            });
+            return counts;
         },
         staleTime: 5 * 60 * 1000,
     });
@@ -316,13 +336,9 @@ export const CourseSection = () => {
                                         </div>
 
                                         <p className="text-muted-foreground text-xs mb-4 line-clamp-3">{description}</p>
-                                        <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> প্রিমিয়াম গাইডলাইন</div>
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> লিডারবোর্ড</div>
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> ইউনিক কন্টেন্ট</div>
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> ওয়ান টু ওয়ান মেন্টরিং</div>
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> র‍্যাপিড ফায়ার</div>
-                                            <div className="flex items-center gap-1"><Check className="h-3 w-3 text-green-500" /> স্ট্যান্ডার্ড এক্সাম</div>
+                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                            <Users className="h-3 w-3 text-green-500" />
+                                            {(enrollmentCounts?.[course.id] || 0).toLocaleString("en-BD")} জন ভর্তি
                                         </div>
                                     </div>
 
