@@ -9,6 +9,7 @@ import { ChevronLeft, Users, Video, FileText, BarChart3, TrendingUp, Presentatio
 import { ClassForm } from "@/components/admin/ClassForm";
 import { ExamForm } from "@/components/admin/ExamForm";
 import { ReadymadeAccessManager } from "@/components/admin/ReadymadeAccessManager";
+import { CourseMentorsReviewsManager } from "@/components/admin/CourseMentorsReviewsManager";
 
 export default function CourseDashboard() {
   const { courseId } = useParams();
@@ -261,6 +262,7 @@ export default function CourseDashboard() {
           <TabsTrigger value="readymade-access" className="data-[state=active]:bg-background">Readymade Access</TabsTrigger>
           <TabsTrigger value="archive-access" className="data-[state=active]:bg-background">Archive Access</TabsTrigger>
           <TabsTrigger value="students" className="data-[state=active]:bg-background">Enrolled Students</TabsTrigger>
+          <TabsTrigger value="mentors-reviews" className="data-[state=active]:bg-background">Mentors & Reviews</TabsTrigger>
         </TabsList>
 
         <div className="bg-card border-x border-b rounded-b-lg p-6 min-h-[400px]">
@@ -429,6 +431,10 @@ export default function CourseDashboard() {
                 </table>
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="mentors-reviews" className="mt-0 space-y-4">
+            {courseId && <CourseMentorsReviewsManager courseId={courseId} />}
           </TabsContent>
         </div>
       </Tabs>

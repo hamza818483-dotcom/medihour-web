@@ -3,7 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -39,6 +41,42 @@ const CourseDetails = () => {
     },
     enabled: !!course?.id,
   });
+
+  // Fetch mentors linked to this course
+  const { data: courseMentors } = useQuery({
+    queryKey: ["public-course-mentors", course?.id],
+    queryFn: async () => {
+      if (!course?.id) return [];
+      const { data, error } = await supabase
+        .from("course_mentors")
+        .select("*, mentors(*)")
+        .eq("course_id", course.id)
+        .order("display_order");
+      if (error) return [];
+      return data || [];
+    },
+    enabled: !!course?.id,
+  });
+
+  // Fetch reviews linked to this course
+  const { data: courseReviews } = useQuery({
+    queryKey: ["public-course-reviews", course?.id],
+    queryFn: async () => {
+      if (!course?.id) return [];
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .eq("course_id", course.id)
+        .order("created_at", { ascending: false });
+      if (error) return [];
+      return data || [];
+    },
+    enabled: !!course?.id,
+  });
+
+  const [reviewEmblaRef] = useEmblaCarousel({ loop: true, align: "start" }, [
+    Autoplay({ delay: 2500, stopOnInteraction: false }),
+  ]);
 
   if (isLoading) {
     return (
@@ -124,6 +162,73 @@ const CourseDetails = () => {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {courseMentors && courseMentors.length > 0 && (
+        <div className="mb-6">
+          <h2 className="mb-3 text-lg font-bold">এই কোর্সের মেন্টরবৃন্দ</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {courseMentors.map((cm: any) => (
+              <div key={cm.id} className="flex flex-col items-center text-center space-y-2">
+                <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-primary shadow-md">
+                  {cm.mentors?.image_url ? (
+                    <img src={cm.mentors.image_url} alt={cm.mentors?.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="h-full w-full bg-secondary" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-semibold text-sm">{cm.mentors?.name}</p>
+                  {cm.mentors?.role && (
+                    <p className="text-xs text-primary font-medium">{cm.mentors.role}</p>
+                  )}
+                  {cm.experience_years && (
+                    <p className="text-xs text-muted-foreground">{cm.experience_years} অভিজ্ঞতা</p>
+                  )}
+                  {cm.mentors?.description && (
+                    <p className="text-xs text-muted-foreground mt-1 max-w-[150px]">{cm.mentors.description}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {courseReviews && courseReviews.length > 0 && (
+        <div className="mb-6">
+          <h2 className="mb-3 text-lg font-bold">শিক্ষার্থীদের মতামত</h2>
+          <div className="overflow-hidden" ref={reviewEmblaRef}>
+            <div className="flex gap-4">
+              {courseReviews.map((r: any) => (
+                <div key={r.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] min-w-0">
+                  <div className="border rounded-xl p-4 h-full bg-card">
+                    <div className="flex items-center gap-3 mb-2">
+                      {r.image_url ? (
+                        <img src={r.image_url} alt={r.student_name} className="h-10 w-10 rounded-full object-cover" />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-secondary" />
+                      )}
+                      <div>
+                        <p className="font-medium text-sm">{r.student_name}</p>
+                        {r.college_name && <p className="text-xs text-muted-foreground">{r.college_name}</p>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-0.5 mb-1.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`} />
+                      ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-4">{r.review_text}</p>
+                    {r.post_image_url && (
+                      <img src={r.post_image_url} alt="Review" className="mt-3 rounded-lg w-full h-auto object-contain max-h-64" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
