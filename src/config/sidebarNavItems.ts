@@ -28,6 +28,7 @@ import {
   Infinity,
   Trophy,
   LayoutDashboard,
+  Timer,
 } from "lucide-react";
 
 export interface SidebarNavItem {
@@ -52,7 +53,7 @@ export const studentItems: SidebarNavItem[] = [
   { title: "Live Exam", url: "/dashboard/live-exam", icon: ListChecks, color: "text-purple-500" },
   { title: "Record Class", url: "/dashboard/recordings", icon: BookOpen, color: "text-orange-500" },
   { title: "Past Exams", url: "/dashboard/past-exam", icon: FileText, color: "text-yellow-500" },
-  { title: "Quick Practice", url: "/quick-practice", icon: Zap, color: "text-violet-500" },
+  { title: "Focus Timer", url: "/focus-timer", icon: Timer, color: "text-violet-500" },
   { title: "Study Tracker", url: "/syllabus-tracker", icon: BarChart3, color: "text-sky-600" },
   { title: "Archive Class & Exam", url: "/dashboard/archive", icon: Archive, color: "text-gray-500" },
   { title: "Class & Exam History", url: "/dashboard/results", icon: ClipboardList, color: "text-teal-500" },
@@ -88,7 +89,7 @@ export const adminItems: AdminSidebarNavItem[] = [
   { title: "Site Heroes", url: "/admin/heroes", icon: LayoutTemplate, roles: ["admin"], color: "text-indigo-600" },
   { title: "Mentors/Founders", url: "/admin/mentors", icon: PenTool, roles: ["admin"], color: "text-violet-600" },
   { title: "Reviews", url: "/admin/reviews", icon: Megaphone, roles: ["admin"], color: "text-pink-600" },
-  { title: "Quick Practice", url: "/admin/quick-practice", icon: Zap, roles: ["admin", "teacher"], color: "text-violet-500" },
+  { title: "Focus Timer", url: "/admin/focus-timer", icon: Timer, roles: ["admin", "teacher"], color: "text-violet-500" },
   { title: "Study Tracker", url: "/admin/syllabus-tracker", icon: BarChart3, roles: ["admin", "teacher"], color: "text-sky-600" },
   { title: "Telegram Channels", url: "/admin/telegram-channels", icon: Send, roles: ["admin"], color: "text-blue-500" },
   { title: "Reports", url: "/admin/reports", icon: Flag, roles: ["admin", "teacher"], color: "text-red-500" },
