@@ -27,6 +27,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { StudentReviews } from "@/components/StudentReviews";
 import { CourseSection } from "@/components/home/CourseSection";
 import { QuickActionsSection } from "@/components/home/QuickActionsSection";
+import { TrustCtaSection } from "@/components/home/TrustCtaSection";
 import HeroCarouselItem from "@/components/home/HeroCarouselItem";
 
 const FEATURES = [
@@ -347,6 +348,9 @@ const Index = () => {
         <div className="rounded-2xl border p-2.5 sm:p-3">
         <CourseSection />
         </div>
+
+        {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
+        <TrustCtaSection />
 
         {/* Unique Services Section */}
         <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(271 81% 60%)" }}>
