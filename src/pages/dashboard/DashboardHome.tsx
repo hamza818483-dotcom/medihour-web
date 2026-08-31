@@ -537,7 +537,7 @@ const DashboardHome = () => {
                                 আপনি কোনো কোর্সে এনরোল করেননি। শুরু করতে একটি কোর্স কিনুন।
                             </p>
                             <p className="text-red-800 dark:text-red-300 mt-2 text-sm font-medium">
-                                কোর্সে পেমেন্ট করে থাকলে শীঘ্রই যোগাযোগ করুন টেলিগ্রাম বটে <a href="https://t.me/atlasweb_Robot" target="_blank" rel="noreferrer" className="underline hover:text-red-950">@atlasweb_Robot</a>
+                                কোর্সে পেমেন্ট করে থাকলে শীঘ্রই যোগাযোগ করুন হোয়াটসঅ্যাপে <a href="https://wa.me/8801639787547" target="_blank" rel="noreferrer" className="underline hover:text-red-950">01639787547</a>
                             </p>
                         </div>
                     </div>
