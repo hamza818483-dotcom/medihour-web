@@ -83,7 +83,7 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PublicHeader />
-      <main className="flex min-h-[calc(100vh-56px)] items-center justify-center px-4 py-10">
+      <main className="flex min-h-screen items-center justify-center px-4 pt-[92px] pb-10">
         {user ? (
           <Card className="w-full max-w-md border-[3px] border-foreground animate-in zoom-in-95 duration-200">
             <CardHeader className="space-y-2 pb-4 text-center">

@@ -234,7 +234,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PublicHeader />
-      <main className="flex min-h-[calc(100vh-56px)] items-center justify-center px-4 py-10">
+      <main className="flex min-h-screen items-center justify-center px-4 pt-[92px] pb-10">
         <Card className="w-full max-w-xl border-[3px] border-foreground">
           <CardHeader className="space-y-2 pb-4">
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Medihour</p>
