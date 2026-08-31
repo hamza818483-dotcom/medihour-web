@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PublicHeader from "@/components/PublicHeader";
-import { Eye, EyeOff, LayoutDashboard, LogOut, AlertTriangle, Send, MessageCircle } from "lucide-react";
+import { Eye, EyeOff, LayoutDashboard, LogOut, AlertTriangle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
@@ -19,13 +19,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-const TELEGRAM_SUPPORT_BOT = "https://t.me/MedihourWeb_Robot";
 const WHATSAPP_HELPLINE = "https://wa.me/8801639787547";
-
-function buildTelegramSupportLink(errorMessage: string, identifier: string) {
-  const text = `আসসালামু আলাইকুম, আমি লগইন করতে সমস্যায় পড়েছি।\nEmail/ID: ${identifier || "(দেওয়া হয়নি)"}\nError: ${errorMessage}\nদয়া করে সাহায্য করুন।`;
-  return `${TELEGRAM_SUPPORT_BOT}?text=${encodeURIComponent(text)}`;
-}
 
 const Login = () => {
   const navigate = useNavigate();
@@ -227,22 +221,11 @@ const Login = () => {
                     <p className="mb-1 text-sm font-black tracking-tight">সতর্কবার্তা!</p>
                     <p className="leading-relaxed text-amber-800/90 dark:text-amber-200/80">আপনার ফোন নম্বর এবং পাসওয়ার্ড মনে রাখুন এবং কোথাও লিখে রাখুন।</p>
                     <p className="mt-2 font-medium text-amber-800/90 dark:text-amber-200/80">লগইন সংক্রান্ত সমস্যা হলে নিচে মেসেজ করুন:</p>
-                    <div className="mt-3 grid grid-cols-2 gap-2">
+                    <div className="mt-3 grid grid-cols-1 gap-2">
                       <Button
                         asChild
                         size="sm"
-                        className="w-full gap-1.5 rounded-lg bg-[#229ED9] font-bold shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#1b87bd] text-white"
-                      >
-                        <a href={TELEGRAM_SUPPORT_BOT} target="_blank" rel="noopener noreferrer">
-                          <Send className="h-3.5 w-3.5" />
-                          Telegram
-                        </a>
-                      </Button>
-                      <Button
-                        asChild
-                        size="sm"
-                        variant="outline"
-                        className="w-full gap-1.5 rounded-lg border-[#25D366] font-bold text-[#25D366] shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#25D366]/10 hover:text-[#25D366]"
+                        className="w-full gap-1.5 rounded-lg bg-[#25D366] font-bold shadow-sm transition-transform hover:scale-[1.02] hover:bg-[#1ebe5b] text-white"
                       >
                         <a href={WHATSAPP_HELPLINE} target="_blank" rel="noopener noreferrer">
                           <MessageCircle className="h-3.5 w-3.5" />
@@ -283,25 +266,11 @@ const Login = () => {
             </Button>
             <Button
               asChild
-              className="w-full gap-2 bg-[#229ED9] hover:bg-[#1b87bd] text-white"
-            >
-              <a
-                href={buildTelegramSupportLink(loginError?.message || "", loginError?.identifier || "")}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Send className="h-4 w-4" />
-                Telegram-এ মেসেজ করো
-              </a>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="w-full gap-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366]/10 hover:text-[#25D366]"
+              className="w-full gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white"
             >
               <a href={WHATSAPP_HELPLINE} target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="h-4 w-4" />
-                WhatsApp হেল্পলাইন
+                WhatsApp-এ মেসেজ করো
               </a>
             </Button>
           </DialogFooter>
