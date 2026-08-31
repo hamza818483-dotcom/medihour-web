@@ -162,7 +162,6 @@ const Index = () => {
       subtitle: "সেরা মেন্টর ও রিসোর্সের সাথে নিয়ে মেডিকেল-ভার্সিটি ভর্তি প্রস্তুতিতে এগিয়ে যাও। লাইভ ক্লাস, তাৎক্ষণিক রেজাল্ট এবং সম্পূর্ণ কোর্স ম্যানেজমেন্টের এক অনন্য আয়োজন।",
       cta_text: "শুরু করুন",
       cta_link: "/login",
-      background_config: { type: "gradient", from: "#f5327a", to: "#8b1552" },
   };
 
   const displayHeroes = heroes && heroes.length > 0 ? heroes : [defaultHero];
