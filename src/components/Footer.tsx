@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Youtube, Mail, Phone, MapPin, Send } from "lucide-react";
+import { Facebook, Youtube, Mail, Phone, MapPin, Send, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -18,84 +18,106 @@ const Footer = () => {
   const email = links?.email || "medihourofficial@gmail.com";
   const whatsapp = links?.whatsapp || "+8801639787547";
   const facebookPage = links?.facebook_page || "https://www.facebook.com/share/1EX8RkwBoP/";
+  const facebookGroup = links?.facebook_group || "https://www.facebook.com/share/g/1CsYjAfZxw/";
   const telegram = links?.telegram || "https://t.me/MediHour";
   const youtube = links?.youtube || "https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C";
 
   return (
-    <footer className="bg-[#052e16] text-slate-100 border-t border-primary/20">
-      <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+    <footer className="relative w-full overflow-hidden bg-gradient-to-br from-[#111118] via-[#151520] to-[#101015] text-white">
+      {/* Decorative glows */}
+      <div className="pointer-events-none absolute -left-40 -top-64 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(239,48,119,0.12),transparent_68%)]" />
+      <div className="pointer-events-none absolute -bottom-64 -right-44 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(95,108,255,0.1),transparent_68%)]" />
 
-          {/* Brand Column */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 bg-white w-fit px-3 py-2 rounded-md">
-               <img src="/logo.png" alt="Medihour Logo" className="h-10 w-auto object-contain" />
-            </div>
-            <p className="text-sm text-slate-200 leading-relaxed">
-              উন্নত শিক্ষা, লাইভ ক্লাস এবং তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে শিক্ষার্থীদের পাশে আমরা। নিজের সম্ভাবনাকে বিকশিত করতে আমাদের সাথে যুক্ত হোন।
-            </p>
-            <div className="flex gap-4">
-              <a href={facebookPage} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-primary transition-colors">
-                <Facebook size={18} />
-              </a>
-              <a href={telegram} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-blue-400 transition-colors">
-                <Send size={18} />
-              </a>
-              <a href={youtube} className="bg-primary-foreground/10 p-2 rounded-full hover:bg-white hover:text-red-600 transition-colors">
-                <Youtube size={18} />
-              </a>
+      <div className="relative z-[2] mx-auto w-[min(1160px,calc(100%-36px))] py-11 pb-6">
+        {/* Top: Brand + Tagline */}
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <a href="/" className="flex h-12 w-12 items-center justify-center rounded-[13px] border border-white/10 bg-white/[0.07] transition-transform hover:-translate-y-0.5 hover:bg-white/[0.11]">
+              <img src="/logo.png" alt="Medihour Logo" className="h-[34px] w-[34px] object-contain" />
+            </a>
+            <div>
+              <h3 className="m-0 text-lg font-extrabold leading-tight text-white sm:text-xl">Medihour</h3>
+              <span className="mt-0.5 block text-[11px] font-medium text-white/50">মেডিকেল-ভার্সিটি প্ল্যাটফর্ম</span>
             </div>
           </div>
 
-          {/* Quick Links + Resources (merged into one box, side by side) */}
-          <div className="md:col-span-2">
-            <div className="rounded-xl border border-slate-700/60 bg-white/5 p-5">
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-4">প্রয়োজনীয় লিংক</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><Link to="/" className="hover:text-primary transition-colors">হোম</Link></li>
-                    <li><Link to="/courses" className="hover:text-primary transition-colors">সকল কোর্স</Link></li>
-                    <li><Link to="/login" className="hover:text-primary transition-colors">লগইন</Link></li>
-                    <li><Link to="/register" className="hover:text-primary transition-colors">রেজিস্ট্রেশন</Link></li>
-                  </ul>
-                </div>
-                <div className="border-l border-slate-700/60 pl-6">
-                  <h4 className="text-lg font-semibold text-white mb-4">রিসোর্স</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><a href="/free-exam" className="hover:text-primary transition-colors">ফ্রি এক্সাম</a></li>
-                    <li><a href="/free-class" className="hover:text-primary transition-colors">ডেমো ক্লাস</a></li>
-                    <li><a href="/#success-stories" className="hover:text-primary transition-colors">সাফল্যের গল্প</a></li>
-                    <li><a href="/#reviews" className="hover:text-primary transition-colors">শিক্ষার্থীদের মতামত</a></li>
-                  </ul>
-                </div>
+          <div className="flex max-w-[470px] items-center gap-2.5 rounded-xl border border-white/[0.07] bg-white/[0.043] px-4 py-3">
+            <span className="h-[7px] w-[7px] flex-shrink-0 rounded-full bg-[#f33b7c] shadow-[0_0_12px_rgba(243,59,124,0.65)]" />
+            <p className="m-0 text-xs leading-relaxed text-white/65">
+              উন্নত শিক্ষা ও তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে <strong className="font-bold text-white">'Medihour'</strong> একটি আস্থার নাম।
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="my-7 h-px w-full bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+        {/* Main columns */}
+        <div className="grid grid-cols-1 gap-9 sm:grid-cols-3">
+          {/* Quick Links */}
+          <div>
+            <div className="mb-4 flex items-center gap-2">
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <h4 className="m-0 text-sm font-bold text-white">প্রয়োজনীয় লিংক</h4>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Link to="/" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">হোম</Link>
+              <Link to="/courses" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">সকল কোর্স</Link>
+              <Link to="/login" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">লগইন</Link>
+              <Link to="/register" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">রেজিস্ট্রেশন</Link>
+              <a href="/free-exam" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">ফ্রি এক্সাম</a>
+              <a href="/free-class" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">ডেমো ক্লাস</a>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <div className="mb-4 flex items-center gap-2">
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <h4 className="m-0 text-sm font-bold text-white">যোগাযোগ</h4>
+            </div>
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-start gap-2.5">
+                <Mail size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <a href={`mailto:${email}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{email}</a>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <Phone size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <a href={`tel:${whatsapp}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{whatsapp}</a>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <span className="text-[12px] text-white/65">সিলেট, বাংলাদেশ</span>
               </div>
             </div>
           </div>
 
-          {/* Contact Info */}
+          {/* Social */}
           <div>
-            <h4 className="text-lg font-semibold text-white mb-4">যোগাযোগ</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-3">
-                <Mail size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href={`mailto:${email}`} className="hover:text-white transition-colors">{email}</a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone size={18} className="text-primary shrink-0 mt-0.5" />
-                <a href={`tel:${whatsapp}`} className="hover:text-white transition-colors">{whatsapp}</a>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin size={18} className="text-primary shrink-0 mt-0.5" />
-                <span>সিলেট, বাংলাদেশ</span>
-              </li>
-            </ul>
+            <div className="mb-4 flex items-center gap-2">
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <h4 className="m-0 text-sm font-bold text-white">সোশ্যাল</h4>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <a href={facebookPage} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+                <Facebook size={15} />
+              </a>
+              <a href={facebookGroup} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+                <Users size={15} />
+              </a>
+              <a href={telegram} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+                <Send size={15} />
+              </a>
+              <a href={youtube} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white">
+                <Youtube size={15} />
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-          <p>© {currentYear} Medihour. সর্বস্বত্ব সংরক্ষিত।</p>
+        {/* Bottom: Copyright */}
+        <div className="mt-9 border-t border-white/[0.07] pt-5 text-center">
+          <p className="m-0 text-[9.5px] leading-relaxed text-white/40">© {currentYear} Medihour. সর্বস্বত্ব সংরক্ষিত।</p>
         </div>
       </div>
     </footer>
