@@ -177,15 +177,17 @@ const Login = () => {
                     </Button>
                   </div>
                   <div className="flex items-center justify-end gap-1.5 pr-0.5 pt-0.5">
-                    <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#ed347d]"}`}>
-                      {passwordLength} অক্ষর
-                    </span>
                     {passwordLength > 0 && (
-                      passwordLength >= 6 ? (
-                        <span className="text-[11px] font-semibold text-emerald-500">✓ ঠিক আছে</span>
-                      ) : (
-                        <span className="text-[11px] text-muted-foreground">আরও {6 - passwordLength} লাগবে</span>
-                      )
+                      <>
+                        <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#ed347d]"}`}>
+                          {passwordLength} অক্ষর
+                        </span>
+                        {passwordLength >= 6 ? (
+                          <span className="text-[11px] font-semibold text-emerald-500">✓ ঠিক আছে</span>
+                        ) : (
+                          <span className="text-[11px] text-muted-foreground">আরও {6 - passwordLength} লাগবে</span>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
