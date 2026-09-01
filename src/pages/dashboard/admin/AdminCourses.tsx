@@ -35,6 +35,8 @@ const demoContentSchema = z.object({
   video_url: z.string().trim().optional().or(z.literal("")),
   note_url: z.string().trim().optional().or(z.literal("")),
   is_locked: z.boolean().default(false),
+  extra_link_label: z.string().trim().optional().or(z.literal("")),
+  extra_link_url: z.string().trim().optional().or(z.literal("")),
 });
 
 const courseSchema = z.object({
@@ -894,6 +896,34 @@ const AdminCourses = () => {
                                                 }}
                                                 className="h-8 font-mono text-xs"
                                                 placeholder="https://drive.google.com..."
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground mb-1 block">Extra: See Button Text</Label>
+                                            <Input
+                                                value={item.extra_link_label || ""}
+                                                onChange={(e) => {
+                                                    const updated = [...(form.demo_content || [])];
+                                                    updated[idx] = { ...updated[idx], extra_link_label: e.target.value };
+                                                    setForm({ ...form, demo_content: updated });
+                                                }}
+                                                className="h-8 text-xs"
+                                                placeholder="e.g. See"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground mb-1 block">Extra: Link URL</Label>
+                                            <Input
+                                                value={item.extra_link_url || ""}
+                                                onChange={(e) => {
+                                                    const updated = [...(form.demo_content || [])];
+                                                    updated[idx] = { ...updated[idx], extra_link_url: e.target.value };
+                                                    setForm({ ...form, demo_content: updated });
+                                                }}
+                                                className="h-8 font-mono text-xs"
+                                                placeholder="https://..."
                                             />
                                         </div>
                                     </div>

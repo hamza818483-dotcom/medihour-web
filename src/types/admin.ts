@@ -92,6 +92,8 @@ export interface DemoContentItem {
   video_url?: string;
   note_url?: string;
   is_locked: boolean;
+  extra_link_label?: string;
+  extra_link_url?: string;
 }
 
 export interface Resource {

@@ -3,9 +3,11 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, ExternalLink, Sparkles } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import { getEmbedUrl } from "@/lib/videoUtils";
+import { DemoContentItem } from "@/types/admin";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -17,7 +19,7 @@ const CourseDetails = () => {
       const { data, error } = await supabase
         .from("courses")
         .select(
-          "id, name, full_description, short_description, price, original_price, image_url, video_url, what_you_get, is_active, is_public"
+          "id, name, full_description, short_description, short_description_lines, full_description_blocks, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public"
         )
         .or(`slug.eq.${courseId},id.eq.${courseId}`)
         .maybeSingle();
@@ -74,6 +76,25 @@ const CourseDetails = () => {
     enabled: !!course?.id,
   });
 
+  // Fetch bonus (linked) courses shown above mentor list
+  const linkedIds: string[] = Array.isArray((course as any)?.linked_course_ids)
+    ? (course as any).linked_course_ids
+    : [];
+
+  const { data: bonusCourses } = useQuery({
+    queryKey: ["public-course-bonus", linkedIds],
+    queryFn: async () => {
+      if (!linkedIds.length) return [];
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, name, image_url, slug")
+        .in("id", linkedIds);
+      if (error) return [];
+      return data || [];
+    },
+    enabled: linkedIds.length > 0,
+  });
+
   const [reviewEmblaRef] = useEmblaCarousel({ loop: true, align: "start" }, [
     Autoplay({ delay: 2500, stopOnInteraction: false }),
   ]);
@@ -119,15 +140,34 @@ const CourseDetails = () => {
         <ArrowLeft className="h-4 w-4" /> ফিরে যান
       </Link>
 
-      {course.image_url && (
-        <div className="mb-5 overflow-hidden rounded-2xl border">
-          <img
-            src={course.image_url}
-            alt={course.name}
-            className="w-full object-cover"
-          />
-        </div>
-      )}
+      {/* Auto-playing demo video takes priority over the static image */}
+      {(() => {
+        const demoItems: DemoContentItem[] = Array.isArray((course as any).demo_content)
+          ? ((course as any).demo_content as DemoContentItem[])
+          : [];
+        const firstVideo = demoItems.find((d) => d.video_url)?.video_url || course.video_url;
+        if (firstVideo) {
+          const embed = getEmbedUrl(firstVideo);
+          if (embed) {
+            return (
+              <div className="mb-5 aspect-video w-full overflow-hidden rounded-2xl border">
+                <iframe
+                  src={`${embed}&autoplay=1&mute=1`}
+                  title={course.name}
+                  className="h-full w-full"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            );
+          }
+        }
+        return course.image_url ? (
+          <div className="mb-5 overflow-hidden rounded-2xl border">
+            <img src={course.image_url} alt={course.name} className="w-full object-cover" />
+          </div>
+        ) : null;
+      })()}
 
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
@@ -141,15 +181,45 @@ const CourseDetails = () => {
         {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
       </div>
 
-      {course.short_description && (
-        <p className="mb-4 text-muted-foreground">{course.short_description}</p>
-      )}
+      {/* Short description: animated checklist */}
+      {Array.isArray((course as any).short_description_lines) &&
+        (course as any).short_description_lines.length > 0 && (
+          <div className="mb-5 space-y-1.5">
+            {((course as any).short_description_lines as { text: string; bold?: boolean }[]).map(
+              (line, i) => (
+                <div key={i} className="flex items-start gap-2 rounded-lg border bg-card p-2">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500 animate-pulse" />
+                  <span className={`text-sm ${line.bold ? "font-bold" : ""}`}>{line.text}</span>
+                </div>
+              )
+            )}
+          </div>
+        )}
 
-      {course.full_description && (
-        <div className="mb-6 whitespace-pre-wrap text-sm leading-relaxed">
-          {course.full_description}
-        </div>
-      )}
+      {/* Full description: heading + rich body blocks */}
+      {Array.isArray((course as any).full_description_blocks) &&
+        (course as any).full_description_blocks.length > 0 && (
+          <div className="mb-6 space-y-4">
+            {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
+              (block, i) => (
+                <div key={i}>
+                  {block.heading && (
+                    <div className="mb-1 flex items-center gap-1.5 font-bold">
+                      <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
+                      <span>{block.heading}</span>
+                    </div>
+                  )}
+                  {block.body && (
+                    <div
+                      className="text-sm leading-relaxed text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: block.body }}
+                    />
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        )}
 
       {whatYouGet.length > 0 && (
         <div className="mb-6">
@@ -162,6 +232,35 @@ const CourseDetails = () => {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {/* Bonus courses, shown above mentor list */}
+      {bonusCourses && bonusCourses.length > 0 && (
+        <div className="mb-6">
+          <h2 className="mb-3 flex items-center gap-1.5 text-lg font-bold">
+            <Gift className="h-5 w-5 text-purple-600" /> সাথে পাচ্ছেন বোনাস কোর্স
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {bonusCourses.map((bc: any) => (
+              <Link
+                key={bc.id}
+                to={`/courses/${bc.slug || bc.id}`}
+                className="flex flex-col overflow-hidden rounded-xl border bg-card transition hover:border-purple-400 hover:shadow-md"
+              >
+                <div className="aspect-video w-full overflow-hidden bg-purple-50">
+                  {bc.image_url ? (
+                    <img src={bc.image_url} alt={bc.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Gift className="h-6 w-6 text-purple-300" />
+                    </div>
+                  )}
+                </div>
+                <p className="line-clamp-2 p-2 text-xs font-semibold">{bc.name}</p>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
@@ -231,6 +330,51 @@ const CourseDetails = () => {
           </div>
         </div>
       )}
+
+      {/* Demo content list with optional "See" extra link */}
+      {Array.isArray((course as any).demo_content) && (course as any).demo_content.length > 0 && (
+        <div className="mb-6">
+          <h2 className="mb-3 text-lg font-bold">ডেমো কনটেন্ট</h2>
+          <div className="space-y-2">
+            {((course as any).demo_content as DemoContentItem[]).map((d, i) => (
+              <div key={i} className="flex items-center justify-between gap-2 rounded-xl border p-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  <PlayCircle className="h-4 w-4 shrink-0 text-primary" />
+                  <span className="truncate text-sm font-medium">{d.title}</span>
+                </div>
+                {d.extra_link_url && (
+                  <a
+                    href={d.extra_link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold hover:bg-secondary"
+                  >
+                    {d.extra_link_label || "See"} <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* "এই কোর্স সম্পর্কে আরো" — vertical serial list built from full_description_blocks headings */}
+      {Array.isArray((course as any).full_description_blocks) &&
+        (course as any).full_description_blocks.length > 0 && (
+          <div className="mb-6">
+            <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
+            <ol className="space-y-2">
+              {((course as any).full_description_blocks as { heading: string }[])
+                .filter((b) => b.heading)
+                .map((b, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm">
+                    <span className="font-bold text-primary">{i + 1}.</span>
+                    <span>{b.heading}</span>
+                  </li>
+                ))}
+            </ol>
+          </div>
+        )}
 
       <div className="sticky bottom-3 mt-8 flex items-center justify-between gap-3 rounded-2xl border bg-background/95 p-4 shadow-lg backdrop-blur">
         <div>
