@@ -5,16 +5,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Timer, Download } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Download } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
 import { DemoContentItem } from "@/types/admin";
 import { useToast } from "@/hooks/use-toast";
 
-// Live countdown timer, copied 1:1 from the LMS course details page
+// Live countdown timer, rendered as small premium digit boxes (H / M / S)
 const CountdownTimer = ({ deadline }: { deadline: string }) => {
-  const [timeLeft, setTimeLeft] = useState("");
+  const [time, setTime] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [expired, setExpired] = useState(false);
 
   useEffect(() => {
@@ -25,22 +25,14 @@ const CountdownTimer = ({ deadline }: { deadline: string }) => {
 
       if (diff <= 0) {
         setExpired(true);
-        setTimeLeft("Expired");
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-      if (days > 0) {
-        setTimeLeft(`${days}d ${hours}h ${mins}m ${secs}s`);
-      } else if (hours > 0) {
-        setTimeLeft(`${hours}h ${mins}m ${secs}s`);
-      } else {
-        setTimeLeft(`${mins}m ${secs}s`);
-      }
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+      setTime({ d, h, m, s });
     };
 
     update();
@@ -48,13 +40,37 @@ const CountdownTimer = ({ deadline }: { deadline: string }) => {
     return () => clearInterval(interval);
   }, [deadline]);
 
-  if (expired) return null;
+  if (expired || !time) return null;
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const units: { label: string; value: number }[] =
+    time.d > 0
+      ? [
+          { label: "দিন", value: time.d },
+          { label: "ঘন্টা", value: time.h },
+          { label: "মিনিট", value: time.m },
+          { label: "সেকেন্ড", value: time.s },
+        ]
+      : [
+          { label: "ঘন্টা", value: time.h },
+          { label: "মিনিট", value: time.m },
+          { label: "সেকেন্ড", value: time.s },
+        ];
 
   return (
-    <span className="inline-flex items-center gap-1 font-mono text-xs font-bold tabular-nums">
-      <Timer className="h-3 w-3" />
-      {timeLeft}
-    </span>
+    <div className="flex items-center gap-1">
+      {units.map((u, i) => (
+        <div key={i} className="flex items-center gap-1">
+          <div className="flex flex-col items-center">
+            <div className="flex h-8 min-w-[2rem] items-center justify-center rounded-md bg-red-600 px-1.5 font-mono text-base font-extrabold text-white shadow-sm tabular-nums">
+              {pad(u.value)}
+            </div>
+            <span className="mt-0.5 text-[9px] font-medium text-red-700 dark:text-red-400">{u.label}</span>
+          </div>
+          {i < units.length - 1 && <span className="mb-3 font-bold text-red-600">:</span>}
+        </div>
+      ))}
+    </div>
   );
 };
 
@@ -269,6 +285,14 @@ const CourseDetails = () => {
         <ArrowLeft className="h-4 w-4" /> ফিরে যান
       </Link>
 
+      {/* Course name: bold, centered — the very first thing on the page */}
+      <div className="mb-4 flex flex-col items-center gap-2 text-center">
+        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
+        {discountPct > 0 && (
+          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
+        )}
+      </div>
+
       {/* Auto-playing demo video takes priority over the static image */}
       {(() => {
         const demoItems: DemoContentItem[] = Array.isArray((course as any).demo_content)
@@ -298,47 +322,48 @@ const CourseDetails = () => {
         ) : null;
       })()}
 
-      {/* Special Discount Banners — copied 1:1 from LMS, shown above the coupon box */}
-      {specialDiscounts && specialDiscounts.length > 0 && specialDiscounts.map((discount: any, idx: number) => (
-        <div key={idx} className="mb-3 rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-3 dark:border-amber-800 dark:from-amber-950/30 dark:to-yellow-950/30">
-          <div className="flex items-start gap-2.5">
-            <Gift className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold leading-snug text-amber-900 dark:text-amber-200">{discount.special_discount_text}</p>
-              <div className="mt-2 flex items-center justify-between">
-                {discount.special_discount_deadline && (
-                  <span className="text-red-600 dark:text-red-400">
+      {/* Premium coupon card: special-discount banner(s) + coupon input, merged into one card */}
+      <div className="mb-5 space-y-3 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-secondary/30 p-4 shadow-md">
+        {specialDiscounts && specialDiscounts.length > 0 && specialDiscounts.map((discount: any, idx: number) => (
+          <div
+            key={idx}
+            className="rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-3 dark:border-amber-800 dark:from-amber-950/30 dark:to-yellow-950/30"
+          >
+            <div className="flex items-start gap-2.5">
+              <Gift className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold leading-snug text-amber-900 dark:text-amber-200">{discount.special_discount_text}</p>
+
+                <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
+                  {discount.special_discount_deadline && (
                     <CountdownTimer deadline={discount.special_discount_deadline} />
-                  </span>
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 border-amber-300 text-xs text-amber-800 hover:bg-amber-100"
+                    onClick={() => {
+                      navigator.clipboard.writeText(discount.code);
+                      toast({ title: "কপি হয়েছে!", description: `"${discount.code}" ক্লিপবোর্ডে কপি হয়েছে।` });
+                    }}
+                  >
+                    <Copy className="mr-1 h-3 w-3" />
+                    {discount.code}
+                  </Button>
+                </div>
+
+                {typeof discount.uses_left === "number" && (
+                  <p className="mt-2 text-xs font-medium text-amber-700 dark:text-amber-400">
+                    {discount.uses_left > 0
+                      ? `আর মাত্র ${discount.uses_left.toLocaleString("en-BD")} জন ব্যবহার করতে পারবেন`
+                      : "ব্যবহারের সীমা শেষ"}
+                  </p>
                 )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 border-amber-300 text-xs text-amber-800 hover:bg-amber-100"
-                  onClick={() => {
-                    navigator.clipboard.writeText(discount.code);
-                    toast({ title: "কপি হয়েছে!", description: `"${discount.code}" ক্লিপবোর্ডে কপি হয়েছে।` });
-                  }}
-                >
-                  <Copy className="mr-1 h-3 w-3" />
-                  {discount.code}
-                </Button>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      {/* Course name: bold, centered, directly under image/video */}
-      <div className="mb-2 flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
-        {discountPct > 0 && (
-          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
-        )}
-      </div>
-
-      {/* Coupon apply box, right under the course name */}
-      <div className="mb-5 space-y-2 rounded-xl border p-3">
         {appliedCoupon ? (
           <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950/30">
             <div className="flex items-center gap-2">

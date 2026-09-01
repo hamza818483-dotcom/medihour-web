@@ -64,7 +64,10 @@ BEGIN
             'discount_amount', pc.discount_amount,
             'discount_type', pc.discount_type,
             'special_discount_text', pc.special_discount_text,
-            'special_discount_deadline', pc.special_discount_deadline
+            'special_discount_deadline', pc.special_discount_deadline,
+            'usage_limit', pc.usage_limit,
+            'used_count', COALESCE(pc.used_count, 0),
+            'uses_left', CASE WHEN pc.usage_limit IS NULL THEN NULL ELSE pc.usage_limit - COALESCE(pc.used_count, 0) END
         )
     ) INTO v_result
     FROM public.promo_codes pc
