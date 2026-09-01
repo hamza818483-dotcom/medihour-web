@@ -619,6 +619,7 @@ export type Database = {
           hsc_gpa: number | null
           hsc_batch: string | null
           is_second_timer: boolean | null
+          avatar_url: string | null
         }
         Insert: {
           batch_year?: number | null
@@ -637,6 +638,7 @@ export type Database = {
           hsc_gpa?: number | null
           hsc_batch?: string | null
           is_second_timer?: boolean | null
+          avatar_url?: string | null
         }
         Update: {
           batch_year?: number | null
@@ -655,6 +657,7 @@ export type Database = {
           hsc_gpa?: number | null
           hsc_batch?: string | null
           is_second_timer?: boolean | null
+          avatar_url?: string | null
         }
         Relationships: []
       }
