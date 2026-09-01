@@ -34,8 +34,6 @@ const demoContentSchema = z.object({
   video_url: z.string().trim().optional().or(z.literal("")),
   note_url: z.string().trim().optional().or(z.literal("")),
   is_locked: z.boolean().default(false),
-  extra_link_label: z.string().trim().optional().or(z.literal("")),
-  extra_link_url: z.string().trim().optional().or(z.literal("")),
 });
 
 const courseSchema = z.object({
@@ -43,6 +41,7 @@ const courseSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
   short_description_lines: z.array(z.object({ text: z.string(), bold: z.boolean().optional() })).optional().default([]),
   full_description_blocks: z.array(z.object({ heading: z.string(), body: z.string() })).optional().default([]),
+  extra_links: z.array(z.object({ label: z.string(), url: z.string() })).optional().default([]),
   price: z
     .string()
     .trim()
@@ -86,6 +85,7 @@ const AdminCourses = () => {
     name: "",
     short_description_lines: [],
     full_description_blocks: [],
+    extra_links: [],
     price: "",
     original_price: "",
     what_you_get: "",
@@ -240,6 +240,7 @@ const AdminCourses = () => {
       name: "",
       short_description_lines: [],
       full_description_blocks: [],
+      extra_links: [],
       price: "",
       original_price: "",
       what_you_get: "",
@@ -268,6 +269,7 @@ const AdminCourses = () => {
         name: parsed.name,
         short_description_lines: parsed.short_description_lines || [],
         full_description_blocks: parsed.full_description_blocks || [],
+        extra_links: parsed.extra_links || [],
         price: parsed.price ? Number(parsed.price) : null,
         original_price: parsed.original_price ? Number(parsed.original_price) : null,
         what_you_get: parsed.what_you_get
@@ -350,6 +352,7 @@ const AdminCourses = () => {
       name: course.name ?? "",
       short_description_lines: (course as any).short_description_lines ?? [],
       full_description_blocks: (course as any).full_description_blocks ?? [],
+      extra_links: (course as any).extra_links ?? [],
       price: course.price != null ? String(course.price) : "",
       original_price: course.original_price != null ? String(course.original_price) : "",
       what_you_get: Array.isArray(course.what_you_get) ? course.what_you_get.join("\n") : "",
@@ -511,6 +514,7 @@ const AdminCourses = () => {
                     name: "",
                     short_description_lines: [],
                     full_description_blocks: [],
+                    extra_links: [],
                     price: "",
                     original_price: "",
                     image_url: "",
@@ -809,6 +813,70 @@ const AdminCourses = () => {
                             onChange={(blocks) => setForm((prev) => ({ ...prev, full_description_blocks: blocks }))}
                         />
                     </div>
+
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                            <Label>Extra Links</Label>
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={() =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        extra_links: [...(prev.extra_links || []), { label: "", url: "" }],
+                                    }))
+                                }
+                            >
+                                <Plus className="w-4 h-4 mr-1" /> Add Link
+                            </Button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                            এই লিংকগুলো পাবলিক কোর্স পেজে "এই কোর্স সম্পর্কে আরো" এর নিচে embedded text আকারে দেখাবে।
+                        </p>
+                        {(form.extra_links || []).length === 0 && (
+                            <div className="text-center py-6 border-2 border-dashed rounded-lg text-muted-foreground text-sm">
+                                No extra links added yet.
+                            </div>
+                        )}
+                        <div className="grid gap-2">
+                            {(form.extra_links || []).map((link, idx) => (
+                                <div key={idx} className="flex items-center gap-2 rounded-md border p-2">
+                                    <Input
+                                        value={link.label}
+                                        onChange={(e) => {
+                                            const updated = [...(form.extra_links || [])];
+                                            updated[idx] = { ...updated[idx], label: e.target.value };
+                                            setForm({ ...form, extra_links: updated });
+                                        }}
+                                        className="h-8 text-sm"
+                                        placeholder="Link text..."
+                                    />
+                                    <Input
+                                        value={link.url}
+                                        onChange={(e) => {
+                                            const updated = [...(form.extra_links || [])];
+                                            updated[idx] = { ...updated[idx], url: e.target.value };
+                                            setForm({ ...form, extra_links: updated });
+                                        }}
+                                        className="h-8 font-mono text-xs"
+                                        placeholder="https://..."
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 shrink-0 text-destructive"
+                                        onClick={() => {
+                                            const updated = (form.extra_links || []).filter((_, i) => i !== idx);
+                                            setForm({ ...form, extra_links: updated });
+                                        }}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </TabsContent>
 
                 <TabsContent value="demos" className="mt-0 space-y-4">
@@ -880,34 +948,6 @@ const AdminCourses = () => {
                                                 }}
                                                 className="h-8 font-mono text-xs"
                                                 placeholder="https://drive.google.com..."
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <Label className="text-xs text-muted-foreground mb-1 block">Extra: See Button Text</Label>
-                                            <Input
-                                                value={item.extra_link_label || ""}
-                                                onChange={(e) => {
-                                                    const updated = [...(form.demo_content || [])];
-                                                    updated[idx] = { ...updated[idx], extra_link_label: e.target.value };
-                                                    setForm({ ...form, demo_content: updated });
-                                                }}
-                                                className="h-8 text-xs"
-                                                placeholder="e.g. See"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-xs text-muted-foreground mb-1 block">Extra: Link URL</Label>
-                                            <Input
-                                                value={item.extra_link_url || ""}
-                                                onChange={(e) => {
-                                                    const updated = [...(form.demo_content || [])];
-                                                    updated[idx] = { ...updated[idx], extra_link_url: e.target.value };
-                                                    setForm({ ...form, demo_content: updated });
-                                                }}
-                                                className="h-8 font-mono text-xs"
-                                                placeholder="https://..."
                                             />
                                         </div>
                                     </div>

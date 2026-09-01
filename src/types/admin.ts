@@ -49,6 +49,7 @@ export interface Course {
   full_description?: string | null;
   short_description_lines?: { text: string; bold?: boolean }[] | null;
   full_description_blocks?: { heading: string; body: string }[] | null;
+  extra_links?: { label: string; url: string }[] | null;
   price?: number | null;
   original_price?: number | null;
   what_you_get?: string[] | null;
@@ -92,8 +93,6 @@ export interface DemoContentItem {
   video_url?: string;
   note_url?: string;
   is_locked: boolean;
-  extra_link_label?: string;
-  extra_link_url?: string;
 }
 
 export interface Resource {
