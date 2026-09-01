@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CalendarClock, Calendar, FileText, ListChecks, Video, BookOpen, History, StickyNote, Files, Trophy, User, AlertCircle, Bookmark, Sparkles, Bell, CheckCircle, AlertTriangle, Trash2, ChevronDown, ChevronUp, Infinity, Flag, Megaphone, BarChart3, Zap, TrendingUp, Target, ClipboardCheck, Send } from "lucide-react";
+import { CalendarClock, Calendar, FileText, ListChecks, Video, BookOpen, History, StickyNote, Files, Trophy, User, AlertCircle, Bookmark, Sparkles, Bell, CheckCircle, AlertTriangle, Trash2, ChevronDown, ChevronUp, Infinity, Flag, Megaphone, BarChart3, Zap, TrendingUp, Target, ClipboardCheck, Send, Timer, BookMarked } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { quickAccessItems } from "@/config/dashboardCardItems";
@@ -627,6 +627,20 @@ const DashboardHome = () => {
            >
              <Calendar className="h-4 w-4" /> Routine
            </Link>
+           <div className="grid grid-cols-2 gap-3">
+             <Link
+               to="/focus-timer"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border border-violet-500/30 bg-violet-50 dark:bg-violet-950 hover:bg-violet-100 dark:hover:bg-violet-900 transition-colors py-3 font-semibold text-violet-600 dark:text-violet-300"
+             >
+               <Timer className="h-4 w-4" /> Live Study Room
+             </Link>
+             <Link
+               to="/syllabus-tracker"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors py-3 font-semibold text-emerald-600 dark:text-emerald-300"
+             >
+               <BookMarked className="h-4 w-4" /> Syllabus Tracker
+             </Link>
+           </div>
            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                {orderedNavigationItems.map((item, index) => (
                    <Card

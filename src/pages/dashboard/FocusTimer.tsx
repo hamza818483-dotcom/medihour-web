@@ -6,7 +6,7 @@ const FocusTimer = () => {
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
         <Timer className="h-8 w-8" />
       </div>
-      <h1 className="text-xl font-bold tracking-tight">Focus Timer</h1>
+      <h1 className="text-xl font-bold tracking-tight">Live Study Room</h1>
       <p className="text-sm text-muted-foreground">শীঘ্রই আসছে...</p>
     </div>
   );

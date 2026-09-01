@@ -1,6 +1,18 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { LayoutGrid, Video, FileQuestion, Timer, BookMarked, Star } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEnrollments } from "@/hooks/useEnrollments";
 
 const scrollToId = (id: string) => {
   const el = document.getElementById(id);
@@ -9,6 +21,18 @@ const scrollToId = (id: string) => {
 
 export const QuickActionsSection = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: enrollments } = useEnrollments();
+  const isEnrolled = !!user && (enrollments?.length ?? 0) > 0;
+  const [showPaidOnlyDialog, setShowPaidOnlyDialog] = useState(false);
+
+  const handleRestrictedNavigate = (path: string) => {
+    if (isEnrolled) {
+      navigate(path);
+    } else {
+      setShowPaidOnlyDialog(true);
+    }
+  };
 
   return (
     <section className="rounded-2xl border border-white/30 bg-white/20 backdrop-blur-md px-0.5 py-2.5 sm:px-1.5 space-y-2 -mt-1 dark:border-white/10 dark:bg-white/5">
@@ -47,19 +71,19 @@ export const QuickActionsSection = () => {
         </button>
       </div>
 
-      {/* Row 3: Focus Timer / Syllabus Tracker */}
+      {/* Row 3: Live Study Room / Syllabus Tracker */}
       <div className="grid grid-cols-2 gap-2">
         <button
-          onClick={() => navigate("/focus-timer")}
+          onClick={() => handleRestrictedNavigate("/focus-timer")}
           className="group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 bg-white/20 backdrop-blur-sm border border-violet-500/20 hover:border-violet-500/50 hover:shadow-md transition-all dark:bg-white/5"
         >
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-sm">
             <Timer className="h-4 w-4 text-white" />
           </div>
-          <span className="text-xs sm:text-sm font-bold text-center leading-tight px-0.5">Focus Timer</span>
+          <span className="text-xs sm:text-sm font-bold text-center leading-tight px-0.5">Live Study Room</span>
         </button>
         <button
-          onClick={() => navigate("/syllabus-tracker")}
+          onClick={() => handleRestrictedNavigate("/syllabus-tracker")}
           className="group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 bg-white/20 backdrop-blur-sm border border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-md transition-all dark:bg-white/5"
         >
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
@@ -68,6 +92,20 @@ export const QuickActionsSection = () => {
           <span className="text-xs sm:text-sm font-bold text-center leading-tight px-0.5">Syllabus Tracker</span>
         </button>
       </div>
+
+      <AlertDialog open={showPaidOnlyDialog} onOpenChange={setShowPaidOnlyDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Paid Batch Feature</AlertDialogTitle>
+            <AlertDialogDescription>
+              এটি শুধুমাত্র পেইড ব্যাচের স্টুডেন্টদের জন্য। এই ফিচার ব্যবহার করতে হলে কোর্সে ভর্তি হতে হবে।
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => scrollToId("courses")}>কোর্সে ভর্তি হও</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </section>
   );
 };

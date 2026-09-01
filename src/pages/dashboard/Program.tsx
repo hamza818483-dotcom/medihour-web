@@ -59,7 +59,7 @@ const Program = () => {
           <TabsContent value="pomodoro">
             <Card className="border-border">
               <CardHeader>
-                <CardTitle>Focus Timer</CardTitle>
+                <CardTitle>Live Study Room</CardTitle>
                 <CardDescription>
                   The Pomodoro Technique is a time management method that uses a timer to break work into intervals, traditionally 25 minutes in length, separated by short breaks.
                 </CardDescription>
