@@ -155,16 +155,7 @@ const Index = () => {
     staleTime: 10 * 60 * 1000,
   });
 
-  // Default hero content if no custom heroes are found
-  const defaultHero = {
-      hero_type: "welcome",
-      title: "MediHour-এ স্বাগতম",
-      subtitle: "সেরা মেন্টর ও রিসোর্সের সাথে নিয়ে মেডিকেল-ভার্সিটি ভর্তি প্রস্তুতিতে এগিয়ে যাও। লাইভ ক্লাস, তাৎক্ষণিক রেজাল্ট এবং সম্পূর্ণ কোর্স ম্যানেজমেন্টের এক অনন্য আয়োজন।",
-      cta_text: "শুরু করুন",
-      cta_link: "/login",
-  };
-
-  const displayHeroes = heroes && heroes.length > 0 ? heroes : [defaultHero];
+  const displayHeroes = heroes && heroes.length > 0 ? heroes : [];
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
 
   return (
@@ -172,22 +163,24 @@ const Index = () => {
       <PublicHeader />
 
       {/* Hero Section (PhysicsHunters-style rounded carousel frame) */}
-      <section className="w-full bg-background px-3 pb-3 pt-[92px] sm:px-4 sm:pt-[100px]">
-        <div className="mx-auto w-full max-w-[1280px]">
-          <div className="relative isolate overflow-hidden rounded-3xl bg-[#090909] shadow-[0_18px_50px_rgba(0,0,0,0.14)] hero-glow" ref={emblaRef}>
-            <div className="flex">
-              {displayHeroes.map((hero: any, index: number) => (
-                <HeroCarouselItem key={hero.id || index} hero={hero} />
-              ))}
+      {displayHeroes.length > 0 && (
+        <section className="w-full bg-background px-3 pb-3 pt-[92px] sm:px-4 sm:pt-[100px]">
+          <div className="mx-auto w-full max-w-[1280px]">
+            <div className="relative isolate overflow-hidden rounded-3xl bg-[#090909] shadow-[0_18px_50px_rgba(0,0,0,0.14)] hero-glow" ref={emblaRef}>
+              <div className="flex">
+                {displayHeroes.map((hero: any, index: number) => (
+                  <HeroCarouselItem key={hero.id || index} hero={hero} />
+                ))}
+              </div>
+              {/* Bottom vignette matching ph-hero-image-wrapper::after */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-black/[0.02] to-black/[0.12]" />
             </div>
-            {/* Bottom vignette matching ph-hero-image-wrapper::after */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-black/[0.02] to-black/[0.12]" />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 pt-6 sm:pt-8 flex-1">
+      <main className={`mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 flex-1 ${displayHeroes.length > 0 ? "pt-6 sm:pt-8" : "pt-[100px] sm:pt-[108px]"}`}>
 
         {/* Landing Exams (Free Exam category exams with "Allow Dashboard" toggle on) */}
         {landingExams && landingExams.length > 0 && (
