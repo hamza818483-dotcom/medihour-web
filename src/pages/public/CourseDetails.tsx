@@ -196,31 +196,6 @@ const CourseDetails = () => {
           </div>
         )}
 
-      {/* Full description: heading + rich body blocks */}
-      {Array.isArray((course as any).full_description_blocks) &&
-        (course as any).full_description_blocks.length > 0 && (
-          <div className="mb-6 space-y-4">
-            {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
-              (block, i) => (
-                <div key={i}>
-                  {block.heading && (
-                    <div className="mb-1 flex items-center gap-1.5 font-bold">
-                      <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
-                      <span>{block.heading}</span>
-                    </div>
-                  )}
-                  {block.body && (
-                    <div
-                      className="text-sm leading-relaxed text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: block.body }}
-                    />
-                  )}
-                </div>
-              )
-            )}
-          </div>
-        )}
-
       {whatYouGet.length > 0 && (
         <div className="mb-6">
           <h2 className="mb-3 text-lg font-bold">যা যা পাবে</h2>
