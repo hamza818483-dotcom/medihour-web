@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Timer } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Timer, Download } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
@@ -79,7 +79,7 @@ const CourseDetails = () => {
       const { data, error } = await supabase
         .from("courses")
         .select(
-          "id, name, full_description, short_description, short_description_lines, full_description_blocks, extra_links, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public"
+          "id, name, full_description, short_description, short_description_lines, full_description_blocks, extra_links, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public, routine_url"
         )
         .or(`slug.eq.${courseId},id.eq.${courseId}`)
         .maybeSingle();
@@ -426,8 +426,23 @@ const CourseDetails = () => {
           </div>
         )}
 
-      {/* Full description: centered numbered special heading box + detail card below it */}
-      {Array.isArray((course as any).full_description_blocks) &&
+      {/* Class routine download button, right under short description */}
+      {(course as any).routine_url && (
+        <div className="mb-6 flex justify-center">
+          <Button
+            asChild
+            variant="outline"
+            className="gap-2 rounded-xl border-primary/40 font-semibold"
+          >
+            <a href={(course as any).routine_url} target="_blank" rel="noopener noreferrer">
+              <Download className="h-4 w-4" />
+              ক্লাস রুটিন
+            </a>
+          </Button>
+        </div>
+      )}
+
+      {/* Full description: centered numbered special heading box + detail card below it */}      {Array.isArray((course as any).full_description_blocks) &&
         (course as any).full_description_blocks.length > 0 && (
           <div className="mb-6 space-y-6">
             <h2 className="mb-1 text-center text-base font-bold underline underline-offset-4">
