@@ -80,7 +80,6 @@ export const adminItems: AdminSidebarNavItem[] = [
   { title: "Notice", url: "/admin/announcements", icon: Megaphone, roles: ["admin", "teacher"], color: "text-yellow-600" },
   { title: "Official Links", url: "/admin/official-links", icon: Send, roles: ["admin", "teacher"], color: "text-cyan-700" },
   { title: "Community Manager", url: "/admin/community", icon: Users, roles: ["admin", "teacher"], color: "text-teal-600" },
-  { title: "Notes Manager", url: "/admin/notes", icon: StickyNote, roles: ["admin", "teacher"], color: "text-pink-600" },
   { title: "Archive Manager", url: "/admin/archive", icon: BookOpen, roles: ["admin", "teacher"], color: "text-purple-500" },
   { title: "Exam Routine Manager", url: "/admin/calendar", icon: CalendarRange, roles: ["admin", "teacher"], color: "text-rose-500" },
   { title: "Free Manager", url: "/admin/free-content", icon: StickyNote, roles: ["admin", "teacher"], color: "text-indigo-500" },
