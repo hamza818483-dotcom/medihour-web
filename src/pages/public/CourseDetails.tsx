@@ -19,7 +19,7 @@ const CourseDetails = () => {
       const { data, error } = await supabase
         .from("courses")
         .select(
-          "id, name, full_description, short_description, short_description_lines, full_description_blocks, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public"
+          "id, name, full_description, short_description, short_description_lines, full_description_blocks, extra_links, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public"
         )
         .or(`slug.eq.${courseId},id.eq.${courseId}`)
         .maybeSingle();
@@ -133,6 +133,12 @@ const CourseDetails = () => {
 
   return (
     <div className="mx-auto w-full max-w-[900px] px-4 py-6">
+      <style>{`
+        @keyframes check-pop {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.35); opacity: 0.7; }
+        }
+      `}</style>
       <Link
         to="/"
         className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
@@ -188,8 +194,38 @@ const CourseDetails = () => {
             {((course as any).short_description_lines as { text: string; bold?: boolean }[]).map(
               (line, i) => (
                 <div key={i} className="flex items-start gap-2 rounded-lg border bg-card p-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-500 animate-pulse" />
+                  <CheckCircle2
+                    className="mt-0.5 h-4 w-4 shrink-0 text-green-500"
+                    style={{ animation: `check-pop 1.6s ease-in-out ${i * 0.15}s infinite` }}
+                  />
                   <span className={`text-sm ${line.bold ? "font-bold" : ""}`}>{line.text}</span>
+                </div>
+              )
+            )}
+          </div>
+        )}
+
+      {/* Full description: centered special heading box + detail below it */}
+      {Array.isArray((course as any).full_description_blocks) &&
+        (course as any).full_description_blocks.length > 0 && (
+          <div className="mb-6 space-y-6">
+            {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
+              (block, i) => (
+                <div key={i}>
+                  {block.heading && (
+                    <div className="mx-auto mb-3 max-w-[90%] rounded-xl border bg-secondary/60 px-4 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1.5 font-bold">
+                        <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
+                        <span>{block.heading}</span>
+                      </div>
+                    </div>
+                  )}
+                  {block.body && (
+                    <div
+                      className="text-sm leading-relaxed text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: block.body }}
+                    />
+                  )}
                 </div>
               )
             )}
@@ -306,48 +342,39 @@ const CourseDetails = () => {
         </div>
       )}
 
-      {/* Demo content list with optional "See" extra link */}
+      {/* Demo content list */}
       {Array.isArray((course as any).demo_content) && (course as any).demo_content.length > 0 && (
         <div className="mb-6">
           <h2 className="mb-3 text-lg font-bold">ডেমো কনটেন্ট</h2>
           <div className="space-y-2">
             {((course as any).demo_content as DemoContentItem[]).map((d, i) => (
-              <div key={i} className="flex items-center justify-between gap-2 rounded-xl border p-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <PlayCircle className="h-4 w-4 shrink-0 text-primary" />
-                  <span className="truncate text-sm font-medium">{d.title}</span>
-                </div>
-                {d.extra_link_url && (
-                  <a
-                    href={d.extra_link_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold hover:bg-secondary"
-                  >
-                    {d.extra_link_label || "See"} <ExternalLink className="h-3 w-3" />
-                  </a>
-                )}
+              <div key={i} className="flex items-center gap-2 rounded-xl border p-3">
+                <PlayCircle className="h-4 w-4 shrink-0 text-primary" />
+                <span className="truncate text-sm font-medium">{d.title}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* "এই কোর্স সম্পর্কে আরো" — vertical serial list built from full_description_blocks headings */}
-      {Array.isArray((course as any).full_description_blocks) &&
-        (course as any).full_description_blocks.length > 0 && (
+      {/* "এই কোর্স সম্পর্কে আরো" — only admin-added Extra Links, as embedded/linked text */}
+      {Array.isArray((course as any).extra_links) &&
+        (course as any).extra_links.length > 0 && (
           <div className="mb-6">
             <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
-            <ol className="space-y-2">
-              {((course as any).full_description_blocks as { heading: string }[])
-                .filter((b) => b.heading)
-                .map((b, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <span className="font-bold text-primary">{i + 1}.</span>
-                    <span>{b.heading}</span>
-                  </li>
-                ))}
-            </ol>
+            <div className="space-y-2">
+              {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => (
+                <a
+                  key={i}
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-sm font-medium text-primary underline underline-offset-2 hover:text-primary/80"
+                >
+                  {l.label} <ExternalLink className="h-3 w-3 shrink-0" />
+                </a>
+              ))}
+            </div>
           </div>
         )}
 
