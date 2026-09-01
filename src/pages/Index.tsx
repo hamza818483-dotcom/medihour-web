@@ -348,6 +348,9 @@ const Index = () => {
         <QuickActionsSection />
         </div>
 
+        {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
+        <TrustCtaSection />
+
         {/* Paid Courses Section (Grid View) */}
         <div className="rounded-2xl border p-2.5 sm:p-3">
         <CourseSection />
@@ -469,9 +472,6 @@ const Index = () => {
 
       {/* Contact Section (PhysicsHunters-style) */}
       <ContactSection />
-
-      {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
-      <TrustCtaSection />
 
       {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
       <SuccessGallerySection />
