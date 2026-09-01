@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { PostEditor } from "@/components/PostEditor";
+import { ChecklistEditor, ChecklistLine } from "@/components/ChecklistEditor";
+import { DescriptionBlockEditor, DescriptionBlock } from "@/components/DescriptionBlockEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { Course } from "@/types/admin";
 import { Button } from "@/components/ui/button";
@@ -38,8 +40,8 @@ const demoContentSchema = z.object({
 const courseSchema = z.object({
   id: z.string().optional(),
   name: z.string().trim().min(1, "Name is required").max(200),
-  short_description: z.string().trim().max(300).optional().or(z.literal("")),
-  full_description: z.string().trim().max(4000).optional().or(z.literal("")),
+  short_description_lines: z.array(z.object({ text: z.string(), bold: z.boolean().optional() })).optional().default([]),
+  full_description_blocks: z.array(z.object({ heading: z.string(), body: z.string() })).optional().default([]),
   price: z
     .string()
     .trim()
@@ -81,8 +83,8 @@ const AdminCourses = () => {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<z.infer<typeof courseSchema>>({
     name: "",
-    short_description: "",
-    full_description: "",
+    short_description_lines: [],
+    full_description_blocks: [],
     price: "",
     original_price: "",
     what_you_get: "",
@@ -235,8 +237,8 @@ const AdminCourses = () => {
   const resetForm = () => {
     setForm({
       name: "",
-      short_description: "",
-      full_description: "",
+      short_description_lines: [],
+      full_description_blocks: [],
       price: "",
       original_price: "",
       what_you_get: "",
@@ -263,8 +265,8 @@ const AdminCourses = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload: any = {
         name: parsed.name,
-        short_description: parsed.short_description || null,
-        full_description: parsed.full_description || null,
+        short_description_lines: parsed.short_description_lines || [],
+        full_description_blocks: parsed.full_description_blocks || [],
         price: parsed.price ? Number(parsed.price) : null,
         original_price: parsed.original_price ? Number(parsed.original_price) : null,
         what_you_get: parsed.what_you_get
@@ -345,8 +347,8 @@ const AdminCourses = () => {
     setForm({
       id: course.id,
       name: course.name ?? "",
-      short_description: course.short_description ?? "",
-      full_description: course.full_description ?? "",
+      short_description_lines: (course as any).short_description_lines ?? [],
+      full_description_blocks: (course as any).full_description_blocks ?? [],
       price: course.price != null ? String(course.price) : "",
       original_price: course.original_price != null ? String(course.original_price) : "",
       what_you_get: Array.isArray(course.what_you_get) ? course.what_you_get.join("\n") : "",
@@ -506,8 +508,8 @@ const AdminCourses = () => {
              <Button variant="ghost" size="sm" onClick={() => {
                  setForm({
                     name: "",
-                    short_description: "",
-                    full_description: "",
+                    short_description_lines: [],
+                    full_description_blocks: [],
                     price: "",
                     original_price: "",
                     image_url: "",
@@ -793,22 +795,18 @@ const AdminCourses = () => {
 
                 <TabsContent value="description" className="mt-0 space-y-4">
                     <div className="space-y-2">
-                    <Label htmlFor="short_description">Short description</Label>
-                    <Textarea
-                        id="short_description"
-                        rows={3}
-                        value={form.short_description}
-                        onChange={(e) => setForm((prev) => ({ ...prev, short_description: e.target.value }))}
-                        placeholder="A brief overview shown on course cards..."
+                    <Label>Short description (animated checklist)</Label>
+                    <ChecklistEditor
+                        value={form.short_description_lines as ChecklistLine[]}
+                        onChange={(lines) => setForm((prev) => ({ ...prev, short_description_lines: lines }))}
                     />
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="full_description">Full description</Label>
-                        <PostEditor
-                            key={form.id || 'desc-new'}
-                            initialValue={form.full_description}
-                            onChange={(val) => setForm((prev) => ({ ...prev, full_description: val }))}
+                        <Label>Full description</Label>
+                        <DescriptionBlockEditor
+                            value={form.full_description_blocks as DescriptionBlock[]}
+                            onChange={(blocks) => setForm((prev) => ({ ...prev, full_description_blocks: blocks }))}
                         />
                     </div>
                 </TabsContent>

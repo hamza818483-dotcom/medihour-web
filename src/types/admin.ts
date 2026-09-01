@@ -47,6 +47,8 @@ export interface Course {
   name: string;
   short_description?: string | null;
   full_description?: string | null;
+  short_description_lines?: { text: string; bold?: boolean }[] | null;
+  full_description_blocks?: { heading: string; body: string }[] | null;
   price?: number | null;
   original_price?: number | null;
   what_you_get?: string[] | null;
