@@ -1,16 +1,30 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, ExternalLink, Sparkles, Check, Loader2 } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
 import { DemoContentItem } from "@/types/admin";
+import { useToast } from "@/hooks/use-toast";
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
+  const { toast } = useToast();
+
+  const [couponCode, setCouponCode] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount_amount: number;
+    discount_type: string;
+    id: string;
+  } | null>(null);
 
   const { data: course, isLoading, isError } = useQuery({
     queryKey: ["public-course-details", courseId],
@@ -131,6 +145,46 @@ const CourseDetails = () => {
         )
       : 0;
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim() || !course?.id) return;
+    setCouponLoading(true);
+    setCouponError("");
+    try {
+      const { data, error } = await supabase.rpc("check_promo_code", {
+        p_code: couponCode.trim(),
+        p_course_id: course.id,
+      });
+      if (error) throw error;
+      if ((data as any)?.valid) {
+        setAppliedCoupon({
+          code: (data as any).code || couponCode.trim().toUpperCase(),
+          discount_amount: (data as any).discount_amount,
+          discount_type: (data as any).discount_type,
+          id: (data as any).id,
+        });
+        toast({
+          title: "কুপন প্রয়োগ হয়েছে!",
+          description: `ছাড়: ${(data as any).discount_type === "percentage" ? `${(data as any).discount_amount}%` : `৳${(data as any).discount_amount}`}`,
+        });
+      } else {
+        setCouponError((data as any)?.message || "ভুল কুপন কোড");
+        setAppliedCoupon(null);
+      }
+    } catch {
+      setCouponError("কুপন যাচাই করা যায়নি, আবার চেষ্টা করুন।");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const getEnrollUrl = () => {
+    const base = `/courses/${courseId}/buy`;
+    if (appliedCoupon) {
+      return `${base}?coupon=${encodeURIComponent(appliedCoupon.code)}&coupon_id=${appliedCoupon.id}&discount_amount=${appliedCoupon.discount_amount}&discount_type=${appliedCoupon.discount_type}`;
+    }
+    return base;
+  };
+
   return (
     <div className="mx-auto w-full max-w-[900px] px-4 py-6">
       <style>{`
@@ -175,6 +229,62 @@ const CourseDetails = () => {
         ) : null;
       })()}
 
+      {/* Coupon apply box, right under the course image */}
+      <div className="mb-5 space-y-2 rounded-xl border p-3">
+        {appliedCoupon ? (
+          <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950/30">
+            <div className="flex items-center gap-2">
+              <Check className="h-4 w-4 text-green-600" />
+              <div>
+                <span className="text-sm font-semibold text-green-700 dark:text-green-400">{appliedCoupon.code}</span>
+                <span className="ml-2 text-xs text-green-600 dark:text-green-500">
+                  {appliedCoupon.discount_type === "percentage"
+                    ? `${appliedCoupon.discount_amount}% ছাড়`
+                    : `৳${appliedCoupon.discount_amount} ছাড়`}
+                </span>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-6 text-xs"
+              onClick={() => {
+                setAppliedCoupon(null);
+                setCouponCode("");
+                setCouponError("");
+              }}
+            >
+              সরান
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Input
+                value={couponCode}
+                onChange={(e) => {
+                  setCouponCode(e.target.value);
+                  setCouponError("");
+                }}
+                placeholder="কুপন কোড লিখুন"
+                className="text-sm"
+                onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleApplyCoupon}
+                disabled={couponLoading || !couponCode.trim()}
+                className="shrink-0"
+              >
+                {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "প্রয়োগ করুন"}
+              </Button>
+            </div>
+            {couponError && <p className="text-xs text-red-500">{couponError}</p>}
+          </div>
+        )}
+      </div>
+
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
         {discountPct > 0 && (
@@ -186,6 +296,14 @@ const CourseDetails = () => {
         <Users className="h-4 w-4 text-green-500" />
         {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
       </div>
+
+      {/* Centered underlined section heading above the checklist */}
+      {Array.isArray((course as any).short_description_lines) &&
+        (course as any).short_description_lines.length > 0 && (
+          <h2 className="mb-3 text-center text-base font-bold underline underline-offset-4">
+            কোর্সের প্রধান ফিচার সমূহ
+          </h2>
+        )}
 
       {/* Short description: animated checklist */}
       {Array.isArray((course as any).short_description_lines) &&
@@ -205,7 +323,7 @@ const CourseDetails = () => {
           </div>
         )}
 
-      {/* Full description: centered special heading box + detail below it */}
+      {/* Full description: centered numbered special heading box + detail card below it */}
       {Array.isArray((course as any).full_description_blocks) &&
         (course as any).full_description_blocks.length > 0 && (
           <div className="mb-6 space-y-6">
@@ -216,15 +334,19 @@ const CourseDetails = () => {
                     <div className="mx-auto mb-3 max-w-[90%] rounded-xl border bg-secondary/60 px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-1.5 font-bold">
                         <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
-                        <span>{block.heading}</span>
+                        <span>
+                          {i + 1}. {block.heading}
+                        </span>
                       </div>
                     </div>
                   )}
                   {block.body && (
-                    <div
-                      className="text-sm leading-relaxed text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: block.body }}
-                    />
+                    <div className="rounded-xl border bg-card p-4 shadow-sm">
+                      <div
+                        className="text-sm leading-relaxed text-muted-foreground"
+                        dangerouslySetInnerHTML={{ __html: block.body }}
+                      />
+                    </div>
                   )}
                 </div>
               )
@@ -399,7 +521,7 @@ const CourseDetails = () => {
           asChild
           className="bg-gradient-to-br from-[#e52b80] to-[#f05463] font-bold"
         >
-          <Link to={`/courses/${courseId}/buy`}>ভর্তি হন</Link>
+          <Link to={getEnrollUrl()}>ভর্তি হন</Link>
         </Button>
       </div>
     </div>
