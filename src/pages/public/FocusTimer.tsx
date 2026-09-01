@@ -158,7 +158,7 @@ const FocusTimer = () => {
   const resumedRef = useRef(false);
 
   useEffect(() => {
-    document.title = "Focus Timer — Atlas";
+    document.title = "Live Study Room — MediHour";
     try {
       if (!localStorage.getItem("atlas_focus_intro_seen")) setShowIntro(true);
     } catch {
@@ -758,7 +758,7 @@ const FocusTimer = () => {
           <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-extrabold text-sm">ATLAS Focus Timer</h3>
+                <h3 className="font-extrabold text-sm">MediHour Live Study Room</h3>
                 <p className="text-[11px] text-muted-foreground">মনোযোগী পড়াশোনার জন্য বাংলাদেশের সেরা টাইমার</p>
               </div>
               <button onClick={dismissIntro} className="text-xs font-bold text-muted-foreground hover:text-foreground">
@@ -842,11 +842,11 @@ const FocusTimer = () => {
           </button>
         </div>
 
-        {/* Premium ATLAS Focus Timer banner */}
+        {/* Premium MediHour Live Study Room banner */}
         <div className="flex items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-4 py-2">
           <Icon className={cn("h-4 w-4", meta.color)} />
           <span className="text-sm font-black tracking-wide bg-gradient-to-r from-primary via-primary/70 to-primary bg-clip-text text-transparent">
-            ATLAS Focus Timer
+            MediHour Live Study Room
           </span>
           <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-gradient-to-r from-primary to-primary/70 text-primary-foreground tracking-wide">
             PREMIUM
