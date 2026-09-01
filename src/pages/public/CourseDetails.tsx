@@ -110,12 +110,11 @@ const CourseDetails = () => {
     queryKey: ["course-enrollment-count", course?.id],
     queryFn: async () => {
       if (!course?.id) return 0;
-      const { count, error } = await supabase
-        .from("enrollments")
-        .select("id", { count: "exact", head: true })
-        .eq("course_id", course.id);
+      const { data, error } = await supabase.rpc("get_course_enrollment_count", {
+        p_course_id: course.id,
+      });
       if (error) return 0;
-      return count || 0;
+      return data || 0;
     },
     enabled: !!course?.id,
   });
