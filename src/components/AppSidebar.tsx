@@ -40,7 +40,7 @@ export function AdminSidebar() {
       collapsible="icon"
       className="border-r border-sidebar-border bg-background text-sidebar-foreground w-56 data-[state=collapsed]:w-16 mt-14 h-[calc(100svh-3.5rem)] z-30"
     >
-      <SidebarContent className="flex h-full flex-col group-data-[collapsible=icon]:!overflow-y-auto no-scrollbar bg-background">
+      <SidebarContent className="flex h-full flex-col overflow-y-auto no-scrollbar bg-background">
         <SidebarGroup>
           <SidebarGroupLabel className="text-sidebar-foreground/70">
               {isAdmin ? "Admin Navigation" : "Teacher Navigation"}
@@ -95,7 +95,7 @@ export function AppSidebar() {
       collapsible="icon"
       className="border-r border-sidebar-border bg-background text-sidebar-foreground w-56 data-[state=collapsed]:w-16 mt-14 h-[calc(100svh-3.5rem)] z-30"
     >
-      <SidebarContent className="flex h-full flex-col group-data-[collapsible=icon]:!overflow-y-auto no-scrollbar bg-background">
+      <SidebarContent className="flex h-full flex-col overflow-y-auto no-scrollbar bg-background">
         <SidebarGroup>
           <SidebarGroupLabel className="text-sidebar-foreground/70">Student</SidebarGroupLabel>
           <SidebarGroupContent>
