@@ -329,7 +329,15 @@ const CourseDetails = () => {
         </div>
       ))}
 
-      {/* Coupon apply box, right under the course image */}
+      {/* Course name: bold, centered, directly under image/video */}
+      <div className="mb-2 flex flex-col items-center gap-2 text-center">
+        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
+        {discountPct > 0 && (
+          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
+        )}
+      </div>
+
+      {/* Coupon apply box, right under the course name */}
       <div className="mb-5 space-y-2 rounded-xl border p-3">
         {appliedCoupon ? (
           <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950/30">
@@ -385,24 +393,19 @@ const CourseDetails = () => {
         )}
       </div>
 
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
-        {discountPct > 0 && (
-          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
-        )}
-      </div>
-
-      <div className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground">
+      <div className="mb-4 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
         <Users className="h-4 w-4 text-green-500" />
         {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
       </div>
 
-      {/* Centered underlined section heading above the checklist */}
+      {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
-          <h2 className="mb-3 text-center text-base font-bold underline underline-offset-4">
-            কোর্সের প্রধান ফিচার সমূহ
-          </h2>
+          <div className="mx-auto mb-3 max-w-[90%] rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 px-4 py-2.5 text-center shadow-sm">
+            <h2 className="text-base font-bold underline underline-offset-4">
+              কোর্সের প্রধান ফিচার সমূহ
+            </h2>
+          </div>
         )}
 
       {/* Short description: animated checklist */}
@@ -427,11 +430,17 @@ const CourseDetails = () => {
       {Array.isArray((course as any).full_description_blocks) &&
         (course as any).full_description_blocks.length > 0 && (
           <div className="mb-6 space-y-6">
+            <h2 className="mb-1 text-center text-base font-bold underline underline-offset-4">
+              প্রত্যেকটি ফিচারের বিস্তারিত:
+            </h2>
             {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
               (block, i) => (
-                <div key={i}>
+                <div
+                  key={i}
+                  className="mx-auto max-w-[95%] rounded-2xl border border-primary/20 bg-gradient-to-br from-secondary/60 to-secondary/30 p-3 shadow-sm"
+                >
                   {block.heading && (
-                    <div className="mx-auto mb-3 max-w-[90%] rounded-xl border bg-secondary/60 px-4 py-3 text-center">
+                    <div className="mb-3 rounded-xl border bg-background/70 px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-1.5 font-bold">
                         <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
                         <span>
