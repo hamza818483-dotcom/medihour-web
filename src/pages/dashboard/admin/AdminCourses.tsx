@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { PostEditor } from "@/components/PostEditor";
 import { ChecklistEditor, ChecklistLine } from "@/components/ChecklistEditor";
 import { DescriptionBlockEditor, DescriptionBlock } from "@/components/DescriptionBlockEditor";
 import { supabase } from "@/integrations/supabase/client";
@@ -540,7 +539,6 @@ const AdminCourses = () => {
                   <TabsList className="inline-flex h-11 items-center justify-start sm:justify-center rounded-lg bg-muted p-1 text-muted-foreground w-max shadow-sm">
                     <TabsTrigger value="basic" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Basic Info</TabsTrigger>
                     <TabsTrigger value="description" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Description</TabsTrigger>
-                    <TabsTrigger value="content" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Curriculum Info</TabsTrigger>
                     <TabsTrigger value="demos" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Demo Content</TabsTrigger>
                     {form.id && (
                       <TabsTrigger value="promo" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-2 text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">Promo Code</TabsTrigger>
@@ -811,20 +809,6 @@ const AdminCourses = () => {
                             onChange={(blocks) => setForm((prev) => ({ ...prev, full_description_blocks: blocks }))}
                         />
                     </div>
-                </TabsContent>
-
-                <TabsContent value="content" className="mt-0 space-y-4">
-                    <div className="flex justify-between items-center mb-2">
-                        <Label htmlFor="what_you_get">
-                            "What you get" Section
-                        </Label>
-                    </div>
-
-                    <PostEditor
-                        key={form.id || 'wyg-new'}
-                        initialValue={form.what_you_get}
-                        onChange={(val) => setForm((prev) => ({ ...prev, what_you_get: val }))}
-                    />
                 </TabsContent>
 
                 <TabsContent value="demos" className="mt-0 space-y-4">
