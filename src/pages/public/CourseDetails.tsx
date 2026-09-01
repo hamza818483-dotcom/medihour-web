@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Download } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Download, Eye } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
@@ -451,17 +451,26 @@ const CourseDetails = () => {
           </div>
         )}
 
-      {/* Class routine download button, right under short description */}
+      {/* Class routine: view + download, right under short description */}
       {(course as any).routine_url && (
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 grid grid-cols-2 gap-3">
           <Button
             asChild
             variant="outline"
             className="gap-2 rounded-xl border-primary/40 font-semibold"
           >
             <a href={(course as any).routine_url} target="_blank" rel="noopener noreferrer">
+              <Eye className="h-4 w-4" />
+              রুটিন দেখো
+            </a>
+          </Button>
+          <Button
+            asChild
+            className="gap-2 rounded-xl bg-gradient-to-br from-[#e52b80] to-[#f05463] font-semibold"
+          >
+            <a href={(course as any).routine_url} download target="_blank" rel="noopener noreferrer">
               <Download className="h-4 w-4" />
-              ক্লাস রুটিন
+              Download করো
             </a>
           </Button>
         </div>
