@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageUploader } from "@/components/ui/image-uploader";
+import { ImageUploader, MultiImageUploader } from "@/components/ui/image-uploader";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, Star } from "lucide-react";
 import {
@@ -126,6 +126,7 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
     rating: 5,
     image_url: "",
     post_image_url: "",
+    images: [] as string[],
   });
 
   const { data: courseReviews, isLoading: loadingReviews } = useQuery({
@@ -144,7 +145,7 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
 
   const addReviewMutation = useMutation({
     mutationFn: async () => {
-      if (!reviewForm.image_url.trim() && !reviewForm.post_image_url.trim()) {
+      if (!reviewForm.image_url.trim() && !reviewForm.post_image_url.trim() && reviewForm.images.length === 0) {
         throw new Error("At least one image is required");
       }
       const { error } = await supabase.from("reviews").insert({
@@ -155,13 +156,14 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
         rating: reviewForm.rating || null,
         image_url: reviewForm.image_url || null,
         post_image_url: reviewForm.post_image_url || null,
+        images: reviewForm.images.length > 0 ? reviewForm.images : null,
       });
       if (error) throw error;
     },
     onSuccess: () => {
       toast({ title: "Review added" });
       queryClient.invalidateQueries({ queryKey: ["course-reviews", courseId] });
-      setReviewForm({ student_name: "", college_name: "", review_text: "", rating: 5, image_url: "", post_image_url: "" });
+      setReviewForm({ student_name: "", college_name: "", review_text: "", rating: 5, image_url: "", post_image_url: "", images: [] });
     },
     onError: (e: any) => toast({ title: "Error", description: e.message, variant: "destructive" }),
   });
@@ -314,6 +316,10 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
             <div className="space-y-1.5 sm:col-span-2">
               <Label>Review Screenshot / Post Image (optional)</Label>
               <ImageUploader value={reviewForm.post_image_url} onChange={(url) => setReviewForm({ ...reviewForm, post_image_url: url })} />
+            </div>
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label>Additional Images (optional, select multiple)</Label>
+              <MultiImageUploader values={reviewForm.images} onChange={(images) => setReviewForm({ ...reviewForm, images })} />
             </div>
             <div className="sm:col-span-2">
               <Button onClick={() => addReviewMutation.mutate()} disabled={addReviewMutation.isPending}>
