@@ -485,21 +485,25 @@ const CourseDetails = () => {
           <div className="mb-6">
             <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
             <div className="flex flex-col gap-3">
-              {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => (
-                <a
-                  key={i}
-                  href={l.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex w-full items-center gap-4 rounded-2xl border bg-gradient-to-br from-card to-secondary/40 p-4 shadow-sm transition hover:shadow-md hover:border-primary/40"
-                >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <PlayCircle className="h-6 w-6" />
-                  </div>
-                  <span className="flex-1 text-sm font-semibold leading-relaxed">{l.label}</span>
-                  <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:text-primary" />
-                </a>
-              ))}
+              {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => {
+                const rawUrl = (l.url || "").trim();
+                const safeUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+                return (
+                  <a
+                    key={i}
+                    href={safeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex w-full items-center gap-4 rounded-2xl border bg-gradient-to-br from-card to-secondary/40 p-4 shadow-sm transition hover:shadow-md hover:border-primary/40"
+                  >
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <PlayCircle className="h-6 w-6" />
+                    </div>
+                    <span className="flex-1 text-sm font-semibold leading-relaxed">{l.label}</span>
+                    <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:text-primary" />
+                  </a>
+                );
+              })}
             </div>
           </div>
         )}
