@@ -1179,17 +1179,6 @@ export const ExamForm = ({ exam, onSuccess, onCancel, isFreeMode = false, isArch
                   />
                   <Label htmlFor="is_only_live" className="text-[10px] font-semibold leading-tight">Only Live</Label>
                 </div>
-
-                <div className="flex flex-col items-center text-center gap-1 border p-1.5 rounded-lg bg-violet-50 dark:bg-violet-900/10 border-violet-200">
-                  <Switch
-                    id="is_omr"
-                    checked={form.is_omr}
-                    onCheckedChange={(checked) =>
-                      setForm((prev) => ({ ...prev, is_omr: checked }))
-                    }
-                  />
-                  <Label htmlFor="is_omr" className="text-[10px] font-semibold leading-tight">OMR Scanner</Label>
-                </div>
               </div>
 
               <div className="space-y-2 md:col-span-2">
