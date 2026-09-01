@@ -88,6 +88,7 @@ import UnifiedContentCreator from "./pages/dashboard/admin/UnifiedContentCreator
 import CourseDashboard from "./pages/dashboard/admin/CourseDashboard";
 import StudentProfileView from "./pages/dashboard/admin/StudentProfileView";
 import StudentCourseResults from "./pages/dashboard/admin/StudentCourseResults";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -110,6 +111,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <AuthProvider>
             <NotificationProvider>
             <Routes>
