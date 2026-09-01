@@ -165,8 +165,8 @@ const App = () => {
 
               <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminLayout /></ProtectedRoute>}>
                 <Route index element={<ErrorBoundary><AdminDashboardHome /></ErrorBoundary>} />
-                <Route path="courses" element={<ProtectedRoute requireAdmin><AdminCourses /></ProtectedRoute>} />
-                <Route path="students" element={<ProtectedRoute requireAdmin><AdminStudents /></ProtectedRoute>} />
+                <Route path="courses" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminCourses /></ProtectedRoute>} />
+                <Route path="students" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminStudents /></ProtectedRoute>} />
                 <Route path="classes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminClasses /></ProtectedRoute>} />
                 <Route path="routines" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminRoutines /></ProtectedRoute>} />
                 <Route path="exams" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminExams /></ProtectedRoute>} />
@@ -175,26 +175,26 @@ const App = () => {
                 <Route path="question-bank" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><QuestionBank /></ProtectedRoute>} />
                 <Route path="announcements" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminAnnouncements /></ProtectedRoute>} />
                 <Route path="community" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminCommunity /></ProtectedRoute>} />
-                <Route path="official-links" element={<ProtectedRoute allowedRoles={['admin']}><AdminOfficialLinks /></ProtectedRoute>} />
+                <Route path="official-links" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminOfficialLinks /></ProtectedRoute>} />
                 <Route path="notes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminNotes /></ProtectedRoute>} />
                 <Route path="archive" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminArchiveManager /></ProtectedRoute>} />
                 <Route path="calendar" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminExamCalendar /></ProtectedRoute>} />
-                <Route path="free-content" element={<ProtectedRoute requireAdmin><AdminFreeContent /></ProtectedRoute>} />
-                <Route path="payments" element={<ProtectedRoute requireAdmin><ErrorBoundary><AdminPayments /></ErrorBoundary></ProtectedRoute>} />
-                <Route path="payments/history" element={<ProtectedRoute requireAdmin><AdminPaymentHistory /></ProtectedRoute>} />
-                <Route path="mentors" element={<ProtectedRoute requireAdmin><AdminMentors /></ProtectedRoute>} />
-                <Route path="success-gallery" element={<ProtectedRoute requireAdmin><AdminSuccessGallery /></ProtectedRoute>} />
-                <Route path="promos" element={<ProtectedRoute requireAdmin><AdminPromoCodes /></ProtectedRoute>} />
-                <Route path="heroes" element={<ProtectedRoute requireAdmin><AdminHeroes /></ProtectedRoute>} />
-                <Route path="reviews" element={<ProtectedRoute requireAdmin><AdminReviews /></ProtectedRoute>} />
+                <Route path="free-content" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminFreeContent /></ProtectedRoute>} />
+                <Route path="payments" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><ErrorBoundary><AdminPayments /></ErrorBoundary></ProtectedRoute>} />
+                <Route path="payments/history" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminPaymentHistory /></ProtectedRoute>} />
+                <Route path="mentors" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminMentors /></ProtectedRoute>} />
+                <Route path="success-gallery" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminSuccessGallery /></ProtectedRoute>} />
+                <Route path="promos" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminPromoCodes /></ProtectedRoute>} />
+                <Route path="heroes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminHeroes /></ProtectedRoute>} />
+                <Route path="reviews" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminReviews /></ProtectedRoute>} />
                 <Route path="reports" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminReports /></ProtectedRoute>} />
                 <Route path="admission-test" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminAdmissionTest /></ProtectedRoute>} />
                 <Route path="syllabus-tracker" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminSyllabusTracker /></ProtectedRoute>} />
-                <Route path="telegram-channels" element={<ProtectedRoute requireAdmin><AdminTelegramChannels /></ProtectedRoute>} />
+                <Route path="telegram-channels" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminTelegramChannels /></ProtectedRoute>} />
                 <Route path="content-creator" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><UnifiedContentCreator /></ProtectedRoute>} />
-                <Route path="course-dashboard/:courseId" element={<ProtectedRoute requireAdmin><CourseDashboard /></ProtectedRoute>} />
-                <Route path="student/:studentId" element={<ProtectedRoute requireAdmin><StudentProfileView /></ProtectedRoute>} />
-                <Route path="student/:studentId/course-results/:courseId" element={<ProtectedRoute requireAdmin><StudentCourseResults /></ProtectedRoute>} />
+                <Route path="course-dashboard/:courseId" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><CourseDashboard /></ProtectedRoute>} />
+                <Route path="student/:studentId" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><StudentProfileView /></ProtectedRoute>} />
+                <Route path="student/:studentId/course-results/:courseId" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><StudentCourseResults /></ProtectedRoute>} />
               </Route>
 
               <Route path="/take-exam/:examId" element={<ErrorBoundary><TakeExam /></ErrorBoundary>} />
