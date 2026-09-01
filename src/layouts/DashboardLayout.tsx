@@ -5,7 +5,7 @@ import {
   History, StickyNote, Files, Calendar,
   User, BarChart, Bell, HelpCircle,
   Settings, Users, Library, Trophy, CreditCard, Bookmark, VolumeX, Volume2, ShieldAlert,
-  Tag, LayoutTemplate, AlertCircle, Archive, Database, GraduationCap, Images
+  Tag, LayoutTemplate, AlertCircle, Archive, Database, GraduationCap, Images, BarChart3, Timer
 } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -257,7 +257,7 @@ export const DashboardLayout = () => {
     <StudyToolsProvider>
     <SidebarProvider>
       <div className="min-h-screen w-full bg-background text-foreground flex flex-col print:block print:h-auto print:overflow-visible">
-        <PushPermissionPrompt />
+        {/* <PushPermissionPrompt /> */}
         <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-background/95 backdrop-blur px-4 supports-[backdrop-filter]:bg-background/60 print:hidden">
           <SidebarTrigger className="mr-3 hidden sm:inline-flex" />
           <div className="flex flex-1 items-center justify-between gap-3">
@@ -504,6 +504,12 @@ export const DashboardLayout = () => {
                             </Link>
                             <Link to="/admin/reports" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
                                 <ShieldAlert className="h-4 w-4 text-red-500" /> Reports
+                            </Link>
+                            <Link to="/admin/syllabus-tracker" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
+                                <BarChart3 className="h-4 w-4 text-sky-600" /> Study Tracker
+                            </Link>
+                            <Link to="/focus-timer" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
+                                <Timer className="h-4 w-4 text-violet-500" /> Live Study Room
                             </Link>
                           </>
                         )}
