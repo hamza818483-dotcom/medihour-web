@@ -32,7 +32,8 @@ import ExamResults from "./pages/dashboard/ExamResults";
 import PastExamCatalog from "./pages/dashboard/PastExamCatalog";
 import TakeExam from "./pages/dashboard/TakeExam";
 import QuickPractice from "./pages/dashboard/QuickPractice";
-import FocusTimer from "./pages/dashboard/FocusTimer";
+import FocusTimer from "./pages/public/FocusTimer";
+import StudyHistory from "./pages/public/StudyHistory";
 import TakeMistakeExam from "./pages/dashboard/TakeMistakeExam";
 import ExamReview from "./pages/dashboard/ExamReview";
 import Leaderboard from "./pages/dashboard/Leaderboard";
@@ -199,7 +200,7 @@ const App = () => {
               <Route path="/take-exam/:examId" element={<ErrorBoundary><TakeExam /></ErrorBoundary>} />
               <Route path="/quick-practice" element={<ErrorBoundary><QuickPractice /></ErrorBoundary>} />
               <Route path="/focus-timer" element={<ErrorBoundary><FocusTimer /></ErrorBoundary>} />
-              <Route path="admin/focus-timer" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><FocusTimer /></ProtectedRoute>} />
+              <Route path="/focus-timer/history" element={<ErrorBoundary><StudyHistory /></ErrorBoundary>} />
               <Route path="/exam-review/:attemptId" element={<ErrorBoundary><ExamReview /></ErrorBoundary>} />
 
               <Route path="*" element={<ErrorBoundary><NotFound /></ErrorBoundary>} />

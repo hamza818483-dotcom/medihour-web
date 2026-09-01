@@ -89,7 +89,7 @@ export const adminItems: AdminSidebarNavItem[] = [
   { title: "Special Banner", url: "/admin/heroes", icon: LayoutTemplate, roles: ["admin"], color: "text-indigo-600" },
   { title: "Mentors/Founders", url: "/admin/mentors", icon: PenTool, roles: ["admin"], color: "text-violet-600" },
   { title: "Reviews", url: "/admin/reviews", icon: Megaphone, roles: ["admin"], color: "text-pink-600" },
-  { title: "Focus Timer", url: "/admin/focus-timer", icon: Timer, roles: ["admin", "teacher"], color: "text-violet-500" },
+  { title: "Live Study Room", url: "/focus-timer", icon: Timer, roles: ["admin", "teacher"], color: "text-violet-500" },
   { title: "Study Tracker", url: "/admin/syllabus-tracker", icon: BarChart3, roles: ["admin", "teacher"], color: "text-sky-600" },
   { title: "Telegram Channels", url: "/admin/telegram-channels", icon: Send, roles: ["admin"], color: "text-blue-500" },
   { title: "Reports", url: "/admin/reports", icon: Flag, roles: ["admin", "teacher"], color: "text-red-500" },
