@@ -34,16 +34,14 @@ export const CourseSection = () => {
     const { data: enrollmentCounts } = useQuery({
         queryKey: ["course-enrollment-counts"],
         queryFn: async () => {
-            const { data, error } = await supabase
-                .from("enrollments")
-                .select("course_id");
+            const { data, error } = await supabase.rpc("get_all_course_enrollment_counts");
             if (error) {
                 console.error("Error fetching enrollment counts:", error);
                 return {} as Record<string, number>;
             }
             const counts: Record<string, number> = {};
             (data || []).forEach((row: any) => {
-                counts[row.course_id] = (counts[row.course_id] || 0) + 1;
+                counts[row.course_id] = row.enrollment_count;
             });
             return counts;
         },
