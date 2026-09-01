@@ -180,7 +180,7 @@ const Index = () => {
       )}
 
 
-      <main className={`mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 flex-1 ${displayHeroes.length > 0 ? "pt-6 sm:pt-8" : "pt-[100px] sm:pt-[108px]"}`}>
+      <main className={`mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 flex-1 pt-6 sm:pt-8 ${displayHeroes.length === 0 ? "mt-[92px] sm:mt-[100px]" : ""}`}>
 
         {/* Landing Exams (Free Exam category exams with "Allow Dashboard" toggle on) */}
         {landingExams && landingExams.length > 0 && (
