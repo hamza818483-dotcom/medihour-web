@@ -348,9 +348,6 @@ const Index = () => {
         <QuickActionsSection />
         </div>
 
-        {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
-        <TrustCtaSection />
-
         {/* Paid Courses Section (Grid View) */}
         <div className="rounded-2xl border p-2.5 sm:p-3">
         <CourseSection />
@@ -406,17 +403,7 @@ const Index = () => {
         </section>
         </div>
 
-        {/* Help / Support CTA (PhysicsHunters-style) */}
-        <HelpCtaSection />
-
-        {/* Student Reviews */}
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        <StudentReviews reviews={reviews as any} id="reviews" />
-
       </main>
-
-      {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
-      <SuccessGallerySection />
 
       {/* About Section (PhysicsHunters-style spotlight card) */}
       <section className="w-full overflow-hidden bg-white dark:bg-slate-950 py-10 sm:py-14" id="about">
@@ -476,8 +463,21 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Student Reviews */}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <StudentReviews reviews={reviews as any} id="reviews" />
+
       {/* Contact Section (PhysicsHunters-style) */}
       <ContactSection />
+
+      {/* Trust CTA (PhysicsHunters-style minimal trust banner) */}
+      <TrustCtaSection />
+
+      {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
+      <SuccessGallerySection />
+
+      {/* Help / Support CTA (PhysicsHunters-style) */}
+      <HelpCtaSection />
 
       {/* Founder & Teacher Panel (Footer Top) */}
       <section className="bg-card border-t py-12 px-4 mt-auto">
