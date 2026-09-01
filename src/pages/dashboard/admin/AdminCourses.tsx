@@ -776,19 +776,6 @@ const AdminCourses = () => {
                                             <span className="text-[10px] leading-tight text-muted-foreground">Absolute shadow hide</span>
                                         </div>
                                     </div>
-                                    <div className="flex items-start gap-3 p-3 rounded bg-muted/20 border">
-                                        <Switch
-                                        id="access_unlimited_practice"
-                                        checked={form.access_unlimited_practice}
-                                        onCheckedChange={(checked) =>
-                                            setForm((prev) => ({ ...prev, access_unlimited_practice: checked }))
-                                        }
-                                        />
-                                        <div className="grid gap-0.5">
-                                            <Label htmlFor="access_unlimited_practice" className="text-sm font-semibold cursor-pointer">Unlimited Practice</Label>
-                                            <span className="text-[10px] leading-tight text-muted-foreground">Unlimited portal access</span>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </CardContent>
