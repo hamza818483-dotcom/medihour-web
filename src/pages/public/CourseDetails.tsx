@@ -1,16 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Timer } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
 import { DemoContentItem } from "@/types/admin";
 import { useToast } from "@/hooks/use-toast";
+
+// Live countdown timer, copied 1:1 from the LMS course details page
+const CountdownTimer = ({ deadline }: { deadline: string }) => {
+  const [timeLeft, setTimeLeft] = useState("");
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date().getTime();
+      const end = new Date(deadline).getTime();
+      const diff = end - now;
+
+      if (diff <= 0) {
+        setExpired(true);
+        setTimeLeft("Expired");
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      if (days > 0) {
+        setTimeLeft(`${days}d ${hours}h ${mins}m ${secs}s`);
+      } else if (hours > 0) {
+        setTimeLeft(`${hours}h ${mins}m ${secs}s`);
+      } else {
+        setTimeLeft(`${mins}m ${secs}s`);
+      }
+    };
+
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [deadline]);
+
+  if (expired) return null;
+
+  return (
+    <span className="inline-flex items-center gap-1 font-mono text-xs font-bold tabular-nums">
+      <Timer className="h-3 w-3" />
+      {timeLeft}
+    </span>
+  );
+};
 
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -113,6 +159,18 @@ const CourseDetails = () => {
     Autoplay({ delay: 2500, stopOnInteraction: false }),
   ]);
 
+  // Fetch special discounts for this course (copied from LMS)
+  const { data: specialDiscounts } = useQuery({
+    queryKey: ["special-discounts", course?.id],
+    queryFn: async () => {
+      if (!course?.id) return [];
+      const { data, error } = await supabase.rpc("get_special_discounts", { p_course_id: course.id });
+      if (error) return [];
+      return data || [];
+    },
+    enabled: !!course?.id,
+  });
+
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -185,6 +243,17 @@ const CourseDetails = () => {
     return base;
   };
 
+  const getDiscountedPrice = () => {
+    if (!course?.price || !appliedCoupon) return null;
+    const price = Number(course.price);
+    if (appliedCoupon.discount_type === "percentage") {
+      return Math.max(0, price - (price * appliedCoupon.discount_amount) / 100);
+    }
+    return Math.max(0, price - appliedCoupon.discount_amount);
+  };
+
+  const discountedPrice = getDiscountedPrice();
+
   return (
     <div className="mx-auto w-full max-w-[900px] px-4 py-6">
       <style>{`
@@ -228,6 +297,37 @@ const CourseDetails = () => {
           </div>
         ) : null;
       })()}
+
+      {/* Special Discount Banners — copied 1:1 from LMS, shown above the coupon box */}
+      {specialDiscounts && specialDiscounts.length > 0 && specialDiscounts.map((discount: any, idx: number) => (
+        <div key={idx} className="mb-3 rounded-lg border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-3 dark:border-amber-800 dark:from-amber-950/30 dark:to-yellow-950/30">
+          <div className="flex items-start gap-2.5">
+            <Gift className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold leading-snug text-amber-900 dark:text-amber-200">{discount.special_discount_text}</p>
+              <div className="mt-2 flex items-center justify-between">
+                {discount.special_discount_deadline && (
+                  <span className="text-red-600 dark:text-red-400">
+                    <CountdownTimer deadline={discount.special_discount_deadline} />
+                  </span>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 border-amber-300 text-xs text-amber-800 hover:bg-amber-100"
+                  onClick={() => {
+                    navigator.clipboard.writeText(discount.code);
+                    toast({ title: "কপি হয়েছে!", description: `"${discount.code}" ক্লিপবোর্ডে কপি হয়েছে।` });
+                  }}
+                >
+                  <Copy className="mr-1 h-3 w-3" />
+                  {discount.code}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
 
       {/* Coupon apply box, right under the course image */}
       <div className="mb-5 space-y-2 rounded-xl border p-3">
@@ -509,16 +609,27 @@ const CourseDetails = () => {
 
       <div className="sticky bottom-3 mt-8 flex items-center justify-between gap-3 rounded-2xl border bg-background/95 p-4 shadow-lg backdrop-blur">
         <div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-extrabold text-[#e93482]">
-              ৳{Number(course.price).toLocaleString("en-BD")}
-            </span>
-            {discountPct > 0 && (
+          {discountedPrice != null && appliedCoupon ? (
+            <div className="flex items-baseline gap-2">
               <span className="text-sm text-muted-foreground line-through">
-                ৳{Number(course.original_price).toLocaleString("en-BD")}
+                ৳{Number(course.price).toLocaleString("en-BD")}
               </span>
-            )}
-          </div>
+              <span className="text-xl font-extrabold text-green-600">
+                {discountedPrice === 0 ? "ফ্রি!" : `৳${discountedPrice.toLocaleString("en-BD")}`}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-extrabold text-[#e93482]">
+                ৳{Number(course.price).toLocaleString("en-BD")}
+              </span>
+              {discountPct > 0 && (
+                <span className="text-sm text-muted-foreground line-through">
+                  ৳{Number(course.original_price).toLocaleString("en-BD")}
+                </span>
+              )}
+            </div>
+          )}
         </div>
         <Button
           asChild
