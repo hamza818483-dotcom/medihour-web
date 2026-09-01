@@ -285,14 +285,6 @@ const CourseDetails = () => {
         <ArrowLeft className="h-4 w-4" /> ফিরে যান
       </Link>
 
-      {/* Course name: bold, centered — the very first thing on the page */}
-      <div className="mb-4 flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
-        {discountPct > 0 && (
-          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
-        )}
-      </div>
-
       {/* Auto-playing demo video takes priority over the static image */}
       {(() => {
         const demoItems: DemoContentItem[] = Array.isArray((course as any).demo_content)
@@ -321,6 +313,14 @@ const CourseDetails = () => {
           </div>
         ) : null;
       })()}
+
+      {/* Course name: bold, centered — directly under the image/video */}
+      <div className="mb-4 flex flex-col items-center gap-2 text-center">
+        <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
+        {discountPct > 0 && (
+          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
+        )}
+      </div>
 
       {/* Premium coupon card: special-discount banner(s) + coupon input, merged into one card */}
       <div className="mb-5 space-y-3 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-secondary/30 p-4 shadow-md">
@@ -426,8 +426,8 @@ const CourseDetails = () => {
       {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
-          <div className="mx-auto mb-3 max-w-[90%] rounded-xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-100 px-4 py-3 text-center shadow-md dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-amber-900/40 dark:border-amber-700">
-            <h2 className="text-base font-bold underline underline-offset-4">
+          <div className="mx-auto mb-3 max-w-[92%] rounded-xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-100 px-5 py-4 text-center shadow-md dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-amber-900/40 dark:border-amber-700">
+            <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
               কোর্সের প্রধান ফিচার সমূহ
             </h2>
           </div>
@@ -470,8 +470,8 @@ const CourseDetails = () => {
       {/* Full description: centered numbered special heading box + detail card below it */}      {Array.isArray((course as any).full_description_blocks) &&
         (course as any).full_description_blocks.length > 0 && (
           <div className="mb-6 space-y-6">
-            <div className="mx-auto mb-1 max-w-[90%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-4 py-3 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
-              <h2 className="text-base font-bold underline underline-offset-4">
+            <div className="mx-auto mb-1 max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-5 py-4 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
+              <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
                 প্রত্যেকটি ফিচারের বিস্তারিত:
               </h2>
             </div>
