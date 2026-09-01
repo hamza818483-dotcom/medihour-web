@@ -471,8 +471,19 @@ mjx-container[display="true"] {
   100% { transform: translate3d(0, 0, 0); }
 }
 .animate-gallery-scroll-left {
-  animation: gallery-scroll-left 38s linear infinite;
+  animation: gallery-scroll-left 70s linear infinite;
 }
 .animate-gallery-scroll-right {
-  animation: gallery-scroll-right 42s linear infinite;
+  animation: gallery-scroll-right 76s linear infinite;
+}
+.animate-gallery-scroll-left.gallery-row-paused,
+.animate-gallery-scroll-right.gallery-row-paused {
+  animation-play-state: paused;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

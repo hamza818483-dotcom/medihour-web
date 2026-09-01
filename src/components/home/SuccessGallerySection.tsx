@@ -1,5 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useRef, useState } from "react";
+
+/** Enables click-and-drag / touch-swipe scrolling on a marquee row while
+ *  the CSS auto-scroll animation is paused during interaction. */
+const useDragScroll = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const startX = useRef(0);
+  const startScroll = useRef(0);
+
+  const onDown = (clientX: number) => {
+    if (!ref.current) return;
+    setDragging(true);
+    startX.current = clientX;
+    startScroll.current = ref.current.scrollLeft;
+  };
+  const onMove = (clientX: number) => {
+    if (!dragging || !ref.current) return;
+    ref.current.scrollLeft = startScroll.current - (clientX - startX.current);
+  };
+  const onUp = () => setDragging(false);
+
+  return {
+    ref,
+    dragging,
+    handlers: {
+      onMouseDown: (e: React.MouseEvent) => onDown(e.clientX),
+      onMouseMove: (e: React.MouseEvent) => onMove(e.clientX),
+      onMouseUp: onUp,
+      onMouseLeave: onUp,
+      onTouchStart: (e: React.TouchEvent) => onDown(e.touches[0].clientX),
+      onTouchMove: (e: React.TouchEvent) => onMove(e.touches[0].clientX),
+      onTouchEnd: onUp,
+    },
+  };
+};
 
 export const SuccessGallerySection = () => {
   const { data: photos } = useQuery({
@@ -13,6 +49,9 @@ export const SuccessGallerySection = () => {
     },
     staleTime: 5 * 60 * 1000,
   });
+
+  const row1 = useDragScroll();
+  const row2 = useDragScroll();
 
   if (!photos || photos.length === 0) return null;
 
@@ -41,8 +80,16 @@ export const SuccessGallerySection = () => {
       </div>
 
       {/* Row 1 */}
-      <div className="w-full overflow-hidden">
-        <div className="flex w-max animate-gallery-scroll-left gap-4 hover:[animation-play-state:paused]">
+      <div
+        ref={row1.ref}
+        className="w-full overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+        {...row1.handlers}
+      >
+        <div
+          className={`flex w-max animate-gallery-scroll-left gap-4 hover:[animation-play-state:paused] ${
+            row1.dragging ? "gallery-row-paused" : ""
+          }`}
+        >
           {[...rowOne, ...rowOne].map((photo, i) => (
             <div
               key={`r1-${photo.id}-${i}`}
@@ -63,8 +110,16 @@ export const SuccessGallerySection = () => {
 
       {/* Row 2 (reverse direction), only if enough photos */}
       {photos.length > 3 && (
-        <div className="mt-4 w-full overflow-hidden">
-          <div className="flex w-max animate-gallery-scroll-right gap-4 hover:[animation-play-state:paused]">
+        <div
+          ref={row2.ref}
+          className="mt-4 w-full overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+          {...row2.handlers}
+        >
+          <div
+            className={`flex w-max animate-gallery-scroll-right gap-4 hover:[animation-play-state:paused] ${
+              row2.dragging ? "gallery-row-paused" : ""
+            }`}
+          >
             {[...rowTwo, ...rowTwo].map((photo, i) => (
               <div
                 key={`r2-${photo.id}-${i}`}
