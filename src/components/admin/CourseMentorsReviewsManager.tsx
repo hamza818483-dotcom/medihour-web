@@ -145,7 +145,7 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
 
   const addReviewMutation = useMutation({
     mutationFn: async () => {
-      if (!reviewForm.image_url.trim() && !reviewForm.post_image_url.trim() && reviewForm.images.length === 0) {
+      if (!reviewForm.image_url.trim() && reviewForm.images.length === 0) {
         throw new Error("At least one image is required");
       }
       const { error } = await supabase.from("reviews").insert({
@@ -155,7 +155,7 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
         review_text: reviewForm.review_text || null,
         rating: reviewForm.rating || null,
         image_url: reviewForm.image_url || null,
-        post_image_url: reviewForm.post_image_url || null,
+        post_image_url: reviewForm.images[0] || null,
         images: reviewForm.images.length > 0 ? reviewForm.images : null,
       });
       if (error) throw error;
@@ -310,15 +310,11 @@ export function CourseMentorsReviewsManager({ courseId }: Props) {
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Student Photo</Label>
+              <Label>Student Photo (optional)</Label>
               <ImageUploader value={reviewForm.image_url} onChange={(url) => setReviewForm({ ...reviewForm, image_url: url })} />
             </div>
             <div className="space-y-1.5 sm:col-span-2">
-              <Label>Review Screenshot / Post Image (optional)</Label>
-              <ImageUploader value={reviewForm.post_image_url} onChange={(url) => setReviewForm({ ...reviewForm, post_image_url: url })} />
-            </div>
-            <div className="space-y-1.5 sm:col-span-2">
-              <Label>Additional Images (optional, select multiple)</Label>
+              <Label>Review Images (select one or multiple)</Label>
               <MultiImageUploader values={reviewForm.images} onChange={(images) => setReviewForm({ ...reviewForm, images })} />
             </div>
             <div className="sm:col-span-2">
