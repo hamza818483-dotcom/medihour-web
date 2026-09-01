@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, Bold, Italic, Underline, Trash2, Plus, ArrowUp, ArrowDown } from "lucide-react";
 
 export interface DescriptionBlock {
+  id?: string;
   heading: string;
   body: string; // html: bold/italic/underline only
 }
@@ -16,6 +17,17 @@ interface DescriptionBlockEditorProps {
 
 const RichBodyEditor: React.FC<{ html: string; onChange: (html: string) => void }> = ({ html, onChange }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
+  // Set initial content only once on mount (or when switching to a different block).
+  // Never re-sync from the `html` prop on every keystroke — that resets the cursor
+  // position and breaks typing (especially Bangla/IME composition).
+  useEffect(() => {
+    if (ref.current && isFirstRender.current) {
+      ref.current.innerHTML = html || "";
+      isFirstRender.current = false;
+    }
+  }, [html]);
 
   const exec = (cmd: string) => {
     ref.current?.focus();
@@ -40,13 +52,14 @@ const RichBodyEditor: React.FC<{ html: string; onChange: (html: string) => void 
         ref={ref}
         contentEditable
         suppressContentEditableWarning
-        dangerouslySetInnerHTML={{ __html: html }}
         onInput={() => onChange(ref.current?.innerHTML || "")}
         className="min-h-[90px] w-full rounded-md border bg-background px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-1 focus:ring-ring"
       />
     </div>
   );
 };
+
+const genId = () => Math.random().toString(36).slice(2, 10);
 
 export const DescriptionBlockEditor: React.FC<DescriptionBlockEditorProps> = ({ value, onChange }) => {
   const blocks = value?.length ? value : [];
@@ -57,7 +70,7 @@ export const DescriptionBlockEditor: React.FC<DescriptionBlockEditorProps> = ({ 
     onChange(next);
   };
 
-  const add = () => onChange([...blocks, { heading: "", body: "" }]);
+  const add = () => onChange([...blocks, { id: genId(), heading: "", body: "" }]);
   const remove = (i: number) => onChange(blocks.filter((_, idx) => idx !== i));
   const move = (i: number, dir: "up" | "down") => {
     const j = dir === "up" ? i - 1 : i + 1;
@@ -70,7 +83,7 @@ export const DescriptionBlockEditor: React.FC<DescriptionBlockEditorProps> = ({ 
   return (
     <div className="space-y-3">
       {blocks.map((block, i) => (
-        <Card key={i} className="border shadow-sm">
+        <Card key={block.id || i} className="border shadow-sm">
           <CardContent className="p-3 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-mono text-muted-foreground">#{i + 1}</span>
