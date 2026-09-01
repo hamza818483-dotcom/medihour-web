@@ -561,7 +561,6 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                     { key: "all", label: "All" },
                     { key: "live", label: "Live" },
                     { key: "practice", label: "Practice" },
-                    { key: "readymade", label: "Readymade" },
                     { key: "free", label: "Free" },
                 ] as const).map((c) => (
                     <button
