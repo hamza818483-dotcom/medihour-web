@@ -445,9 +445,11 @@ const CourseDetails = () => {
       {/* Full description: centered numbered special heading box + detail card below it */}      {Array.isArray((course as any).full_description_blocks) &&
         (course as any).full_description_blocks.length > 0 && (
           <div className="mb-6 space-y-6">
-            <h2 className="mb-1 text-center text-base font-bold underline underline-offset-4">
-              প্রত্যেকটি ফিচারের বিস্তারিত:
-            </h2>
+            <div className="mx-auto mb-1 max-w-[90%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-4 py-3 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
+              <h2 className="text-base font-bold underline underline-offset-4">
+                প্রত্যেকটি ফিচারের বিস্তারিত:
+              </h2>
+            </div>
             {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
               (block, i) => (
                 <div
