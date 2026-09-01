@@ -87,7 +87,7 @@ const Footer = () => {
               </div>
               <div className="flex items-start gap-2.5">
                 <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
-                <span className="text-[12px] text-white/65">সিলেট, বাংলাদেশ</span>
+                <span className="text-[12px] text-white/65">চট্টগ্রাম, বাংলাদেশ</span>
               </div>
             </div>
           </div>
