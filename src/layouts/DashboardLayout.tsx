@@ -8,7 +8,7 @@ import {
   Tag, LayoutTemplate, AlertCircle, Archive, Database, GraduationCap, Images, BarChart3, Timer
 } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebar, adminItems } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotification } from "@/contexts/NotificationContext";
@@ -443,76 +443,15 @@ export const DashboardLayout = () => {
                         <div className="my-1 border-t border-border/50"></div>
                         <p className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{isAdmin ? "Admin" : "Teacher"}</p>
 
-                        {/* Common Links for Admin & Teacher */}
-                        <Link to="/admin" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <LayoutDashboard className="h-4 w-4 text-blue-600" /> Overview
-                        </Link>
-                        <Link to="/admin/classes" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <Video className="h-4 w-4 text-red-600" /> Classes
-                        </Link>
-                        <Link to="/admin/routines" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <Calendar className="h-4 w-4 text-indigo-600" /> Routine Manager
-                        </Link>
-                        <Link to="/admin/exams" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <PenTool className="h-4 w-4 text-orange-600" /> Exams
-                        </Link>
-                        <Link to="/admin/question-bank" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <Database className="h-4 w-4 text-blue-600" /> Question Bank
-                        </Link>
-                        <Link to="/admin/announcements" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <Megaphone className="h-4 w-4 text-yellow-600" /> Notice
-                        </Link>
-                        <Link to="/admin/community" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <Users className="h-4 w-4 text-teal-600" /> Community Manager
-                        </Link>
-                        <Link to="/admin/notes" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <StickyNote className="h-4 w-4 text-pink-600" /> Notes Manager
-                        </Link>
-                        <Link to="/admin/archive" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                            <BookOpen className="h-4 w-4 text-purple-500" /> Archive Manager
-                        </Link>
-
-                        {/* Admin Only Links */}
-                        {isAdmin && (
-                          <>
-                            <Link to="/admin/free-content" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <StickyNote className="h-4 w-4 text-indigo-500" /> Free Manager
+                        {adminItems.filter(item => {
+                            if (item.roles.includes("admin") && isAdmin) return true;
+                            if (item.roles.includes("teacher") && isTeacher) return true;
+                            return false;
+                        }).map((item) => (
+                            <Link key={item.url} to={item.url} className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
+                                <item.icon className={`h-4 w-4 ${item.color || ''}`} /> {item.title}
                             </Link>
-                            <Link to="/admin/courses" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Settings className="h-4 w-4 text-green-600" /> Courses
-                            </Link>
-                            <Link to="/admin/students" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Users className="h-4 w-4 text-purple-600" /> Students
-                            </Link>
-                            <Link to="/admin/payments" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <CreditCard className="h-4 w-4 text-emerald-600" /> Payments
-                            </Link>
-                            <Link to="/admin/promos" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Tag className="h-4 w-4 text-cyan-600" /> Promo Codes
-                            </Link>
-                            <Link to="/admin/heroes" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <LayoutTemplate className="h-4 w-4 text-indigo-600" /> Site Heroes
-                            </Link>
-                            <Link to="/admin/mentors" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <PenTool className="h-4 w-4 text-violet-600" /> Mentors/Founders
-                            </Link>
-                            <Link to="/admin/success-gallery" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Images className="h-4 w-4 text-fuchsia-600" /> Success Gallery
-                            </Link>
-                            <Link to="/admin/reviews" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Megaphone className="h-4 w-4 text-pink-600" /> Reviews
-                            </Link>
-                            <Link to="/admin/reports" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <ShieldAlert className="h-4 w-4 text-red-500" /> Reports
-                            </Link>
-                            <Link to="/admin/syllabus-tracker" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <BarChart3 className="h-4 w-4 text-sky-600" /> Study Tracker
-                            </Link>
-                            <Link to="/focus-timer" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                                <Timer className="h-4 w-4 text-violet-500" /> Live Study Room
-                            </Link>
-                          </>
-                        )}
+                        ))}
                       </>
                     )}
 
