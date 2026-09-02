@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle2, Copy, AlertCircle, Sparkles, Tag, Gift, Timer, CalendarIcon, Info, SkipForward } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { trackPixelEvent, generateEventId, getStoredUtmParams, getFacebookCookies } from "@/lib/metaPixel";
 
 // Live countdown timer component
 const CountdownTimer = ({ deadline }: { deadline: string }) => {
@@ -165,6 +166,18 @@ const CourseBuy = () => {
     staleTime: 3 * 60 * 1000,
   });
 
+  useEffect(() => {
+    if (course?.id) {
+      trackPixelEvent("InitiateCheckout", {
+        content_ids: [course.id],
+        content_name: course.name,
+        content_type: "product",
+        value: course.price ?? undefined,
+        currency: "BDT",
+      });
+    }
+  }, [course?.id]);
+
   // Fetch special discounts for this course
   const { data: specialDiscounts } = useQuery({
     queryKey: ["special-discounts", course?.id],
@@ -192,6 +205,8 @@ const CourseBuy = () => {
           phone: profile?.phone || "N/A",
           payment_method: "bkash",
           status: "pending",
+          event_id: generateEventId(),
+          ...getStoredUtmParams(),
         });
         if (error) throw error;
       }
@@ -299,6 +314,9 @@ const CourseBuy = () => {
         sender_last5: values.sender_last5,
         social_link: values.social_link,
         contact_number: values.contact_number,
+        event_id: generateEventId(),
+        ...getStoredUtmParams(),
+        ...(() => { const c = getFacebookCookies(); return { fbp: c.fbp || null, fbc: c.fbc || null }; })(),
       };
 
       const { error } = await (supabase.from as any)("payment_requests").insert(payload);

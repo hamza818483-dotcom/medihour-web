@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Youtube, Mail, Phone, MapPin, Send, Users } from "lucide-react";
+import { Facebook, Youtube, Mail, Phone, MapPin, Send, Users, FileText, ChevronRight, RotateCcw, Building2, Atom, Leaf, PenSquare } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -21,6 +21,23 @@ const Footer = () => {
   const facebookGroup = links?.facebook_group || "https://www.facebook.com/share/g/1CsYjAfZxw/";
   const telegram = links?.telegram || "https://t.me/MediHour";
   const youtube = links?.youtube || "https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C";
+
+  const batches = [
+    { icon: RotateCcw, label: "প্রত্যাবর্তন", sub: "(2nd Time)" },
+    { icon: Building2, label: "ক্যাম্পাস", sub: "(Varsity)" },
+    { icon: Atom, label: "GST Admission" },
+    { icon: Leaf, label: "Agri Admission" },
+    { icon: PenSquare, label: "Exam Batch" },
+  ];
+
+  const quickLinks = [
+    { to: "/", label: "হোম" },
+    { to: "/courses", label: "সকল কোর্স" },
+    { to: "/login", label: "লগইন" },
+    { to: "/register", label: "রেজিস্ট্রেশন" },
+    { href: "/free-exam", label: "ফ্রি এক্সাম" },
+    { href: "/free-class", label: "ডেমো ক্লাস" },
+  ];
 
   return (
     <footer className="relative w-full overflow-hidden bg-gradient-to-br from-[#111118] via-[#151520] to-[#101015] text-white">
@@ -54,19 +71,23 @@ const Footer = () => {
 
         {/* Main columns */}
         <div className="grid grid-cols-1 gap-9 sm:grid-cols-3">
-          {/* Quick Links */}
+          {/* Batches */}
           <div>
             <div className="mb-4 flex items-center gap-2">
               <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
-              <h4 className="m-0 text-sm font-bold text-white">প্রয়োজনীয় লিংক</h4>
+              <h4 className="m-0 text-sm font-bold text-white">আমাদের ব্যাচসমূহ</h4>
             </div>
-            <div className="flex flex-col gap-2">
-              <Link to="/" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">হোম</Link>
-              <Link to="/courses" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">সকল কোর্স</Link>
-              <Link to="/login" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">লগইন</Link>
-              <Link to="/register" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">রেজিস্ট্রেশন</Link>
-              <a href="/free-exam" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">ফ্রি এক্সাম</a>
-              <a href="/free-class" className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">ডেমো ক্লাস</a>
+            <div className="flex flex-wrap gap-2">
+              {batches.map((b, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.045] px-3 py-1.5 text-[11px] font-medium text-white/70 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
+                >
+                  <b.icon size={12} className="text-[#f0447f]" />
+                  {b.label}
+                  {b.sub && <span className="text-white/40">{b.sub}</span>}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -78,46 +99,67 @@ const Footer = () => {
             </div>
             <div className="flex flex-col gap-2.5">
               <div className="flex items-start gap-2.5">
-                <Mail size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
-                <a href={`mailto:${email}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{email}</a>
+                <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <span className="text-[12px] text-white/65">চট্টগ্রাম, বাংলাদেশ</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <Phone size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
                 <a href={`tel:${whatsapp}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{whatsapp}</a>
               </div>
               <div className="flex items-start gap-2.5">
-                <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
-                <span className="text-[12px] text-white/65">চট্টগ্রাম, বাংলাদেশ</span>
+                <Mail size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <a href={`mailto:${email}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{email}</a>
               </div>
             </div>
           </div>
 
-          {/* Social */}
+          {/* Important Links */}
           <div>
             <div className="mb-4 flex items-center gap-2">
               <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
-              <h4 className="m-0 text-sm font-bold text-white">সোশ্যাল</h4>
+              <h4 className="m-0 text-sm font-bold text-white">গুরুত্বপূর্ণ লিংক</h4>
             </div>
-            <div className="flex flex-wrap items-center gap-1.5">
-              <a href={facebookPage} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
-                <Facebook size={15} />
-              </a>
-              <a href={facebookGroup} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
-                <Users size={15} />
-              </a>
-              <a href={telegram} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#35aeea]">
-                <Send size={15} />
-              </a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#ff4d62]">
-                <Youtube size={15} />
-              </a>
+            <div className="flex flex-col gap-2">
+              {quickLinks.map((l, i) =>
+                l.to ? (
+                  <Link key={i} to={l.to} className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">
+                    <ChevronRight size={11} className="text-[#f0447f]" />
+                    {l.label}
+                  </Link>
+                ) : (
+                  <a key={i} href={l.href} className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">
+                    <ChevronRight size={11} className="text-[#f0447f]" />
+                    {l.label}
+                  </a>
+                )
+              )}
             </div>
           </div>
         </div>
 
-        {/* Bottom: Copyright */}
-        <div className="mt-9 border-t border-white/[0.07] pt-5 text-center">
-          <p className="m-0 text-[9.5px] leading-relaxed text-white/40">© {currentYear} MediHour. সর্বস্বত্ব সংরক্ষিত।</p>
+        {/* Bottom bar */}
+        <div className="mt-9 border-t border-white/[0.07] pt-6">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
+            <a href={facebookPage} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
+              <Facebook size={15} />
+            </a>
+            <a href={facebookGroup} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#4d8dff]">
+              <Users size={15} />
+            </a>
+            <a href={telegram} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#35aeea]">
+              <Send size={15} />
+            </a>
+            <a href={youtube} target="_blank" rel="noreferrer" className="flex h-[35px] w-[35px] items-center justify-center rounded-[10px] border border-white/[0.07] bg-white/[0.043] text-white/55 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-[#ff4d62]">
+              <Youtube size={15} />
+            </a>
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-center text-[9.5px] leading-relaxed text-white/40 sm:justify-start">
+            <span className="inline-flex items-center gap-1">
+              <FileText size={10} className="text-white/30" />
+              © {currentYear} MediHour. সর্বস্বত্ব সংরক্ষিত।
+            </span>
+          </div>
         </div>
       </div>
     </footer>

@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { getEmbedUrl } from "@/lib/videoUtils";
 import { QuickAccessSortDialog, QUICK_ACCESS_ORDER_KEY } from "@/components/dashboard/QuickAccessSortDialog";
 import { LiveCountdown } from "@/components/shared/LiveCountdown";
+import { trackPixelEvent } from "@/lib/metaPixel";
 
 const TUTORIAL_VIDEO_KEY = "dashboard_tutorial_video_url";
 
@@ -143,6 +144,37 @@ const DashboardHome = () => {
     },
     enabled: !!user,
   });
+
+  // Meta Pixel: fire browser-side Purchase the moment this student's own
+  // payment gets approved (verified server-side status change via Realtime),
+  // using the same event_id the DB trigger sends to the CAPI edge function
+  // — so Meta dedupes the browser + server events into a single Purchase.
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`payment-approved-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "payment_requests", filter: `profile_id=eq.${user.id}` },
+        (payload: any) => {
+          const row = payload.new;
+          if (row?.status === "approved") {
+            trackPixelEvent(
+              "Purchase",
+              {
+                content_ids: [row.course_id],
+                content_type: "product",
+                value: row.amount_final ?? row.amount_sent ?? undefined,
+                currency: "BDT",
+              },
+              row.event_id || undefined
+            );
+          }
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
 
   const { data: dashboardData, isLoading: dashboardLoading, isError } = useQuery({
     queryKey: ["dashboard-data", user?.id],

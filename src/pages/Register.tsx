@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
 import { Eye, EyeOff, AlertTriangle, PhoneCall, MessageCircle, Send, User } from "lucide-react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { trackPixelEvent, generateEventId, getStoredUtmParams, getFacebookCookies } from "@/lib/metaPixel";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -158,6 +159,7 @@ const Register = () => {
       }
 
       // 2. Create the user in Supabase Auth
+      const utmParams = getStoredUtmParams();
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
@@ -175,6 +177,11 @@ const Register = () => {
             phone: phone,
             gender: gender,
             is_second_timer: isSecondTimer,
+            utm_source: utmParams.utm_source || null,
+            utm_medium: utmParams.utm_medium || null,
+            utm_campaign: utmParams.utm_campaign || null,
+            utm_content: utmParams.utm_content || null,
+            utm_term: utmParams.utm_term || null,
           }
         }
       });
@@ -211,6 +218,24 @@ const Register = () => {
         title: "Registration successful",
         description: "Account created! Redirecting...",
       });
+
+      // Meta Pixel: CompleteRegistration (browser + server CAPI, same event_id for dedup)
+      const regEventId = generateEventId();
+      trackPixelEvent("CompleteRegistration", { content_name: "MediHour Registration" }, regEventId);
+      const fbCookies = getFacebookCookies();
+      supabase.functions.invoke("meta-capi", {
+        body: {
+          event_name: "CompleteRegistration",
+          event_id: regEventId,
+          event_source_url: window.location.href,
+          user: {
+            email,
+            phone,
+            fbp: fbCookies.fbp,
+            fbc: fbCookies.fbc,
+          },
+        },
+      }).catch(() => { /* non-blocking: registration already succeeded */ });
 
       if (authData.session) {
         navigate(location.state?.from || "/dashboard", { replace: true });

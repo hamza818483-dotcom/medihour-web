@@ -8,6 +8,8 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { HelmetProvider } from "react-helmet-async";
+import MetaPixelRouteTracker from "@/components/MetaPixelRouteTracker";
+import CookieConsentBanner from "@/components/CookieConsentBanner";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -20,6 +22,7 @@ import CourseBuy from "./pages/public/CourseBuy";
 import FreeClass from "./pages/public/FreeClass";
 import FreeExam from "./pages/public/FreeExam";
 import Reviews from "./pages/public/Reviews";
+import PrivacyPolicy from "./pages/public/PrivacyPolicy";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -113,6 +116,8 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <MetaPixelRouteTracker />
+          <CookieConsentBanner />
           <AuthProvider>
             <NotificationProvider>
             <Routes>
@@ -128,6 +133,7 @@ const App = () => {
                 <Route path="/free-class" element={<ErrorBoundary><FreeClass /></ErrorBoundary>} />
                 <Route path="/free-exam" element={<ErrorBoundary><FreeExam /></ErrorBoundary>} />
                 <Route path="/reviews" element={<ErrorBoundary><Reviews /></ErrorBoundary>} />
+                <Route path="/privacy-policy" element={<ErrorBoundary><PrivacyPolicy /></ErrorBoundary>} />
               </Route>
 
               <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>

@@ -11,6 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
 import { DemoContentItem } from "@/types/admin";
 import { useToast } from "@/hooks/use-toast";
+import { trackPixelEvent } from "@/lib/metaPixel";
 
 // Live countdown timer, rendered as small premium digit boxes (H / M / S)
 const CountdownTimer = ({ deadline }: { deadline: string }) => {
@@ -105,6 +106,18 @@ const CourseDetails = () => {
     enabled: !!courseId,
     staleTime: 3 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (course?.id) {
+      trackPixelEvent("ViewContent", {
+        content_ids: [course.id],
+        content_name: course.name,
+        content_type: "product",
+        value: course.price ?? undefined,
+        currency: "BDT",
+      });
+    }
+  }, [course?.id]);
 
   const { data: enrollmentCount } = useQuery({
     queryKey: ["course-enrollment-count", course?.id],
