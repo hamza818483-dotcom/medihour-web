@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, Loader2, ChevronLeft, ChevronRight, BookOpen, Clock, Archive } from "lucide-react";
+import { Search, Loader2, ChevronLeft, ChevronRight, BookOpen, Archive } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
@@ -342,7 +342,7 @@ export const QuestionBankSelector = ({ onSelect }: QuestionBankSelectorProps) =>
             <div className="flex-1 overflow-y-auto min-h-0 bg-background/50 py-4 px-1.5 sm:px-2">
                 {/* View 1: Category Selection */}
                 {view === 'category' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:max-w-3xl sm:mx-auto mt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:max-w-2xl sm:mx-auto mt-4">
                         <Card
                             className="p-6 cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all text-center flex flex-col items-center gap-3"
                             onClick={() => { setSelectedCategory('exams'); setView('subjects'); }}
@@ -353,19 +353,6 @@ export const QuestionBankSelector = ({ onSelect }: QuestionBankSelectorProps) =>
                             <div>
                                 <h3 className="font-semibold text-lg">Regular Exams</h3>
                                 <p className="text-sm text-muted-foreground mt-1">Live and practice exams of courses</p>
-                            </div>
-                        </Card>
-
-                        <Card
-                            className="p-6 cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all text-center flex flex-col items-center gap-3"
-                            onClick={() => { setSelectedCategory('readymade'); setView('subjects'); }}
-                        >
-                            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full">
-                                <Clock className="h-6 w-6" />
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-lg">Readymade</h3>
-                                <p className="text-sm text-muted-foreground mt-1">Exams marked as readymade</p>
                             </div>
                         </Card>
 
