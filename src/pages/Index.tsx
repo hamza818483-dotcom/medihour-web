@@ -45,11 +45,6 @@ const FEATURES = [
     { icon: BarChart, title: "এক্সাম লিডারবোর্ড", desc: "অন্যদের সাথে নিজের অবস্থান যাচাই।" },
 ];
 
-const STATS = [
-    { year: "২০২৪", title: "মেডিকেল ভর্তি", details: "টপ ২০-এ ৬/২০। মোট ৩৫০+ সাফল্য।" },
-    
-];
-
 const Index = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -382,29 +377,6 @@ const Index = () => {
                 </div>
             </div>
         </section>
-
-        {/* Success Stats Section */}
-        <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(0 84% 60%)" }}>
-        <section id="success-stories" className="space-y-3">
-             <div className="text-center space-y-2">
-                <h2 className="text-2xl font-semibold tracking-tight">সাফল্যের গল্প</h2>
-                <p className="text-muted-foreground">প্রতি বছর ধারাবাহিক সাফল্য।</p>
-             </div>
-             <div className="grid gap-4 md:grid-cols-3">
-                 {STATS.map((stat, i) => (
-                     <Card key={i} className="animate-border-chase text-center bg-primary/5 border-primary/20" style={{ ["--border-chase-color" as any]: "hsl(var(--primary))" }}>
-                         <CardHeader>
-                             <CardTitle className="text-4xl font-bold text-primary">{stat.year}</CardTitle>
-                             <CardDescription className="font-semibold uppercase tracking-wider">{stat.title}</CardDescription>
-                         </CardHeader>
-                         <CardContent>
-                             <p className="text-sm font-medium">{stat.details}</p>
-                         </CardContent>
-                     </Card>
-                 ))}
-             </div>
-        </section>
-        </div>
 
       </main>
 
