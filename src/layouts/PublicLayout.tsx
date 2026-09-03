@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import Footer from "@/components/Footer";
 
 const PublicLayout = () => {
   return (
@@ -7,7 +6,6 @@ const PublicLayout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
-      <Footer />
     </div>
   );
 };
