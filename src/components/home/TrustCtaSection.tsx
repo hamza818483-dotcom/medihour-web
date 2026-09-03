@@ -22,7 +22,7 @@ export const TrustCtaSection = () => {
 
             <div className="flex flex-wrap items-center gap-2.5">
               <a
-                href="/courses"
+                href="/#courses"
                 className="inline-flex min-h-[42px] items-center justify-center rounded-[9px] bg-gradient-to-br from-[#e52b80] to-[#f05463] px-5 text-[13px] font-bold text-white shadow-[0_7px_16px_rgba(229,43,128,0.17)] transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(229,43,128,0.25)]"
               >
                 পেইড কোর্স
