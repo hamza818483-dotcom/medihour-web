@@ -157,25 +157,19 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <PublicHeader />
 
-      {/* Hero Section (PhysicsHunters-style rounded carousel frame) */}
+      {/* Hero Section (Full Width, LMS-style) */}
       {displayHeroes.length > 0 && (
-        <section className="w-full bg-background px-3 pb-3 pt-3 sm:px-4 sm:pt-4">
-          <div className="mx-auto w-full max-w-[1280px]">
-            <div className="relative isolate overflow-hidden rounded-3xl bg-[#090909] shadow-[0_18px_50px_rgba(0,0,0,0.14)] hero-glow" ref={emblaRef}>
-              <div className="flex">
-                {displayHeroes.map((hero: any, index: number) => (
-                  <HeroCarouselItem key={hero.id || index} hero={hero} />
-                ))}
-              </div>
-              {/* Bottom vignette matching ph-hero-image-wrapper::after */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-black/[0.02] to-black/[0.12]" />
-            </div>
+        <div className="overflow-hidden w-full relative hero-glow" ref={emblaRef}>
+          <div className="flex">
+            {displayHeroes.map((hero: any, index: number) => (
+              <HeroCarouselItem key={hero.id || index} hero={hero} />
+            ))}
           </div>
-        </section>
+        </div>
       )}
 
 
-      <main className={`mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 flex-1 pt-6 sm:pt-8 ${displayHeroes.length === 0 ? "mt-[92px] sm:mt-[100px]" : ""}`}>
+      <main className={`mx-auto flex max-w-6xl flex-col gap-6 px-2 sm:px-4 pb-10 flex-1 pt-6 sm:pt-8 ${displayHeroes.length === 0 ? "mt-3 sm:mt-4" : ""}`}>
 
         {/* Landing Exams (Free Exam category exams with "Allow Dashboard" toggle on) */}
         {landingExams && landingExams.length > 0 && (
