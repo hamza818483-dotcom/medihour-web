@@ -154,6 +154,7 @@
   html {
       /* Fluid typography: base 16px, scales with viewport, max 22px */
       font-size: clamp(16px, 1.2vw + 12px, 22px);
+      overflow-x: hidden;
   }
   * {
     @apply border-border;
@@ -161,6 +162,7 @@
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
+    overflow-x: hidden;
   }
 }
 

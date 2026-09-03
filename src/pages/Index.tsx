@@ -154,7 +154,7 @@ const Index = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <PublicHeader />
 
       {/* Hero Section (PhysicsHunters-style rounded carousel frame) */}
