@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Youtube, Mail, Phone, MapPin, Send, Users, FileText, ChevronRight, RotateCcw, Building2, Atom, Leaf, PenSquare } from "lucide-react";
+import { Facebook, Youtube, Mail, Phone, MapPin, Send, Users, FileText, ChevronRight, GraduationCap } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,20 +15,27 @@ const Footer = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: courses } = useQuery({
+    queryKey: ["footer-courses"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("courses")
+        .select("id, slug, name")
+        .eq("is_active", true)
+        .eq("is_public", true)
+        .order("priority", { ascending: false })
+        .limit(6);
+      return data || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   const email = links?.email || "medihourofficial@gmail.com";
   const whatsapp = links?.whatsapp || "+8801639787547";
   const facebookPage = links?.facebook_page || "https://www.facebook.com/share/1EX8RkwBoP/";
   const facebookGroup = links?.facebook_group || "https://www.facebook.com/share/g/1CsYjAfZxw/";
   const telegram = links?.telegram || "https://t.me/MediHour";
   const youtube = links?.youtube || "https://youtube.com/@medihour.official?si=Q-vU8sHvBB0cka-C";
-
-  const batches = [
-    { icon: RotateCcw, label: "প্রত্যাবর্তন", sub: "(2nd Time)" },
-    { icon: Building2, label: "ক্যাম্পাস", sub: "(Varsity)" },
-    { icon: Atom, label: "GST Admission" },
-    { icon: Leaf, label: "Agri Admission" },
-    { icon: PenSquare, label: "Exam Batch" },
-  ];
 
   const quickLinks = [
     { to: "/", label: "হোম" },
@@ -75,19 +82,23 @@ const Footer = () => {
           <div>
             <div className="mb-4 flex items-center gap-2">
               <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
-              <h4 className="m-0 text-sm font-bold text-white">আমাদের ব্যাচসমূহ</h4>
+              <h4 className="m-0 text-sm font-bold text-white">আমাদের কোর্সসমূহ</h4>
             </div>
             <div className="flex flex-wrap gap-2">
-              {batches.map((b, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.045] px-3 py-1.5 text-[11px] font-medium text-white/70 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
-                >
-                  <b.icon size={12} className="text-[#f0447f]" />
-                  {b.label}
-                  {b.sub && <span className="text-white/40">{b.sub}</span>}
-                </span>
-              ))}
+              {courses && courses.length > 0 ? (
+                courses.map((c) => (
+                  <Link
+                    key={c.id}
+                    to={`/courses/${c.slug || c.id}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.045] px-3 py-1.5 text-[11px] font-medium text-white/70 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
+                  >
+                    <GraduationCap size={12} className="text-[#f0447f]" />
+                    {c.name}
+                  </Link>
+                ))
+              ) : (
+                <span className="text-[11px] text-white/40">শীঘ্রই আসছে</span>
+              )}
             </div>
           </div>
 
