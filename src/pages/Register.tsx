@@ -72,8 +72,6 @@ const Register = () => {
 
     const formData = new FormData(event.currentTarget);
     const fullName = formData.get("fullName") as string;
-    const fatherName = formData.get("fatherName") as string;
-    const motherName = formData.get("motherName") as string;
     // const registrationId = formData.get("registrationId") as string; // Optional or generated
     const rawPhone = formData.get("phone") as string;
     const phone = convertToEnglishDigits(rawPhone).trim();
@@ -168,8 +166,6 @@ const Register = () => {
           captchaToken,
           data: {
             full_name: fullName,
-            father_name: fatherName,
-            mother_name: motherName,
             hsc_batch: hscBatch,
             college_name: collegeName,
             ssc_gpa: sscGpa,
@@ -356,16 +352,6 @@ const Register = () => {
                   <Input id="email" name="email" type="email" required placeholder="user@example.com" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
                 </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="fatherName">Father's Full Name</Label>
-                  <Input id="fatherName" name="fatherName" required placeholder="Father's full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
-                  <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide father's full name.</p>
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="motherName">Mother's Full Name</Label>
-                  <Input id="motherName" name="motherName" required placeholder="Mother's full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
-                  <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide mother's full name.</p>
-                </div>
                 <div className="space-y-2">
                   <Label htmlFor="collegeName">Full College Name</Label>
                   <Input id="collegeName" name="collegeName" required placeholder="Your full college name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10" />
