@@ -679,7 +679,11 @@ const CourseDetails = () => {
           </div>
         )}
 
-      <div className="sticky bottom-3 mt-8 flex items-center justify-between gap-3 rounded-2xl border bg-background/95 p-4 shadow-lg backdrop-blur">
+      {/* Spacer so fixed enroll bar doesn't cover the last content */}
+      <div className="h-24" />
+
+      <div className="fixed inset-x-0 bottom-0 z-[1000] border-t bg-background/95 p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur">
+        <div className="mx-auto flex w-full max-w-[900px] items-center justify-between gap-3 px-4">
         <div>
           {discountedPrice != null && appliedCoupon ? (
             <div className="flex items-baseline gap-2">
@@ -709,6 +713,7 @@ const CourseDetails = () => {
         >
           <Link to={getEnrollUrl()}>ভর্তি হন</Link>
         </Button>
+        </div>
       </div>
     </div>
   );
