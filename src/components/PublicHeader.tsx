@@ -30,9 +30,9 @@ export const PublicHeader = () => {
   ];
 
   return (
-    <header className="w-full px-3 pt-3.5 sm:px-5 bg-transparent">
-      <div className="mx-auto w-full max-w-[1180px] pointer-events-auto">
-        <nav className="flex h-[62px] items-center gap-5 rounded-[18px] border border-white/85 bg-white/[0.88] pl-4 pr-3 backdrop-blur-xl shadow-[0_8px_35px_rgba(30,40,70,0.09)] dark:bg-slate-900/85 dark:border-white/10">
+    <header className="w-full border-b bg-white/95 backdrop-blur dark:bg-slate-900/95 dark:border-white/10">
+      <div className="mx-auto w-full max-w-[1180px] px-3 sm:px-5">
+        <nav className="flex h-[62px] items-center gap-5">
           {/* Logo */}
           <a href="/" className="flex flex-shrink-0 items-center">
             <img src="/logo.png" alt="MediHour" className="h-[45px] w-[135px] object-contain" />
