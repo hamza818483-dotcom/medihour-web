@@ -30,7 +30,7 @@ export const PublicHeader = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[1050] px-3 pt-3.5 sm:px-5 pointer-events-none bg-transparent">
+    <header className="w-full px-3 pt-3.5 sm:px-5 bg-transparent">
       <div className="mx-auto w-full max-w-[1180px] pointer-events-auto">
         <nav className="flex h-[62px] items-center gap-5 rounded-[18px] border border-white/85 bg-white/[0.88] pl-4 pr-3 backdrop-blur-xl shadow-[0_8px_35px_rgba(30,40,70,0.09)] dark:bg-slate-900/85 dark:border-white/10">
           {/* Logo */}

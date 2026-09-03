@@ -260,7 +260,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PublicHeader />
-      <main className="flex min-h-screen items-center justify-center px-4 pt-[92px] pb-10">
+      <main className="flex min-h-screen items-center justify-center px-4 pt-8 pb-10">
         <Card className="w-full max-w-xl overflow-hidden rounded-[26px] border border-[#f3d9e3] bg-gradient-to-br from-white via-white to-[#fff7fa] shadow-[0_25px_60px_rgba(237,52,125,0.14)] dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
           <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#e9287a]" />
           <CardHeader className="space-y-3 pb-2 pt-7 text-center">

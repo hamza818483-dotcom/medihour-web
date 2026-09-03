@@ -159,7 +159,7 @@ const Index = () => {
 
       {/* Hero Section (PhysicsHunters-style rounded carousel frame) */}
       {displayHeroes.length > 0 && (
-        <section className="w-full bg-background px-3 pb-3 pt-[92px] sm:px-4 sm:pt-[100px]">
+        <section className="w-full bg-background px-3 pb-3 pt-3 sm:px-4 sm:pt-4">
           <div className="mx-auto w-full max-w-[1280px]">
             <div className="relative isolate overflow-hidden rounded-3xl bg-[#090909] shadow-[0_18px_50px_rgba(0,0,0,0.14)] hero-glow" ref={emblaRef}>
               <div className="flex">

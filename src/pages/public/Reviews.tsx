@@ -24,7 +24,7 @@ const Reviews = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <PublicHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-[110px]">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-8">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-black tracking-tight sm:text-3xl">শিক্ষার্থীদের মতামত</h1>
           <p className="mt-2 text-sm text-muted-foreground">আমাদের শিক্ষার্থীদের অভিজ্ঞতা</p>

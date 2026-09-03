@@ -22,7 +22,7 @@ const FreeClass = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <PublicHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-[110px]">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-8">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-black tracking-tight sm:text-3xl">ফ্রি ক্লাস</h1>
           <p className="mt-2 text-sm text-muted-foreground">সবার জন্য উন্মুক্ত ক্লাস নোট ও রিসোর্স</p>

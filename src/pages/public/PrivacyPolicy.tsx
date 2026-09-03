@@ -5,7 +5,7 @@ const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
-      <main className="mx-auto max-w-3xl px-4 pb-16 pt-28 sm:pt-32">
+      <main className="mx-auto max-w-3xl px-4 pb-16 pt-8 sm:pt-10">
         <h1 className="mb-6 text-2xl font-extrabold sm:text-3xl">Privacy Policy & Cookie Notice</h1>
         <p className="mb-6 text-sm text-muted-foreground">সর্বশেষ আপডেট: {new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}</p>
 
