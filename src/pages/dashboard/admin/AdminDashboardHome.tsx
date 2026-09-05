@@ -70,14 +70,14 @@ const AdminDashboardHome = () => {
     { title: "Payments", icon: CreditCard, url: "/admin/payments", color: "text-emerald-600", bg: "bg-emerald-50 dark:bg-emerald-950" },
     { title: "Archive", icon: BookOpen, url: "/admin/archive", color: "text-slate-600", bg: "bg-slate-50 dark:bg-slate-950" },
     { title: "Routines", icon: Flag, url: "/admin/routines", color: "text-cyan-600", bg: "bg-cyan-50 dark:bg-cyan-950" },
-    { title: "Reviews", icon: PenTool, url: "/admin/reviews", color: "text-pink-600", bg: "bg-pink-50 dark:bg-pink-950" },
+    { title: "Reviews", icon: PenTool, url: "/admin/reviews", color: "text-blue-600", bg: "bg-blue-50 dark:bg-blue-950" },
     { title: "Promo Codes", icon: DollarSign, url: "/admin/promo-codes", color: "text-lime-600", bg: "bg-lime-50 dark:bg-lime-950" },
     { title: "Mentors", icon: GraduationCap, url: "/admin/mentors", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950" },
-    { title: "Heroes", icon: Users, url: "/admin/heroes", color: "text-rose-600", bg: "bg-rose-50 dark:bg-rose-950" },
+    { title: "Heroes", icon: Users, url: "/admin/heroes", color: "text-sky-600", bg: "bg-sky-50 dark:bg-sky-950" },
     { title: "Community", icon: Megaphone, url: "/admin/community", color: "text-violet-600", bg: "bg-violet-50 dark:bg-violet-950" },
     { title: "Reports", icon: Flag, url: "/admin/reports", color: "text-amber-600", bg: "bg-amber-50 dark:bg-amber-950" },
     { title: "Live Study Room", icon: Timer, url: "/focus-timer", color: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-950" },
-    { title: "Mock Test", icon: ListChecks, url: "/admin/exams", color: "text-fuchsia-600", bg: "bg-fuchsia-50 dark:bg-fuchsia-950" },
+    { title: "Mock Test", icon: ListChecks, url: "/admin/exams", color: "text-indigo-600", bg: "bg-indigo-50 dark:bg-indigo-950" },
   ];
 
   return (

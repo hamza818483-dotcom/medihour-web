@@ -77,7 +77,7 @@ export function StudyTrackerRevision() {
                   <div className="text-xs font-bold mb-1.5">{c.name}</div>
                   <div className="flex items-center gap-2">
                     <div className="flex-1 h-1 bg-muted rounded-full">
-                      <div className="h-full w-0 bg-gradient-to-r from-purple-500 to-rose-500 rounded-full" />
+                      <div className="h-full w-0 bg-gradient-to-r from-purple-500 to-sky-500 rounded-full" />
                     </div>
                     <span className="text-[10px] text-muted-foreground whitespace-nowrap">
                       {c.chapterCount} অধ্যায় · {c.topicCount} টপিক

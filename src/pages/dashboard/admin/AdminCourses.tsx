@@ -643,8 +643,8 @@ const AdminCourses = () => {
                                 />
                             </div>
 
-                            <div className="space-y-2 border md:border-0 rounded p-3 md:p-0 bg-pink-50/50 md:bg-transparent dark:bg-pink-950/10 dark:md:bg-transparent border-pink-100 dark:border-pink-900 border-dashed md:border-solid">
-                                <Label htmlFor="bkash_number" className="text-sm font-semibold text-pink-700 dark:text-pink-400">bKash Number</Label>
+                            <div className="space-y-2 border md:border-0 rounded p-3 md:p-0 bg-blue-50/50 md:bg-transparent dark:bg-blue-950/10 dark:md:bg-transparent border-blue-100 dark:border-blue-900 border-dashed md:border-solid">
+                                <Label htmlFor="bkash_number" className="text-sm font-semibold text-blue-700 dark:text-blue-400">bKash Number</Label>
                                 <Input
                                 id="bkash_number"
                                 value={form.bkash_number}

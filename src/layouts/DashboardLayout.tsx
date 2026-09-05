@@ -423,7 +423,7 @@ export const DashboardLayout = () => {
                         <AlertCircle className="h-4 w-4 text-red-600" /> My Mistakes
                     </Link>
                     <Link to="/dashboard/announcements" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
-                        <Megaphone className="h-4 w-4 text-rose-500" /> Notice
+                        <Megaphone className="h-4 w-4 text-sky-500" /> Notice
                     </Link>
                     <Link to="/dashboard/bookmarks" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
                         <Bookmark className="h-4 w-4 text-emerald-500" /> Bookmarks

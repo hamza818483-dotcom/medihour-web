@@ -78,7 +78,7 @@ const Podium = ({ topThree, isStaff }: { topThree: any[], isStaff: boolean }) =>
             {/* Background decorations */}
             <div className="absolute top-6 left-8 text-yellow-300 opacity-50"><Star size={16} fill="currentColor" /></div>
             <div className="absolute top-10 right-10 text-blue-300 opacity-40"><Star size={12} fill="currentColor" /></div>
-            <div className="absolute top-3 right-1/4 text-pink-300 opacity-60"><Star size={14} fill="currentColor" /></div>
+            <div className="absolute top-3 right-1/4 text-blue-300 opacity-60"><Star size={14} fill="currentColor" /></div>
             
             <PodiumItem student={second} rank={2} color="from-slate-400 to-slate-500" glowColor="rgba(148, 163, 184, 0.5)" height="70px" zIndex={20} />
             <PodiumItem student={first} rank={1} color="from-yellow-400 to-amber-500" glowColor="rgba(250, 204, 21, 0.6)" height="95px" zIndex={30} CrownIcon={true} />

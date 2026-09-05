@@ -215,8 +215,8 @@ const AdminMockPool = () => {
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-3">
-        <div className="h-12 w-12 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center shrink-0">
-          <Target className="h-6 w-6 text-fuchsia-600" />
+        <div className="h-12 w-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center shrink-0">
+          <Target className="h-6 w-6 text-indigo-600" />
         </div>
         <div>
           <h1 className="text-xl font-bold">আনলিমিটেড মক টেস্ট — প্রশ্ন ব্যাংক</h1>
