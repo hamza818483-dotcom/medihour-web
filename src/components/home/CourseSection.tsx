@@ -282,7 +282,7 @@ export const CourseSection = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {isLoading ? (
                     <p className="text-sm text-muted-foreground col-span-full">লোড হচ্ছে...</p>
                 ) : !filteredCourses || filteredCourses.length === 0 ? (
@@ -298,9 +298,9 @@ export const CourseSection = () => {
                         return (
                             <article
                                 key={course.id}
-                                className="group relative w-full rounded-[24px] p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.85),0_8px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-[7px] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.95),0_15px_35px_rgba(237,60,124,0.16)]"
+                                className="group relative w-full rounded-[24px] p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.85),0_8px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-[7px] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.95),0_15px_35px_rgba(37,99,235,0.16)]"
                                 style={{
-                                    background: "linear-gradient(120deg, #111 0%, #ff3f78 25%, #111 50%, #ff6b8d 75%, #111 100%)",
+                                    background: "linear-gradient(120deg, #111 0%, #2563eb 25%, #111 50%, #60a5fa 75%, #111 100%)",
                                     backgroundSize: "350% 350%",
                                     animation: "phStrongBorderMove 5s linear infinite",
                                 }}
@@ -324,41 +324,41 @@ export const CourseSection = () => {
                                     </div>
 
                                     {/* Body */}
-                                    <div className="flex flex-1 flex-col px-5 pb-[19px] pt-6">
-                                        <h3 className="mb-[15px] min-h-[57px] text-[19px] font-extrabold leading-[1.5] tracking-[-0.15px] text-[#171b1c] line-clamp-2 dark:text-white">
+                                    <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
+                                        <h3 className="mb-2.5 text-[16px] font-extrabold leading-[1.35] tracking-[-0.15px] text-[#171b1c] line-clamp-2 dark:text-white">
                                             {course.name}
                                         </h3>
 
                                         {/* Enrollment meta */}
-                                        <div className="mb-[17px] flex w-full items-center">
-                                            <div className="inline-flex items-center gap-2.5 rounded-[13px] border border-[#e8dce1] bg-gradient-to-br from-[#fff8fa] to-white py-[7px] pl-[7px] pr-[15px] shadow-[0_4px_14px_rgba(0,0,0,0.055)] transition-transform hover:-translate-y-0.5 dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
-                                                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-[#ffd0df] bg-[#fff0f5] shadow-[0_3px_10px_rgba(237,59,112,0.08)]">
-                                                    <Users className="h-[18px] w-[18px] text-[#2563eb]" />
+                                        <div className="mb-2.5 flex w-full items-center">
+                                            <div className="inline-flex items-center gap-2 rounded-[11px] border border-[#dce4f5] bg-gradient-to-br from-[#f5f8ff] to-white py-1 pl-1 pr-3 shadow-[0_4px_14px_rgba(0,0,0,0.055)] dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
+                                                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] border border-[#c7d7f7] bg-[#eef2ff]">
+                                                    <Users className="h-[14px] w-[14px] text-[#2563eb]" />
                                                 </span>
-                                                <span className="flex items-baseline gap-1.5 whitespace-nowrap">
-                                                    <span className="text-[18px] font-black leading-none text-[#e92f68]">{enrollCount.toLocaleString("en-BD")}</span>
-                                                    <span className="text-[13px] font-bold text-[#45484d] dark:text-slate-300">জন ভর্তি</span>
+                                                <span className="flex items-baseline gap-1 whitespace-nowrap">
+                                                    <span className="text-[14px] font-black leading-none text-[#2563eb]">{enrollCount.toLocaleString("en-BD")}</span>
+                                                    <span className="text-[11px] font-bold text-[#45484d] dark:text-slate-300">জন ভর্তি</span>
                                                 </span>
                                             </div>
                                         </div>
 
                                         {/* Divider */}
-                                        <div className="mb-[17px] h-px w-full bg-gradient-to-r from-[#eee] via-[#f5dbe4] to-[#eee]" />
+                                        <div className="mb-2.5 h-px w-full bg-gradient-to-r from-[#eee] via-[#dce4f5] to-[#eee]" />
 
                                         {/* Price + Button */}
-                                        <div className="mt-auto flex w-full items-center justify-between gap-3.5">
-                                            <div className="flex min-w-0 flex-col gap-[3px]">
-                                                <p className="m-0 text-[11px] font-semibold text-[#858a91]">কোর্স ফি</p>
+                                        <div className="mt-auto flex w-full items-center justify-between gap-3">
+                                            <div className="flex min-w-0 flex-col gap-0.5">
+                                                <p className="m-0 text-[10px] font-semibold text-[#858a91]">কোর্স ফি</p>
                                                 {course.original_price != null && Number(course.original_price) > Number(course.price) && (
-                                                    <del className="text-[13px] font-semibold leading-none text-[#a5a8ad]">৳{Number(course.original_price).toLocaleString("en-BD")}</del>
+                                                    <del className="text-[12px] font-semibold leading-none text-[#a5a8ad]">৳{Number(course.original_price).toLocaleString("en-BD")}</del>
                                                 )}
-                                                <p className="m-0 text-[26px] font-black leading-[1.15] tracking-[-0.4px] text-[#ed3068]">
+                                                <p className="m-0 text-[21px] font-black leading-[1.1] tracking-[-0.4px] text-[#2563eb]">
                                                     {course.price != null ? `৳${Number(course.price).toLocaleString("en-BD")}` : "যোগাযোগ করুন"}
                                                 </p>
                                             </div>
                                             <a
                                                 href={`/courses/${idOrSlug}`}
-                                                className="group/btn relative flex min-w-[125px] flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-[13px] bg-gradient-to-br from-[#ff6872] to-[#ed3c7c] px-[17px] py-[13px] text-[13px] font-extrabold text-white shadow-[0_8px_20px_rgba(237,60,124,0.22)] transition-all hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(237,60,124,0.32)]"
+                                                className="group/btn relative flex min-w-[110px] flex-shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-[12px] bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] px-4 py-2.5 text-[12px] font-extrabold text-white shadow-[0_8px_20px_rgba(37,99,235,0.22)] transition-all hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(37,99,235,0.32)]"
                                             >
                                                 <span className="absolute -left-[120%] top-0 h-full w-4/5 -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/35 to-transparent transition-all duration-500 group-hover/btn:left-[140%]" />
                                                 <span className="relative z-[1]">বিস্তারিত</span>
