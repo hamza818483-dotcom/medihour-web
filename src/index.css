@@ -9,37 +9,37 @@
 @layer base {
   :root {
     --background: 0 0% 99.2157%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 99.2157%;
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 98.8235%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 217 83.7% 56.7%; /* MediHour Blue */
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 33%; /* MediHour Deep Navy */
     --primary-foreground: 0 0% 100%;
-    --secondary: 340 100% 97.1%;
-    --secondary-foreground: 217 60% 25%;
-    --muted: 0 0% 96.0784%;
-    --muted-foreground: 0 0% 32.1569%;
-    --accent: 340 100% 97.6%;
-    --accent-foreground: 217 60% 20%; /* MediHour Blue-dark */
+    --secondary: 217 60% 96%;
+    --secondary-foreground: 221 60% 22%;
+    --muted: 217 20% 95.5%;
+    --muted-foreground: 217 12% 40%;
+    --accent: 217 60% 96%;
+    --accent-foreground: 221 60% 20%; /* MediHour Navy-dark */
     --destructive: 358.4416 74.7573% 59.6078%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 17.0732% 91.9608%;
-    --input: 0 0% 92.1569%;
-    --ring: 0 0% 0%;
-    --chart-1: 217 60% 50%;
+    --border: 217 25% 90%;
+    --input: 217 20% 91%;
+    --ring: 221 83% 33%;
+    --chart-1: 221 70% 40%;
     --chart-2: 190.3 72.5% 25%;
-    --chart-3: 24.8571 98.1308% 58.0392%;
+    --chart-3: 38 92% 55%;
     --chart-4: 217.0787 76.7241% 54.5098%;
     --chart-5: 0 0% 45.4902%;
-    --sidebar: 210 42.8571% 97.2549%;
-    --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
+    --sidebar: 221 45% 97.2549%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 221 83% 33%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 92.1569%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 92.1569%;
-    --sidebar-ring: 0 0% 0%;
+    --sidebar-accent: 217 30% 92%;
+    --sidebar-accent-foreground: 221 60% 20%;
+    --sidebar-border: 217 25% 90%;
+    --sidebar-ring: 221 83% 33%;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --font-serif: "Lora", serif;
     --font-mono: "IBM Plex Mono", monospace;
@@ -48,16 +48,16 @@
     --shadow-y: 2px;
     --shadow-blur: 3px;
     --shadow-spread: 0px;
-    --shadow-opacity: 0.16;
-    --shadow-color: hsl(0 0% 0%);
-    --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-    --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-    --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-    --shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-    --shadow-md: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 2px 4px -1px hsl(0 0% 0% / 0.16);
-    --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 4px 6px -1px hsl(0 0% 0% / 0.16);
-    --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 8px 10px -1px hsl(0 0% 0% / 0.16);
-    --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.40);
+    --shadow-opacity: 0.1;
+    --shadow-color: hsl(221 60% 20%);
+    --shadow-2xs: 0px 1px 2px 0px hsl(221 60% 20% / 0.05);
+    --shadow-xs: 0px 2px 4px 0px hsl(221 60% 20% / 0.05);
+    --shadow-sm: 0px 2px 8px 0px hsl(221 60% 20% / 0.08), 0px 1px 2px -1px hsl(221 60% 20% / 0.08);
+    --shadow: 0px 2px 8px 0px hsl(221 60% 20% / 0.08), 0px 1px 2px -1px hsl(221 60% 20% / 0.08);
+    --shadow-md: 0px 4px 14px 0px hsl(221 60% 20% / 0.1), 0px 2px 4px -1px hsl(221 60% 20% / 0.08);
+    --shadow-lg: 0px 8px 24px 0px hsl(221 60% 20% / 0.12), 0px 4px 6px -1px hsl(221 60% 20% / 0.08);
+    --shadow-xl: 0px 14px 36px 0px hsl(221 60% 20% / 0.14), 0px 8px 10px -1px hsl(221 60% 20% / 0.08);
+    --shadow-2xl: 0px 20px 50px 0px hsl(221 60% 20% / 0.22);
     --tracking-normal: -0.025em;
     --spacing: 0.27rem;
   }
@@ -68,10 +68,10 @@
     :root:not(.dark) {
       --background: 210 40% 98%;
       --card: 0 0% 100%;
-      --primary: 217 83.7% 56.7%; /* MediHour Blue */
+      --primary: 221 83% 33%; /* MediHour Deep Navy */
       --primary-foreground: 0 0% 100%;
-      --accent: 340 100% 97.6%;
-      --accent-foreground: 217 60% 20%;
+      --accent: 217 60% 96%;
+      --accent-foreground: 221 60% 20%;
       --radius: 1rem;
     }
     :root.dark {
@@ -80,43 +80,43 @@
       --primary: 217 80% 62%;
       --primary-foreground: 0 0% 100%;
       --accent: 217 50% 20%;
-      --accent-foreground: 340 60% 85%;
+      --accent-foreground: 217 60% 85%;
       --radius: 1rem;
     }
   }
 
   .dark {
-    --background: 252 45% 6%;
+    --background: 222 47% 7%;
     --foreground: 210 20% 96%;
-    --card: 250 35% 10%;
+    --card: 222 40% 11%;
     --card-foreground: 210 20% 96%;
-    --popover: 250 35% 10%;
+    --popover: 222 40% 11%;
     --popover-foreground: 210 20% 96%;
     --primary: 217 80% 62%; /* MediHour Blue (glow-enhanced) */
     --primary-foreground: 0 0% 100%;
-    --secondary: 250 28% 16%;
+    --secondary: 222 28% 16%;
     --secondary-foreground: 210 20% 96%;
-    --muted: 250 25% 14%;
-    --muted-foreground: 240 15% 65%;
+    --muted: 222 25% 14%;
+    --muted-foreground: 217 15% 65%;
     --accent: 217 55% 24%;
     --accent-foreground: 217 90% 82%;
     --destructive: 0 84% 65%;
     --destructive-foreground: 0 0% 100%;
-    --border: 250 25% 20%;
-    --input: 250 25% 18%;
+    --border: 222 25% 20%;
+    --input: 222 25% 18%;
     --ring: 217 80% 62%;
     --chart-1: 217 80% 62%;
-    --chart-2: 262 83% 66%;
+    --chart-2: 200 83% 55%;
     --chart-3: 38 92% 62%;
     --chart-4: 0 84% 65%;
     --chart-5: 0 0% 62.7451%;
-    --sidebar: 252 48% 5%;
+    --sidebar: 222 48% 6%;
     --sidebar-foreground: 210 20% 96%;
     --sidebar-primary: 217 80% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 250 28% 16%;
+    --sidebar-accent: 222 28% 16%;
     --sidebar-accent-foreground: 217 80% 72%;
-    --sidebar-border: 250 25% 20%;
+    --sidebar-border: 222 25% 20%;
     --sidebar-ring: 217 80% 62%;
     --font-sans: "Plus Jakarta Sans", sans-serif;
     --font-serif: "Lora", serif;
@@ -126,16 +126,16 @@
     --shadow-y: 2px;
     --shadow-blur: 3px;
     --shadow-spread: 0px;
-    --shadow-opacity: 0.16;
-    --shadow-color: hsl(0 0% 0%);
-    --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-    --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-    --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-    --shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-    --shadow-md: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 2px 4px -1px hsl(0 0% 0% / 0.16);
-    --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 4px 6px -1px hsl(0 0% 0% / 0.16);
-    --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 8px 10px -1px hsl(0 0% 0% / 0.16);
-    --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.40);
+    --shadow-opacity: 0.3;
+    --shadow-color: hsl(222 60% 3%);
+    --shadow-2xs: 0px 2px 4px 0px hsl(222 60% 3% / 0.15);
+    --shadow-xs: 0px 2px 4px 0px hsl(222 60% 3% / 0.15);
+    --shadow-sm: 0px 2px 8px 0px hsl(222 60% 3% / 0.25), 0px 1px 2px -1px hsl(222 60% 3% / 0.25);
+    --shadow: 0px 2px 8px 0px hsl(222 60% 3% / 0.25), 0px 1px 2px -1px hsl(222 60% 3% / 0.25);
+    --shadow-md: 0px 4px 14px 0px hsl(222 60% 3% / 0.3), 0px 2px 4px -1px hsl(222 60% 3% / 0.25);
+    --shadow-lg: 0px 8px 24px 0px hsl(222 60% 3% / 0.35), 0px 4px 6px -1px hsl(222 60% 3% / 0.25);
+    --shadow-xl: 0px 14px 36px 0px hsl(222 60% 3% / 0.4), 0px 8px 10px -1px hsl(222 60% 3% / 0.25);
+    --shadow-2xl: 0px 20px 50px 0px hsl(222 60% 3% / 0.5);
     --tracking-normal: -0.025em;
     --spacing: 0.27rem;
   }
@@ -171,7 +171,7 @@
   .dark .hero-glow {
     background-image:
       radial-gradient(60% 80% at 20% 0%, hsl(217 80% 55% / 0.22) 0%, transparent 70%),
-      radial-gradient(50% 70% at 85% 10%, hsl(262 83% 60% / 0.18) 0%, transparent 70%);
+      radial-gradient(50% 70% at 85% 10%, hsl(221 70% 45% / 0.18) 0%, transparent 70%);
   }
   .dark .glow-border-primary {
     box-shadow: 0 0 0 1px hsl(var(--primary) / 0.25), 0 0 24px hsl(var(--primary) / 0.15);
