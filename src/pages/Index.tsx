@@ -243,7 +243,7 @@ const Index = () => {
                         return (
                           <div key={exam.id} className="animate-border-chase relative flex flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ ["--border-chase-color" as any]: "hsl(271 81% 60%)" }}>
                             {/* Accent gradient top bar */}
-                            <div className="h-1.5 w-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500" />
+                            <div className="h-1.5 w-full bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500" />
                             {exam.image_url && (
                               <div className="h-48 w-full overflow-hidden">
                                 <img src={exam.image_url} alt={exam.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -378,7 +378,7 @@ const Index = () => {
       <section className="w-full overflow-hidden bg-white dark:bg-slate-950 py-10 sm:py-14" id="about">
         <div className="mx-auto w-full max-w-[1180px] px-4">
           <h2 className="mb-8 text-center text-[26px] font-black leading-snug text-[#202124] dark:text-white sm:text-[32px]">
-            <span className="bg-gradient-to-r from-[#ff7a18] to-[#f72585] bg-clip-text text-transparent">আমাদের</span> সম্পর্কে
+            <span className="bg-gradient-to-r from-[#ff7a18] to-[#2563eb] bg-clip-text text-transparent">আমাদের</span> সম্পর্কে
           </h2>
 
           <div className="relative grid grid-cols-1 items-center gap-8 overflow-hidden rounded-[32px] border border-[#eee8e8] dark:border-white/10 bg-gradient-to-br from-[#fff8f5] via-white to-[#f7f8ff] dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 p-6 shadow-[0_15px_50px_rgba(30,30,30,0.07)] sm:p-9 md:grid-cols-[0.9fr_1.1fr]">
@@ -408,7 +408,7 @@ const Index = () => {
               </div>
               <h3 className="mb-3.5 text-[22px] font-black leading-snug text-[#1f2328] dark:text-white sm:text-[30px]">
                 স্বপ্ন ছোঁয়ার আশা থাকলে সেই স্বপ্নের ভিত তৈরিতে সাথে আছে{" "}
-                <span className="bg-gradient-to-r from-[#ff6b35] to-[#f72585] bg-clip-text text-transparent">"MediHour"</span>
+                <span className="bg-gradient-to-r from-[#ff6b35] to-[#2563eb] bg-clip-text text-transparent">"MediHour"</span>
               </h3>
               <p className="mb-5 max-w-[650px] text-sm font-medium leading-[1.85] text-[#626870] dark:text-slate-300">
                 মেডিকেল ও ভার্সিটি ভর্তি পরীক্ষার প্রস্তুতির জন্য দেশের অন্যতম সেরা প্ল্যাটফর্ম <strong className="text-[#1f2328] dark:text-white">"MediHour"</strong>।

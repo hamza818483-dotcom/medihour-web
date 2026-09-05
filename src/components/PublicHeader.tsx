@@ -44,9 +44,9 @@ export const PublicHeader = () => {
               <a
                 key={item.href}
                 href={item.href}
-                className={`group relative inline-flex items-center gap-[7px] rounded-[11px] px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:origin-left after:scale-x-0 after:rounded-full after:bg-[#ed347d] after:transition-transform after:duration-200 hover:bg-[#fff3f7] hover:text-[#ed347d] hover:after:scale-x-100 dark:hover:bg-rose-500/10 ${
+                className={`group relative inline-flex items-center gap-[7px] rounded-[11px] px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:origin-left after:scale-x-0 after:rounded-full after:bg-[#2563eb] after:transition-transform after:duration-200 hover:bg-[#eff6ff] hover:text-[#2563eb] hover:after:scale-x-100 dark:hover:bg-blue-500/10 ${
                   item.active
-                    ? "bg-[#fff2f7] text-[#ed347d] font-bold after:scale-x-100"
+                    ? "bg-[#fff2f7] text-[#2563eb] font-bold after:scale-x-100"
                     : "text-[#777] dark:text-slate-300"
                 }`}
               >
@@ -63,9 +63,9 @@ export const PublicHeader = () => {
             {/* Hotline box */}
             <a
               href={`tel:${hotline}`}
-              className="hidden items-center gap-2 rounded-[13px] border border-[#eee] bg-white py-[5px] pl-[7px] pr-[11px] transition-all duration-200 hover:-translate-y-px hover:border-[#ffd1e1] hover:bg-[#fff5f8] hover:shadow-[0_5px_15px_rgba(237,52,125,0.1)] sm:flex dark:bg-slate-800/70 dark:border-white/10"
+              className="hidden items-center gap-2 rounded-[13px] border border-[#eee] bg-white py-[5px] pl-[7px] pr-[11px] transition-all duration-200 hover:-translate-y-px hover:border-[#bfdbfe] hover:bg-[#eff6ff] hover:shadow-[0_5px_15px_rgba(37,99,235,0.1)] sm:flex dark:bg-slate-800/70 dark:border-white/10"
             >
-              <span className="flex h-[31px] w-[31px] flex-shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#f53278] to-[#e9287a] text-white shadow-[0_4px_10px_rgba(239,45,117,0.2)]">
+              <span className="flex h-[31px] w-[31px] flex-shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_4px_10px_rgba(239,45,117,0.2)]">
                 <Phone className="h-3 w-3" strokeWidth={2.5} />
               </span>
               <span className="flex flex-col whitespace-nowrap leading-[1.1]">
@@ -81,7 +81,7 @@ export const PublicHeader = () => {
             {/* Login */}
             <a
               href="/login"
-              className="inline-flex h-[38px] items-center justify-center rounded-full bg-gradient-to-br from-[#f53278] to-[#e9287a] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
+              className="inline-flex h-[38px] items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
             >
               লগইন
             </a>
@@ -100,15 +100,15 @@ export const PublicHeader = () => {
                   </SheetHeader>
                   <nav className="mt-6 flex flex-col gap-4">
                     {navItems.map((item) => (
-                      <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#ed347d]">
+                      <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
                         <item.icon className="h-4 w-4" />
                         {item.label}
                       </a>
                     ))}
-                    <a href="/login" className="text-lg font-medium hover:text-[#ed347d]">
+                    <a href="/login" className="text-lg font-medium hover:text-[#2563eb]">
                       লগইন
                     </a>
-                    <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#ed347d]">
+                    <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
                       <Phone className="h-4 w-4" />
                       {hotline}
                     </a>

@@ -103,10 +103,10 @@ const Login = () => {
         ) : (
           <Card className="w-full max-w-md overflow-hidden rounded-[26px] border border-[#f3d9e3] bg-gradient-to-br from-white via-white to-[#fff7fa] shadow-[0_25px_60px_rgba(237,52,125,0.14)] dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
             {/* Top accent bar */}
-            <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#e9287a]" />
+            <div className="h-[5px] w-full bg-gradient-to-r from-[#f5327a] via-[#ff6b8d] to-[#1d4ed8]" />
 
             <CardHeader className="space-y-3 pb-2 pt-7 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#e9287a] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5327a] to-[#1d4ed8] shadow-[0_10px_25px_rgba(239,45,117,0.3)]">
                 <img src="/logo.png" alt="MediHour" className="h-9 w-9 object-contain brightness-0 invert" />
               </div>
               <div>
@@ -131,7 +131,7 @@ const Login = () => {
                       required
                       autoComplete="username"
                       placeholder="Gmail বা Phone Number লিখুন"
-                      className="h-12 rounded-xl border-[#e8dde3] pl-4 pr-4 text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
+                      className="h-12 rounded-xl border-[#e8dde3] pl-4 pr-4 text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#2563eb] focus-visible:ring-[#2563eb]/20 dark:border-white/10"
                     />
                   </div>
                 </div>
@@ -141,7 +141,7 @@ const Login = () => {
                     <Label htmlFor="password" className="text-xs font-semibold text-[#555]">
                       Password <span className="font-normal text-muted-foreground">(কমপক্ষে ৬ অক্ষর)</span>
                     </Label>
-                    <Link to="/forgot-password" tabIndex={-1} className="text-xs font-semibold text-[#ed347d] hover:underline">
+                    <Link to="/forgot-password" tabIndex={-1} className="text-xs font-semibold text-[#2563eb] hover:underline">
                       পাসওয়ার্ড ভুলে গেছেন?
                     </Link>
                   </div>
@@ -153,7 +153,7 @@ const Login = () => {
                       required
                       autoComplete="current-password"
                       onChange={(e) => setPasswordLength(e.target.value.length)}
-                      className="login-caret h-12 rounded-xl border-[#e8dde3] pl-4 pr-10 text-[15px] tracking-wide shadow-sm transition-all focus-visible:border-[#ed347d] focus-visible:ring-[#ed347d]/20 dark:border-white/10"
+                      className="login-caret h-12 rounded-xl border-[#e8dde3] pl-4 pr-10 text-[15px] tracking-wide shadow-sm transition-all focus-visible:border-[#2563eb] focus-visible:ring-[#2563eb]/20 dark:border-white/10"
                     />
                     <Button
                       type="button"
@@ -173,7 +173,7 @@ const Login = () => {
                   <div className="flex items-center justify-end gap-1.5 pr-0.5 pt-0.5">
                     {passwordLength > 0 && (
                       <>
-                        <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#ed347d]"}`}>
+                        <span className={`text-[11px] font-bold transition-colors ${passwordLength >= 6 ? "text-emerald-500" : "text-[#2563eb]"}`}>
                           {passwordLength} অক্ষর
                         </span>
                         {passwordLength >= 6 ? (
@@ -198,7 +198,7 @@ const Login = () => {
 
                 <Button
                   type="submit"
-                  className="mt-1 h-12 w-full rounded-xl bg-gradient-to-r from-[#f5327a] to-[#e9287a] text-[15px] font-bold shadow-[0_10px_25px_rgba(239,45,117,0.28)] transition-transform hover:scale-[1.015] hover:shadow-[0_14px_30px_rgba(239,45,117,0.36)]"
+                  className="mt-1 h-12 w-full rounded-xl bg-gradient-to-r from-[#f5327a] to-[#1d4ed8] text-[15px] font-bold shadow-[0_10px_25px_rgba(239,45,117,0.28)] transition-transform hover:scale-[1.015] hover:shadow-[0_14px_30px_rgba(239,45,117,0.36)]"
                   disabled={loading || !captchaToken}
                 >
                   {loading ? "লগইন হচ্ছে..." : "লগইন করুন"}
@@ -206,7 +206,7 @@ const Login = () => {
 
                 <div className="mt-4 text-center text-sm">
                   অ্যাকাউন্ট নেই?{" "}
-                  <Link to="/register" state={{ from: location.state?.from }} className="font-bold text-[#ed347d] hover:underline">
+                  <Link to="/register" state={{ from: location.state?.from }} className="font-bold text-[#2563eb] hover:underline">
                     নতুন অ্যাকাউন্ট তৈরি করুন
                   </Link>
                 </div>
@@ -258,7 +258,7 @@ const Login = () => {
           <DialogFooter className="flex-col gap-2 sm:flex-col">
             <Button
               asChild
-              className="w-full gap-2 bg-gradient-to-r from-[#f5327a] to-[#e9287a] text-white hover:opacity-90"
+              className="w-full gap-2 bg-gradient-to-r from-[#f5327a] to-[#1d4ed8] text-white hover:opacity-90"
             >
               <Link to="/register" state={{ from: location.state?.from }} onClick={() => setLoginError(null)}>
                 নতুন অ্যাকাউন্ট খুলুন

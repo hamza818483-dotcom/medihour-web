@@ -333,7 +333,7 @@ export const CourseSection = () => {
                                         <div className="mb-[17px] flex w-full items-center">
                                             <div className="inline-flex items-center gap-2.5 rounded-[13px] border border-[#e8dce1] bg-gradient-to-br from-[#fff8fa] to-white py-[7px] pl-[7px] pr-[15px] shadow-[0_4px_14px_rgba(0,0,0,0.055)] transition-transform hover:-translate-y-0.5 dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
                                                 <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] border border-[#ffd0df] bg-[#fff0f5] shadow-[0_3px_10px_rgba(237,59,112,0.08)]">
-                                                    <Users className="h-[18px] w-[18px] text-[#ed347d]" />
+                                                    <Users className="h-[18px] w-[18px] text-[#2563eb]" />
                                                 </span>
                                                 <span className="flex items-baseline gap-1.5 whitespace-nowrap">
                                                     <span className="text-[18px] font-black leading-none text-[#e92f68]">{enrollCount.toLocaleString("en-BD")}</span>

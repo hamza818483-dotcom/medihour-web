@@ -7,7 +7,7 @@ export const TrustCtaSection = () => {
           <div className="pointer-events-none absolute -bottom-[170px] right-[80px] h-[270px] w-[270px] rounded-full bg-[rgba(255,190,100,0.15)]" />
 
           <div className="relative z-[5] w-full sm:w-[58%]">
-            <span className="mb-3 inline-flex items-center rounded-full border border-[#ffd4e5] bg-white dark:bg-slate-800 dark:border-rose-500/30 px-3 py-1.5 text-[11px] font-bold text-[#e93482] before:mr-1.5 before:h-1.5 before:w-1.5 before:rounded-full before:bg-[#ed347f]">
+            <span className="mb-3 inline-flex items-center rounded-full border border-[#bfdbfe] bg-white dark:bg-slate-800 dark:border-blue-500/30 px-3 py-1.5 text-[11px] font-bold text-[#2563eb] before:mr-1.5 before:h-1.5 before:w-1.5 before:rounded-full before:bg-[#2563eb]">
               আস্থার প্রতিশ্রুতি
             </span>
 
@@ -23,7 +23,7 @@ export const TrustCtaSection = () => {
             <div className="flex flex-wrap items-center gap-2.5">
               <a
                 href="/#courses"
-                className="inline-flex min-h-[42px] items-center justify-center rounded-[9px] bg-gradient-to-br from-[#e52b80] to-[#f05463] px-5 text-[13px] font-bold text-white shadow-[0_7px_16px_rgba(229,43,128,0.17)] transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(229,43,128,0.25)]"
+                className="inline-flex min-h-[42px] items-center justify-center rounded-[9px] bg-gradient-to-br from-[#2563eb] to-[#3b82f6] px-5 text-[13px] font-bold text-white shadow-[0_7px_16px_rgba(229,43,128,0.17)] transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_20px_rgba(229,43,128,0.25)]"
               >
                 পেইড কোর্স
               </a>

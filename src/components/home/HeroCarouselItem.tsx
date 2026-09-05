@@ -95,7 +95,7 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
           ) : (
             <div
               className="relative flex h-full w-full items-center justify-center overflow-hidden"
-              style={{ background: "linear-gradient(135deg, #e52b80 0%, #a5195f 100%)" }}
+              style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" }}
             >
               <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[60%] bg-white/10 rounded-full blur-[80px]" />
               <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[70%] bg-black/10 rounded-full blur-[100px]" />

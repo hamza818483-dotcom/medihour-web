@@ -330,7 +330,7 @@ const CourseDetails = () => {
       <div className="mb-4 flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-extrabold sm:text-3xl">{course.name}</h1>
         {discountPct > 0 && (
-          <Badge className="bg-[#e93482] hover:bg-[#e93482]">{discountPct}% ছাড়</Badge>
+          <Badge className="bg-[#2563eb] hover:bg-[#2563eb]">{discountPct}% ছাড়</Badge>
         )}
       </div>
 
@@ -478,7 +478,7 @@ const CourseDetails = () => {
           </Button>
           <Button
             asChild
-            className="gap-2 rounded-xl bg-gradient-to-br from-[#e52b80] to-[#f05463] font-semibold"
+            className="gap-2 rounded-xl bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-semibold"
           >
             <a href={(course as any).routine_url} download target="_blank" rel="noopener noreferrer">
               <Download className="h-4 w-4" />
@@ -696,7 +696,7 @@ const CourseDetails = () => {
             </div>
           ) : (
             <div className="flex items-baseline gap-2">
-              <span className="text-xl font-extrabold text-[#e93482]">
+              <span className="text-xl font-extrabold text-[#2563eb]">
                 ৳{Number(course.price).toLocaleString("en-BD")}
               </span>
               {discountPct > 0 && (
@@ -709,7 +709,7 @@ const CourseDetails = () => {
         </div>
         <Button
           asChild
-          className="bg-gradient-to-br from-[#e52b80] to-[#f05463] font-bold"
+          className="bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-bold"
         >
           <Link to={getEnrollUrl()}>ভর্তি হন</Link>
         </Button>

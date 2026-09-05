@@ -541,14 +541,14 @@ const CourseBuy = () => {
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                    <div className="relative p-4 bg-pink-50 dark:bg-pink-950/30 rounded-lg border border-pink-200 dark:border-pink-800 group hover:shadow-sm transition-shadow">
-                      <span className="text-xs font-bold text-pink-600 dark:text-pink-400 block mb-1 uppercase tracking-wider">বিকাশ পার্সোনাল</span>
+                    <div className="relative p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800 group hover:shadow-sm transition-shadow">
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400 block mb-1 uppercase tracking-wider">বিকাশ পার্সোনাল</span>
                       <div className="flex items-center justify-between">
                         <span className="font-mono text-lg font-bold tracking-wide">{bkashNumber}</span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-pink-600 hover:text-pink-700 hover:bg-pink-100"
+                          className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
                           onClick={() => copyToClipboard(bkashNumber, "বিকাশ নাম্বার")}
                         >
                           <Copy className="h-4 w-4" />

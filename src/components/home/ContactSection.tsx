@@ -41,8 +41,8 @@ export const ContactSection = () => {
       icon: Mail,
       name: "ইমেইল করো",
       sub: email,
-      iconBg: "bg-[#fff0f2] dark:bg-rose-500/10 border-[#ffd8de] dark:border-rose-500/20",
-      iconColor: "text-[#ef334f] dark:text-rose-400",
+      iconBg: "bg-[#fff0f2] dark:bg-blue-500/10 border-[#ffd8de] dark:border-blue-500/20",
+      iconColor: "text-[#ef334f] dark:text-blue-400",
     },
     {
       href: telegram,
@@ -57,8 +57,8 @@ export const ContactSection = () => {
       icon: Youtube,
       name: "YouTube চ্যানেল সাবস্ক্রাইব করো",
       sub: "ফ্রি ক্লাস ও ভিডিও দেখো",
-      iconBg: "bg-[#fff0f6] dark:bg-pink-500/10 border-[#ffd9e8] dark:border-pink-500/20",
-      iconColor: "text-[#ed3d78] dark:text-pink-400",
+      iconBg: "bg-[#fff0f6] dark:bg-sky-500/10 border-[#ffd9e8] dark:border-sky-500/20",
+      iconColor: "text-[#ed3d78] dark:text-sky-400",
     },
   ];
 

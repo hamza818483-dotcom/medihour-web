@@ -66,7 +66,7 @@ const Footer = () => {
           </div>
 
           <div className="flex max-w-[470px] items-center gap-2.5 rounded-xl border border-white/[0.07] bg-white/[0.043] px-4 py-3">
-            <span className="h-[7px] w-[7px] flex-shrink-0 rounded-full bg-[#f33b7c] shadow-[0_0_12px_rgba(243,59,124,0.65)]" />
+            <span className="h-[7px] w-[7px] flex-shrink-0 rounded-full bg-[#2563eb] shadow-[0_0_12px_rgba(243,59,124,0.65)]" />
             <p className="m-0 text-xs leading-relaxed text-white/65">
               উন্নত শিক্ষা ও তাৎক্ষণিক এক্সাম রেজাল্ট নিয়ে <strong className="font-bold text-white">'MediHour'</strong> একটি আস্থার নাম।
             </p>
@@ -81,7 +81,7 @@ const Footer = () => {
           {/* Batches */}
           <div>
             <div className="mb-4 flex items-center gap-2">
-              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#3b82f6] to-[#2563eb]" />
               <h4 className="m-0 text-sm font-bold text-white">আমাদের কোর্সসমূহ</h4>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -92,7 +92,7 @@ const Footer = () => {
                     to={`/courses/${c.slug || c.id}`}
                     className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.045] px-3 py-1.5 text-[11px] font-medium text-white/70 transition-all hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
                   >
-                    <GraduationCap size={12} className="text-[#f0447f]" />
+                    <GraduationCap size={12} className="text-[#2563eb]" />
                     {c.name}
                   </Link>
                 ))
@@ -105,20 +105,20 @@ const Footer = () => {
           {/* Contact */}
           <div>
             <div className="mb-4 flex items-center gap-2">
-              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#3b82f6] to-[#2563eb]" />
               <h4 className="m-0 text-sm font-bold text-white">যোগাযোগ</h4>
             </div>
             <div className="flex flex-col gap-2.5">
               <div className="flex items-start gap-2.5">
-                <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <MapPin size={13} className="mt-0.5 flex-shrink-0 text-[#2563eb]" />
                 <span className="text-[12px] text-white/65">চট্টগ্রাম, বাংলাদেশ</span>
               </div>
               <div className="flex items-start gap-2.5">
-                <Phone size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <Phone size={13} className="mt-0.5 flex-shrink-0 text-[#2563eb]" />
                 <a href={`tel:${whatsapp}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{whatsapp}</a>
               </div>
               <div className="flex items-start gap-2.5">
-                <Mail size={13} className="mt-0.5 flex-shrink-0 text-[#f0447f]" />
+                <Mail size={13} className="mt-0.5 flex-shrink-0 text-[#2563eb]" />
                 <a href={`mailto:${email}`} className="text-[12px] text-white/65 hover:text-white transition-colors">{email}</a>
               </div>
             </div>
@@ -127,19 +127,19 @@ const Footer = () => {
           {/* Important Links */}
           <div>
             <div className="mb-4 flex items-center gap-2">
-              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#ff4384] to-[#e93272]" />
+              <span className="h-[18px] w-1 rounded-full bg-gradient-to-b from-[#3b82f6] to-[#2563eb]" />
               <h4 className="m-0 text-sm font-bold text-white">গুরুত্বপূর্ণ লিংক</h4>
             </div>
             <div className="flex flex-col gap-2">
               {quickLinks.map((l, i) =>
                 l.to ? (
                   <Link key={i} to={l.to} className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">
-                    <ChevronRight size={11} className="text-[#f0447f]" />
+                    <ChevronRight size={11} className="text-[#2563eb]" />
                     {l.label}
                   </Link>
                 ) : (
                   <a key={i} href={l.href} className="flex w-fit items-center gap-1.5 text-[11px] text-white/55 transition-all hover:translate-x-1 hover:text-white">
-                    <ChevronRight size={11} className="text-[#f0447f]" />
+                    <ChevronRight size={11} className="text-[#2563eb]" />
                     {l.label}
                   </a>
                 )
