@@ -325,7 +325,7 @@ export const CourseSection = () => {
 
                                     {/* Body */}
                                     <div className="flex flex-1 flex-col px-4 pb-4 pt-4">
-                                        <h3 className="mb-2.5 text-[16px] font-extrabold leading-[1.35] tracking-[-0.15px] text-[#171b1c] line-clamp-2 dark:text-white">
+                                        <h3 className="mb-2.5 text-center text-[19px] font-extrabold leading-[1.35] tracking-[-0.15px] text-[#171b1c] line-clamp-2 dark:text-white">
                                             {course.name}
                                         </h3>
 
