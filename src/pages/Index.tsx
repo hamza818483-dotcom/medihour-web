@@ -341,9 +341,7 @@ const Index = () => {
         <TrustCtaSection />
 
         {/* Paid Courses Section (Grid View) */}
-        <div className="rounded-2xl border p-2.5 sm:p-3">
         <CourseSection />
-        </div>
 
         {/* Benefits Section (PhysicsHunters-style dark cards) */}
         <section className="overflow-hidden py-2">

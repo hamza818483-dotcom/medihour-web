@@ -191,7 +191,7 @@ export const CourseSection = () => {
     }, [selectedCategory, courses]);
 
     return (
-        <section id="courses" className="space-y-6 w-[1px] min-w-full">
+        <section id="courses" className="space-y-6">
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center justify-center text-center gap-2">
                     <h2 className="text-3xl font-bold tracking-tight text-primary relative inline-block">
@@ -282,7 +282,7 @@ export const CourseSection = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {isLoading ? (
                     <p className="text-sm text-muted-foreground col-span-full">লোড হচ্ছে...</p>
                 ) : !filteredCourses || filteredCourses.length === 0 ? (
