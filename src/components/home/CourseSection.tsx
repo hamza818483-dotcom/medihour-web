@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Tag, Users } from "lucide-react";
-import { Input } from "@/components/ui/input";
 
 // Configuration: Add category names here to restrict the buttons shown on the landing page.
 // Example: ["HSC 25", "HSC 26", "Engineering"]
@@ -13,7 +12,6 @@ const FEATURED_CATEGORIES: string[] = [];
 export const CourseSection = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [selectedSubCategory, setSelectedSubCategory] = useState<string>("all");
-    const [searchQuery, setSearchQuery] = useState<string>("");
 
     const { data: courses, isLoading } = useQuery({
         queryKey: ["public-courses"],
@@ -121,12 +119,6 @@ export const CourseSection = () => {
         if (selectedCategory !== "all" && !courseCats.includes(selectedCategory)) return false;
         if (selectedSubCategory !== "all" && !courseSubs.includes(selectedSubCategory)) return false;
 
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            const nameMatch = course.name?.toLowerCase().includes(query);
-            return nameMatch;
-        }
-
         return true;
     });
 
@@ -195,20 +187,9 @@ export const CourseSection = () => {
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center justify-center text-center gap-2">
                     <h2 className="text-3xl font-bold tracking-tight text-primary relative inline-block">
-                        চলমান কোর্স সমূহ
+                        All Courses
                         <span className="absolute left-0 -bottom-2 w-full h-1 bg-primary rounded-full"></span>
                     </h2>
-
-                    {/* Search Input */}
-                    <div className="w-full max-w-2xl mt-4">
-                        <Input
-                            type="text"
-                            placeholder="কোর্স খুঁজুন..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="bg-white"
-                        />
-                    </div>
                 </div>
 
                 {/* Filters using Visible Buttons */}

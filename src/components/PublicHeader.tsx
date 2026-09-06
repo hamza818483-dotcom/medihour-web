@@ -1,6 +1,7 @@
-import { Menu, Home, BookOpen, Info, Phone } from "lucide-react";
+import { Menu, Home, BookOpen, Info, Phone, LayoutDashboard } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 
 export const PublicHeader = () => {
+  const { user } = useAuth();
   const { data: links } = useQuery({
     queryKey: ["official-links-public"],
     queryFn: async () => {
@@ -78,12 +80,13 @@ export const PublicHeader = () => {
               </span>
             </a>
 
-            {/* Login */}
+            {/* Login / Dashboard */}
             <a
-              href="/login"
-              className="inline-flex h-[38px] items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
+              href={user ? "/dashboard" : "/login"}
+              className="inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
             >
-              লগইন
+              {user && <LayoutDashboard className="h-3.5 w-3.5" strokeWidth={2.5} />}
+              {user ? "ড্যাশবোর্ড" : "লগইন"}
             </a>
 
             {/* Mobile Menu */}
@@ -105,8 +108,9 @@ export const PublicHeader = () => {
                         {item.label}
                       </a>
                     ))}
-                    <a href="/login" className="text-lg font-medium hover:text-[#2563eb]">
-                      লগইন
+                    <a href={user ? "/dashboard" : "/login"} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                      {user && <LayoutDashboard className="h-4 w-4" />}
+                      {user ? "ড্যাশবোর্ড" : "লগইন"}
                     </a>
                     <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
                       <Phone className="h-4 w-4" />
