@@ -29,7 +29,7 @@ import { CoursePositionManagerDialog } from "@/components/admin/CoursePositionMa
 import { ImageUploader } from "@/components/ui/image-uploader";
 
 const demoContentSchema = z.object({
-  title: z.string().min(1, "Title required"),
+  title: z.string().trim().optional().or(z.literal("")),
   video_url: z.string().trim().optional().or(z.literal("")),
   note_url: z.string().trim().optional().or(z.literal("")),
   is_locked: z.boolean().default(false),
@@ -313,6 +313,7 @@ const AdminCourses = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-courses"] });
       queryClient.invalidateQueries({ queryKey: ["admin-course-tags"] }); // Refresh tags
       resetForm();
+      setShowForm(false);
     },
     onError: (error: Error) => {
       toast({
