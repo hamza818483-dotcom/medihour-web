@@ -26,9 +26,10 @@ export interface Review {
 interface StudentReviewsProps {
   reviews: Review[];
   id?: string;
+  tagline?: string;
 }
 
-export const StudentReviews = ({ reviews, id }: StudentReviewsProps) => {
+export const StudentReviews = ({ reviews, id, tagline }: StudentReviewsProps) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -53,6 +54,11 @@ export const StudentReviews = ({ reviews, id }: StudentReviewsProps) => {
       <h2 className="text-2xl font-semibold tracking-tight text-center">
         শিক্ষার্থীদের মতামত
       </h2>
+      {tagline && (
+        <p className="-mt-4 text-center text-sm sm:text-base font-medium text-muted-foreground max-w-xl mx-auto">
+          {tagline}
+        </p>
+      )}
 
       <div className="relative md:px-12">
         <Carousel

@@ -29,6 +29,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUploader } from "@/components/ui/image-uploader";
 import { PromoVideoManager } from "@/components/admin/PromoVideoManager";
+import { AboutSectionManager } from "@/components/admin/AboutSectionManager";
+import { ReviewsTaglineManager } from "@/components/admin/ReviewsTaglineManager";
 import { Loader2, Plus, Trash2, Edit, Image as ImageIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -354,6 +356,10 @@ const AdminHeroes = () => {
       </div>
 
       <PromoVideoManager />
+
+      <AboutSectionManager />
+
+      <ReviewsTaglineManager />
 
       <Tabs defaultValue="heroes">
         <TabsList className="mb-4">
