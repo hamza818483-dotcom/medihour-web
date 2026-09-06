@@ -460,7 +460,7 @@ const CourseDetails = () => {
         (course as any).short_description_lines.length > 0 && (
           <div className="mb-3 flex justify-center">
             <div className="w-fit max-w-[92%] rounded-xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-100 px-4 py-2 text-center shadow-md dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-amber-900/40 dark:border-amber-700">
-              <h2 className="text-xl font-semibold sm:text-2xl">
+              <h2 className="text-2xl font-semibold sm:text-3xl">
                 কোর্সের প্রধান ফিচার সমূহ
               </h2>
             </div>
@@ -515,10 +515,12 @@ const CourseDetails = () => {
       {/* Full description: plain text set by admin */}
       {(course as any).full_description && (
         <div className="mb-6 space-y-3">
-          <div className="mx-auto mb-1 max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-5 py-4 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
-            <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
-              বিস্তারিত
-            </h2>
+          <div className="mb-1 flex justify-center">
+            <div className="w-fit max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-4 py-2 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
+              <h2 className="text-xl font-semibold sm:text-2xl">
+                বিস্তারিত
+              </h2>
+            </div>
           </div>
           <div className="mx-auto max-w-[95%] rounded-2xl border bg-card p-4 shadow-sm">
             <div
