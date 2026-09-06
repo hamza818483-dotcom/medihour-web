@@ -222,7 +222,7 @@ const ArchiveClassView = ({ enrollments, selectedSubject, setSelectedSubject, se
                 .or(accessFilter)
                 .eq("is_archive", true)
                 .or(`title.ilike.%${safeQuery}%,topic.ilike.%${safeQuery}%`)
-                .order("sort_order", { ascending: false })
+                .order("archive_sort_order", { ascending: false })
                 .order("start_at", { ascending: false })
                 .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
@@ -331,7 +331,7 @@ const ArchiveClassView = ({ enrollments, selectedSubject, setSelectedSubject, se
                 .eq("is_archive", true)
                 .contains("subject", [selectedSubject])
                 .eq("chapter", selectedChapter)
-                .order("sort_order", { ascending: false })
+                .order("archive_sort_order", { ascending: false })
                 .order("start_at", { ascending: false })
                 .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
@@ -568,7 +568,7 @@ const ArchiveExamView = ({ enrollments, selectedSubject, setSelectedSubject, sel
                 .eq("is_archive", true)
                 .eq("is_published", true)
                 .ilike("title", `%${safeQuery}%`)
-                .order("sort_order", { ascending: false })
+                .order("archive_sort_order", { ascending: false })
                 .order("created_at", { ascending: false })
                 .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
@@ -680,7 +680,7 @@ const ArchiveExamView = ({ enrollments, selectedSubject, setSelectedSubject, sel
                  .contains("subject", [selectedSubject])
                  .eq("chapter", selectedChapter)
                  .eq("is_published", true)
-                 .order("sort_order", { ascending: false })
+                 .order("archive_sort_order", { ascending: false })
                  .order("created_at", { ascending: false })
                  .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
              if (error) throw error;

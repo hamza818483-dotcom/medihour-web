@@ -311,7 +311,7 @@ const AdminClasses = () => {
                 <ClassSortableList
                   classes={classes}
                   onClose={() => { setIsReordering(false); setReorderCourseId(null); }}
-                  sortColumn="sort_order"
+                  sortColumn={categoryFilter === "archive" ? "archive_sort_order" : "sort_order"}
                 />
              ) : (
                 <>
