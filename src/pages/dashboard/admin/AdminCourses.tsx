@@ -889,6 +889,18 @@ const AdminCourses = () => {
                 </TabsContent>
 
                 <TabsContent value="demos" className="mt-0 space-y-4">
+                    <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-4 space-y-2">
+                        <Label htmlFor="video_url_demo_tab" className="text-sm font-semibold">🎬 কোর্সের প্রোমো ভিডিও (Intro Video)</Label>
+                        <Input
+                            id="video_url_demo_tab"
+                            value={form.video_url}
+                            onChange={(e) => setForm((prev) => ({ ...prev, video_url: e.target.value }))}
+                            placeholder="https://youtu.be/..."
+                            className="bg-background"
+                        />
+                        <p className="text-[11px] text-muted-foreground">এটি একটি মাত্র ভিডিও — কোর্স ডিটেইলস পেজের উপরে দেখাবে। নিচের "Add Class" দিয়ে যোগ করা সব ভিডিও Demo Class ট্যাবে যাবে।</p>
+                    </div>
+
                     <div className="flex justify-between items-center mb-4">
                         <div className="space-y-1">
                              <h4 className="text-sm font-semibold">Demo / Preview Content</h4>
