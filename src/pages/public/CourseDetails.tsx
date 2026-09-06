@@ -520,7 +520,7 @@ const CourseDetails = () => {
           </div>
           <div className="mx-auto max-w-[95%] rounded-2xl border bg-card p-4 shadow-sm">
             <div
-              className="space-y-2 text-sm leading-relaxed text-muted-foreground [&_div]:min-h-[1em] [&_font[size='1']]:text-xs [&_font[size='2']]:text-sm [&_font[size='3']]:text-base [&_font[size='4']]:text-lg [&_font[size='5']]:text-xl [&_font[size='6']]:text-2xl [&_font[size='7']]:text-3xl"
+              className="space-y-2 text-sm leading-relaxed text-muted-foreground [&_div]:min-h-[1em]"
               dangerouslySetInnerHTML={{ __html: (course as any).full_description }}
             />
           </div>

@@ -16,6 +16,16 @@ interface RichTextEditorProps {
   minHeightClassName?: string;
 }
 
+const FONT_SIZE_PX: Record<string, string> = {
+  "1": "12px",
+  "2": "14px",
+  "3": "16px",
+  "4": "18px",
+  "5": "20px",
+  "6": "24px",
+  "7": "30px",
+};
+
 // Simple contentEditable rich text editor: bold, underline, font size, highlight.
 // Stores content as HTML (spans/tags), never re-syncs from `value` prop on every
 // keystroke to avoid resetting cursor position (breaks typing, especially Bangla/IME).
@@ -27,6 +37,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
+  // The Select dropdown steals focus from the editable div when opened, which
+  // collapses the text selection. We snapshot the Range on mousedown (before
+  // focus moves) and restore it right before applying the font size.
+  const savedRangeRef = useRef<Range | null>(null);
 
   useEffect(() => {
     if (ref.current && isFirstRender.current) {
@@ -43,11 +57,41 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     emit();
   };
 
-  // execCommand fontSize uses legacy HTML sizes 1-7 (not px). Selected text gets
-  // wrapped in <font size="N">, which we map to real px sizes via CSS below.
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0 && ref.current?.contains(sel.anchorNode)) {
+      savedRangeRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
   const setFontSize = (size: string) => {
-    ref.current?.focus();
-    document.execCommand("fontSize", false, size);
+    const px = FONT_SIZE_PX[size];
+    if (!px || !ref.current) return;
+
+    ref.current.focus();
+    const sel = window.getSelection();
+    if (sel && savedRangeRef.current) {
+      sel.removeAllRanges();
+      sel.addRange(savedRangeRef.current);
+    }
+    if (!sel || sel.isCollapsed) {
+      // Nothing selected — nothing to resize.
+      return;
+    }
+
+    const range = sel.getRangeAt(0);
+    const span = document.createElement("span");
+    span.style.fontSize = px;
+    try {
+      range.surroundContents(span);
+    } catch {
+      // Selection spans multiple elements (surroundContents fails on partial
+      // node boundaries) — fall back to extracting and re-wrapping contents.
+      const frag = range.extractContents();
+      span.appendChild(frag);
+      range.insertNode(span);
+    }
+    sel.removeAllRanges();
     emit();
   };
 
@@ -85,14 +129,15 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <Select onValueChange={setFontSize}>
           <SelectTrigger
             className="h-7 w-[110px] text-xs"
-            onMouseDown={(e) => e.preventDefault()}
+            onMouseDown={saveSelection}
             title="টেক্সট সাইজ"
           >
             <SelectValue placeholder="সাইজ" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="2">ছোট</SelectItem>
-            <SelectItem value="3">স্বাভাবিক</SelectItem>
+            <SelectItem value="1">ছোট</SelectItem>
+            <SelectItem value="2">স্বাভাবিক</SelectItem>
+            <SelectItem value="3">মাঝারি</SelectItem>
             <SelectItem value="4">মাঝারি বড়</SelectItem>
             <SelectItem value="5">বড়</SelectItem>
             <SelectItem value="6">অনেক বড়</SelectItem>
@@ -116,8 +161,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         contentEditable
         suppressContentEditableWarning
         onInput={emit}
+        onMouseUp={saveSelection}
+        onKeyUp={saveSelection}
         data-placeholder={placeholder}
-        className={`${minHeightClassName} w-full rounded-md border bg-background px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-1 focus:ring-ring empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground [&_font[size='1']]:text-xs [&_font[size='2']]:text-sm [&_font[size='3']]:text-base [&_font[size='4']]:text-lg [&_font[size='5']]:text-xl [&_font[size='6']]:text-2xl [&_font[size='7']]:text-3xl`}
+        className={`${minHeightClassName} w-full rounded-md border bg-background px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-1 focus:ring-ring empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground`}
       />
     </div>
   );
