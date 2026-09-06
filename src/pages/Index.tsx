@@ -33,7 +33,6 @@ import HeroCarouselItem from "@/components/home/HeroCarouselItem";
 import Footer from "@/components/Footer";
 import { ContactSection } from "@/components/home/ContactSection";
 import { SuccessGallerySection } from "@/components/home/SuccessGallerySection";
-import { AboutSection } from "@/components/home/AboutSection";
 
 const FEATURES = [
     { icon: Monitor, title: "অনলাইন প্রোগ্রাম", desc: "ঘরে বসেই সেরা প্রস্তুতি।" },
@@ -382,9 +381,6 @@ const Index = () => {
 
       </main>
 
-      {/* About Section (admin-managed) */}
-      <AboutSection />
-
       {/* Student Reviews */}
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <StudentReviews reviews={reviews as any} id="reviews" tagline={reviewsTagline} />
@@ -398,38 +394,33 @@ const Index = () => {
       {/* Help / Support CTA (PhysicsHunters-style) */}
       <HelpCtaSection />
 
-      {/* Founder & Teacher Panel (Footer Top) */}
+      {/* Owner Introduction (Footer Top) */}
       <section className="bg-card border-t py-12 px-4 mt-auto">
-          <div className="mx-auto max-w-6xl space-y-8">
+          <div className="mx-auto max-w-3xl space-y-8">
                <div className="text-center space-y-2">
-                    <h2 className="text-2xl font-bold">আমাদের মেন্টরবৃন্দ</h2>
-                    <p className="text-muted-foreground">আপনার সফলতার কারিগর।</p>
+                    <h2 className="text-2xl font-bold">Owner Introduction</h2>
                </div>
 
-               <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 justify-center">
-                   {mentors && mentors.length > 0 ? (
-                       mentors.map((mentor: any) => (
-                           <div key={mentor.id} className="flex flex-col items-center text-center space-y-3">
-                               <div className="h-40 w-40 rounded-full overflow-hidden border-2 border-primary shadow-lg hover:shadow-xl transition-shadow">
-                                   {mentor.image_url ? (
-                                       <img src={mentor.image_url} alt={mentor.name} className="h-full w-full object-cover" />
-                                   ) : (
-                                       <div className="h-full w-full bg-secondary flex items-center justify-center">
-                                           <User className="h-16 w-16 text-muted-foreground" />
-                                       </div>
-                                   )}
+               {mentors && mentors.length > 0 ? (
+                   <div className="flex flex-col items-center text-center space-y-4">
+                       <div className="h-40 w-40 rounded-full overflow-hidden border-2 border-primary shadow-lg hover:shadow-xl transition-shadow">
+                           {mentors[0].image_url ? (
+                               <img src={mentors[0].image_url} alt={mentors[0].name} className="h-full w-full object-cover" />
+                           ) : (
+                               <div className="h-full w-full bg-secondary flex items-center justify-center">
+                                   <User className="h-16 w-16 text-muted-foreground" />
                                </div>
-                               <div>
-                                   <h3 className="font-semibold">{mentor.name}</h3>
-                                   <p className="text-xs text-primary font-medium uppercase tracking-wide">{mentor.role}</p>
-                                   <p className="text-sm text-muted-foreground mt-1 max-w-[200px]">{mentor.description}</p>
-                               </div>
-                           </div>
-                       ))
-                   ) : (
-                       <p className="text-center col-span-full text-muted-foreground">খুব শীঘ্রই মেন্টর যুক্ত করা হবে।</p>
-                   )}
-               </div>
+                           )}
+                       </div>
+                       <div>
+                           <h3 className="font-semibold text-lg">{mentors[0].name}</h3>
+                           <p className="text-xs text-primary font-medium uppercase tracking-wide">{mentors[0].role}</p>
+                           <p className="text-sm text-muted-foreground mt-2 max-w-md">{mentors[0].description}</p>
+                       </div>
+                   </div>
+               ) : (
+                   <p className="text-center text-muted-foreground">খুব শীঘ্রই যুক্ত করা হবে।</p>
+               )}
           </div>
       </section>
 
