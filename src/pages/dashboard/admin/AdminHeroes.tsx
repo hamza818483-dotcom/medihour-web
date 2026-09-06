@@ -28,6 +28,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { ImageUploader } from "@/components/ui/image-uploader";
+import { PromoVideoManager } from "@/components/admin/PromoVideoManager";
 import { Loader2, Plus, Trash2, Edit, Image as ImageIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -351,6 +352,8 @@ const AdminHeroes = () => {
           <p className="text-muted-foreground">Manage the main banners and special announcements.</p>
         </div>
       </div>
+
+      <PromoVideoManager />
 
       <Tabs defaultValue="heroes">
         <TabsList className="mb-4">
