@@ -33,6 +33,15 @@ export const PublicHeader = () => {
 
   const loggedInMenuItems = [
     { href: "/", label: "Home", icon: Home },
+    { href: "/dashboard/profile", label: "Profile", icon: User },
+    { href: "/all-courses", label: "Courses", icon: BookOpen },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/instructors", label: "Instructors", icon: Users },
+    { href: "/ebooks", label: "E-Books", icon: Library },
+  ];
+
+  const loggedOutMenuItems = [
+    { href: "/", label: "Home", icon: Home },
     { href: "/all-courses", label: "Courses", icon: BookOpen },
     { href: "/instructors", label: "Instructors", icon: Users },
     { href: "/ebooks", label: "E-Books", icon: Library },
@@ -124,7 +133,7 @@ export const PublicHeader = () => {
                       </>
                     ) : (
                       <>
-                        {navItems.map((item) => (
+                        {loggedOutMenuItems.map((item) => (
                           <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
                             <item.icon className="h-4 w-4" />
                             {item.label}
