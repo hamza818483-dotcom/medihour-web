@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import {
-  ArrowLeft, Menu, Moon, Sun, Megaphone,
+  ArrowLeft, Menu, Megaphone,
   LayoutDashboard, Video, PenTool, BookOpen,
   History, StickyNote, Files, Calendar,
   User, BarChart, Bell, HelpCircle,
@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotification } from "@/contexts/NotificationContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -32,7 +31,6 @@ export const DashboardLayout = () => {
   const { sendNotification, permission, requestPermission } = useNotification();
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme, setTheme } = useTheme();
   const { data: enrollments } = useEnrollments();
   const [hasPendingPayments, setHasPendingPayments] = useState(false);
   const [isMuted, setIsMuted] = useState(() => localStorage.getItem("admin_sound_muted") === "true");
@@ -299,15 +297,6 @@ export const DashboardLayout = () => {
               <Button
                 variant="outline"
                 size="icon"
-                className="shrink-0"
-                aria-label="Toggle theme"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
                 className="relative shrink-0"
                 aria-label="Notifications"
                 onClick={() => navigate("/dashboard/announcements")}
@@ -462,17 +451,6 @@ export const DashboardLayout = () => {
                   </nav>
 
                   <div className="mt-auto flex flex-col gap-4">
-                    <div className="flex items-center justify-between gap-2 px-2">
-                      <span className="text-sm">Theme</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label="Toggle theme"
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                      >
-                        {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                      </Button>
-                    </div>
                     <Button variant="destructive" size="sm" onClick={() => signOut()} className="w-full">
                       Logout
                     </Button>

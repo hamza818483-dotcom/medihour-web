@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import {
-  ArrowLeft, Menu, Moon, Sun, 
+  ArrowLeft, Menu, 
   LayoutDashboard, VolumeX, Volume2, ShieldAlert
 } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -8,7 +8,6 @@ import { AdminSidebar, adminItems } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "next-themes";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +16,6 @@ import { AdminReportAlert } from "@/components/AdminReportAlert";
 export const AdminLayout = () => {
   const { profile, signOut, isAdmin, isTeacher } = useAuth();
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
   
   const [isMuted, setIsMuted] = useState(() => localStorage.getItem("admin_sound_muted") === "true");
   const [isDevMode, setIsDevMode] = useState(() => localStorage.getItem("dev_mode") === "true");
@@ -92,17 +90,6 @@ export const AdminLayout = () => {
                   </Button>
                 </>
               )}
-              {/* Desktop theme toggle */}
-              <Button
-                variant="outline"
-                size="icon"
-                className="hidden sm:inline-flex"
-                aria-label="Toggle theme"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
-
               <Button variant="outline" size="sm" onClick={() => signOut()} className="hidden sm:inline-flex">
                 Logout
               </Button>
@@ -144,17 +131,6 @@ export const AdminLayout = () => {
                   </nav>
 
                   <div className="mt-auto flex flex-col gap-4">
-                    <div className="flex items-center justify-between gap-2 px-2">
-                      <span className="text-sm">Theme</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        aria-label="Toggle theme"
-                        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                      >
-                        {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                      </Button>
-                    </div>
                     <Button variant="destructive" size="sm" onClick={() => signOut()} className="w-full">
                       Logout
                     </Button>
