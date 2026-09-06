@@ -872,9 +872,6 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                 }}>
                                                     <ExternalLink className="mr-2 h-4 w-4" /> Open Exam
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem disabled>
-                                                    <FileText className="mr-2 h-4 w-4 text-emerald-600" /> Print Solution
-                                                </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleDownloadCSV(exam.id, exam.title)}>
                                                     <Download className="mr-2 h-4 w-4 text-blue-600" /> Download CSV
                                                 </DropdownMenuItem>

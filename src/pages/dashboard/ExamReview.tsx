@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import MathText from "@/components/MathText";
 import { ArrowLeft, Check, X, Trophy, Bookmark, AlertTriangle, Lock, Calculator, Flag, Repeat, FileDown, ListChecks, ListOrdered, Sparkles } from "lucide-react";
 import { getExamSourceList } from "@/lib/examSourceTracker";
-import { openSolvePdf } from "@/lib/solvePdf";
+import { openPlainSolvePdf } from "@/lib/solvePdf";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
@@ -324,9 +324,8 @@ const ExamReview = () => {
 
   const handleSolvePdf = () => {
       if (!questions || questions.length === 0) return;
-      openSolvePdf({
+      openPlainSolvePdf({
           examName: attempt?.exam?.title || "Exam",
-          studentName: authProfile?.full_name || undefined,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           questions: questions.map((q: any) => ({
               question_text: q.question_text,
@@ -340,8 +339,6 @@ const ExamReview = () => {
               explanation: q.explanation,
           })),
           totalMarks: displayTotalMarks,
-          score: Number(score),
-          style: "style1",
       });
   };
 
