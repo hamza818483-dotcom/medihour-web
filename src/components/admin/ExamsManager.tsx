@@ -696,7 +696,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                     className="h-8 w-8 text-blue-500"
                                     title="Copy Exam Link"
                                     onClick={() => {
-                                        const path = exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/open-exam/${exam.id}`;
+                                        const path = exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/take-exam/${exam.id}`;
                                         const url = `${window.location.origin}${path}`;
                                         navigator.clipboard.writeText(url);
                                         toast({ title: "Copied!", description: "Exam link copied to clipboard." });
@@ -836,7 +836,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                             variant="ghost"
                                             className="h-8 w-8 p-0"
                                             onClick={() => {
-                                                const path = exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/open-exam/${exam.id}`;
+                                                const path = exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/take-exam/${exam.id}`;
                                                 const url = `${window.location.origin}${path}`;
                                                 navigator.clipboard.writeText(url);
                                                 toast({ title: "Copied!", description: "Link copied." });
@@ -866,7 +866,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                     <Trophy className="mr-2 h-4 w-4 text-yellow-500" /> Leaderboard
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => {
-                                                    const path = exam.external_exam_link ? exam.external_exam_link : (exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/open-exam/${exam.id}`);
+                                                    const path = exam.external_exam_link ? exam.external_exam_link : (exam.course_id ? `/dashboard/take-exam/${exam.id}` : `/take-exam/${exam.id}`);
                                                     window.open(path, "_blank");
                                                 }}>
                                                     <ExternalLink className="mr-2 h-4 w-4" /> Open Exam
