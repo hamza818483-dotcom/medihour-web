@@ -13,9 +13,10 @@ const FreeExam = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("exams")
-        .select("id, title, duration_minutes, total_marks, free_exam_category, subject, is_published")
+        .select("id, title, duration_minutes, total_marks, free_exam_category, subject, is_published, is_visible_on_free")
         .is("course_id", null)
         .eq("is_published", true)
+        .eq("is_visible_on_free", true)
         .order("free_sort_order", { ascending: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
