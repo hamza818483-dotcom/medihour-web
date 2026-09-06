@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Download, Eye } from "lucide-react";
+import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Check, Loader2, Copy, Download, Eye } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { getEmbedUrl } from "@/lib/videoUtils";
@@ -97,7 +97,7 @@ const CourseDetails = () => {
       const { data, error } = await supabase
         .from("courses")
         .select(
-          "id, name, full_description, short_description, short_description_lines, full_description_blocks, extra_links, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public, routine_url"
+          "id, name, full_description, short_description, short_description_lines, extra_links, price, original_price, image_url, video_url, what_you_get, demo_content, linked_course_ids, is_active, is_public, routine_url, show_enrollment_count"
         )
         .or(`slug.eq.${courseId},id.eq.${courseId}`)
         .maybeSingle();
@@ -508,43 +508,21 @@ const CourseDetails = () => {
         </div>
       )}
 
-      {/* Full description: centered numbered special heading box + detail card below it */}      {Array.isArray((course as any).full_description_blocks) &&
-        (course as any).full_description_blocks.length > 0 && (
-          <div className="mb-6 space-y-6">
-            <div className="mx-auto mb-1 max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-5 py-4 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
-              <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
-                প্রত্যেকটি ফিচারের বিস্তারিত:
-              </h2>
-            </div>
-            {((course as any).full_description_blocks as { heading: string; body: string }[]).map(
-              (block, i) => (
-                <div
-                  key={i}
-                  className="mx-auto max-w-[95%] rounded-2xl border border-primary/20 bg-gradient-to-br from-secondary/60 to-secondary/30 p-3 shadow-sm"
-                >
-                  {block.heading && (
-                    <div className="mb-3 rounded-xl border bg-background/70 px-4 py-3 text-center">
-                      <div className="flex items-center justify-center gap-1.5 font-bold">
-                        <Sparkles className="h-4 w-4 shrink-0 text-amber-500 animate-pulse" />
-                        <span>
-                          {i + 1}. {block.heading}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  {block.body && (
-                    <div className="rounded-xl border bg-card p-4 shadow-sm">
-                      <div
-                        className="text-sm leading-relaxed text-muted-foreground"
-                        dangerouslySetInnerHTML={{ __html: block.body }}
-                      />
-                    </div>
-                  )}
-                </div>
-              )
-            )}
+      {/* Full description: plain text set by admin */}
+      {(course as any).full_description && (
+        <div className="mb-6 space-y-3">
+          <div className="mx-auto mb-1 max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-5 py-4 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
+            <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
+              বিস্তারিত
+            </h2>
           </div>
-        )}
+          <div className="mx-auto max-w-[95%] rounded-2xl border bg-card p-4 shadow-sm">
+            <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {(course as any).full_description}
+            </p>
+          </div>
+        </div>
+      )}
 
       {whatYouGet.length > 0 && (
         <div className="mb-6">

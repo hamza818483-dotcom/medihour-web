@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { ChecklistEditor, ChecklistLine } from "@/components/ChecklistEditor";
-import { DescriptionBlockEditor, DescriptionBlock } from "@/components/DescriptionBlockEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { Course } from "@/types/admin";
 import { Button } from "@/components/ui/button";
@@ -42,7 +41,7 @@ const courseSchema = z.object({
   id: z.string().optional(),
   name: z.string().trim().min(1, "Name is required").max(200),
   short_description_lines: z.array(z.object({ text: z.string(), bold: z.boolean().optional() })).optional().default([]),
-  full_description_blocks: z.array(z.object({ heading: z.string(), body: z.string() })).optional().default([]),
+  full_description: z.string().trim().optional().or(z.literal("")),
   extra_links: z.array(z.object({ label: z.string(), url: z.string() })).optional().default([]),
   price: z
     .string()
@@ -87,7 +86,7 @@ const AdminCourses = () => {
   const [form, setForm] = useState<z.infer<typeof courseSchema>>({
     name: "",
     short_description_lines: [],
-    full_description_blocks: [],
+    full_description: "",
     extra_links: [],
     price: "",
     original_price: "",
@@ -243,7 +242,7 @@ const AdminCourses = () => {
     setForm({
       name: "",
       short_description_lines: [],
-      full_description_blocks: [],
+      full_description: "",
       extra_links: [],
       price: "",
       original_price: "",
@@ -273,7 +272,7 @@ const AdminCourses = () => {
       const payload: any = {
         name: parsed.name,
         short_description_lines: parsed.short_description_lines || [],
-        full_description_blocks: parsed.full_description_blocks || [],
+        full_description: parsed.full_description || null,
         extra_links: parsed.extra_links || [],
         price: parsed.price ? Number(parsed.price) : null,
         original_price: parsed.original_price ? Number(parsed.original_price) : null,
@@ -357,7 +356,7 @@ const AdminCourses = () => {
       id: course.id,
       name: course.name ?? "",
       short_description_lines: (course as any).short_description_lines ?? [],
-      full_description_blocks: (course as any).full_description_blocks ?? [],
+      full_description: (course as any).full_description ?? "",
       extra_links: (course as any).extra_links ?? [],
       price: course.price != null ? String(course.price) : "",
       original_price: course.original_price != null ? String(course.original_price) : "",
@@ -521,7 +520,7 @@ const AdminCourses = () => {
                  setForm({
                     name: "",
                     short_description_lines: [],
-                    full_description_blocks: [],
+                    full_description: "",
                     extra_links: [],
                     price: "",
                     original_price: "",
@@ -817,9 +816,11 @@ const AdminCourses = () => {
 
                     <div className="space-y-2">
                         <Label>Full description</Label>
-                        <DescriptionBlockEditor
-                            value={form.full_description_blocks as DescriptionBlock[]}
-                            onChange={(blocks) => setForm((prev) => ({ ...prev, full_description_blocks: blocks }))}
+                        <Textarea
+                            value={form.full_description || ""}
+                            onChange={(e) => setForm((prev) => ({ ...prev, full_description: e.target.value }))}
+                            placeholder="Course details লিখুন..."
+                            className="min-h-[160px]"
                         />
                     </div>
 
