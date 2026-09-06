@@ -727,7 +727,8 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                     size="sm"
                                     variant="ghost"
                                     className="h-8 text-emerald-600"
-                                    onClick={() => handleGenerateSolvesheet(exam.id, exam.title)}
+                                    disabled
+                                    title="Temporarily disabled"
                                 >
                                     <FileText className="h-4 w-4 mr-1" /> Solution
                                 </Button>
@@ -871,7 +872,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                 }}>
                                                     <ExternalLink className="mr-2 h-4 w-4" /> Open Exam
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleGenerateSolvesheet(exam.id, exam.title)}>
+                                                <DropdownMenuItem disabled>
                                                     <FileText className="mr-2 h-4 w-4 text-emerald-600" /> Print Solution
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem onClick={() => handleDownloadCSV(exam.id, exam.title)}>
