@@ -130,7 +130,7 @@ const CourseDetails = () => {
       if (error) return 0;
       return data || 0;
     },
-    enabled: !!course?.id,
+    enabled: !!course?.id && (course as any)?.show_enrollment_count !== false,
   });
 
   // Fetch mentors linked to this course
@@ -431,10 +431,12 @@ const CourseDetails = () => {
         )}
       </div>
 
-      <div className="mb-4 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
-        <Users className="h-4 w-4 text-green-500" />
-        {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
-      </div>
+      {(course as any).show_enrollment_count !== false && (
+        <div className="mb-4 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
+          <Users className="h-4 w-4 text-green-500" />
+          {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
+        </div>
+      )}
 
       <Tabs defaultValue="features" className="mb-6">
         <TabsList className="mb-4 flex h-auto w-full rounded-2xl bg-white p-0 shadow-lg border-b">

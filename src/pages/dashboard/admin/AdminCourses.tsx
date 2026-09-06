@@ -72,6 +72,7 @@ const courseSchema = z.object({
   is_active: z.boolean().optional().default(true),
   is_public: z.boolean().optional().default(true),
   is_hidden: z.boolean().optional().default(false),
+  show_enrollment_count: z.boolean().optional().default(true),
   category: z.array(z.string()).default([]),
   sub_category: z.array(z.string()).default([]),
   priority: z.number().optional().default(0),
@@ -101,6 +102,7 @@ const AdminCourses = () => {
     is_active: true,
     is_public: true,
     is_hidden: false,
+    show_enrollment_count: true,
     category: [],
     sub_category: [],
     priority: 0,
@@ -254,6 +256,7 @@ const AdminCourses = () => {
       is_active: true,
       is_public: true,
       is_hidden: false,
+      show_enrollment_count: true,
       category: [],
       sub_category: [],
       priority: 0,
@@ -287,6 +290,7 @@ const AdminCourses = () => {
         is_active: parsed.is_active ?? true,
         is_public: parsed.is_public ?? true,
         is_hidden: parsed.is_hidden ?? false,
+        show_enrollment_count: parsed.show_enrollment_count ?? true,
         category: parsed.category,
         sub_category: parsed.sub_category,
         priority: parsed.priority ?? 0,
@@ -369,6 +373,8 @@ const AdminCourses = () => {
       is_public: course.is_public ?? true,
       // @ts-ignore
       is_hidden: course.is_hidden ?? false,
+      // @ts-ignore
+      show_enrollment_count: course.show_enrollment_count ?? true,
       category: cats,
       sub_category: subs,
       priority: course.priority ?? 0,
@@ -526,6 +532,7 @@ const AdminCourses = () => {
                     is_active: false,
                     is_public: true,
                     is_hidden: false,
+                    show_enrollment_count: true,
                     priority: 0,
                     category: [],
                     sub_category: [],
@@ -776,6 +783,19 @@ const AdminCourses = () => {
                                         <div className="grid gap-0.5">
                                             <Label htmlFor="is_hidden" className="text-sm font-semibold cursor-pointer">Hidden App</Label>
                                             <span className="text-[10px] leading-tight text-muted-foreground">Absolute shadow hide</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3 p-3 rounded bg-muted/20 border">
+                                        <Switch
+                                        id="show_enrollment_count"
+                                        checked={form.show_enrollment_count}
+                                        onCheckedChange={(checked) =>
+                                            setForm((prev) => ({ ...prev, show_enrollment_count: checked }))
+                                        }
+                                        />
+                                        <div className="grid gap-0.5">
+                                            <Label htmlFor="show_enrollment_count" className="text-sm font-semibold cursor-pointer">Enrollment Count</Label>
+                                            <span className="text-[10px] leading-tight text-muted-foreground">Show "X জন ভর্তি" publicly</span>
                                         </div>
                                     </div>
                                 </div>

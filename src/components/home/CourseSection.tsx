@@ -311,17 +311,19 @@ export const CourseSection = () => {
                                         </h3>
 
                                         {/* Enrollment meta */}
-                                        <div className="mb-2.5 flex w-full items-center">
-                                            <div className="inline-flex items-center gap-2 rounded-[11px] border border-[#dce4f5] bg-gradient-to-br from-[#f5f8ff] to-white py-1 pl-1 pr-3 shadow-[0_4px_14px_rgba(0,0,0,0.055)] dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
-                                                <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] border border-[#c7d7f7] bg-[#eef2ff]">
-                                                    <Users className="h-[14px] w-[14px] text-[#2563eb]" />
-                                                </span>
-                                                <span className="flex items-baseline gap-1 whitespace-nowrap">
-                                                    <span className="text-[14px] font-black leading-none text-[#2563eb]">{enrollCount.toLocaleString("en-BD")}</span>
-                                                    <span className="text-[11px] font-bold text-[#45484d] dark:text-slate-300">জন ভর্তি</span>
-                                                </span>
+                                        {course.show_enrollment_count !== false && (
+                                            <div className="mb-2.5 flex w-full items-center">
+                                                <div className="inline-flex items-center gap-2 rounded-[11px] border border-[#dce4f5] bg-gradient-to-br from-[#f5f8ff] to-white py-1 pl-1 pr-3 shadow-[0_4px_14px_rgba(0,0,0,0.055)] dark:border-white/10 dark:from-slate-800 dark:to-slate-800">
+                                                    <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-[8px] border border-[#c7d7f7] bg-[#eef2ff]">
+                                                        <Users className="h-[14px] w-[14px] text-[#2563eb]" />
+                                                    </span>
+                                                    <span className="flex items-baseline gap-1 whitespace-nowrap">
+                                                        <span className="text-[14px] font-black leading-none text-[#2563eb]">{enrollCount.toLocaleString("en-BD")}</span>
+                                                        <span className="text-[11px] font-bold text-[#45484d] dark:text-slate-300">জন ভর্তি</span>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
 
                                         {/* Divider */}
                                         <div className="mb-2.5 h-px w-full bg-gradient-to-r from-[#eee] via-[#dce4f5] to-[#eee]" />
