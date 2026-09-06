@@ -93,6 +93,8 @@ export interface DemoContentItem {
   video_url?: string;
   note_url?: string;
   is_locked: boolean;
+  sub_course_name?: string;
+  lecture_number?: string;
 }
 
 export interface Resource {

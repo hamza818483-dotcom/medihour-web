@@ -34,6 +34,8 @@ const demoContentSchema = z.object({
   video_url: z.string().trim().optional().or(z.literal("")),
   note_url: z.string().trim().optional().or(z.literal("")),
   is_locked: z.boolean().default(false),
+  sub_course_name: z.string().trim().optional().or(z.literal("")),
+  lecture_number: z.string().trim().optional().or(z.literal("")),
 });
 
 const courseSchema = z.object({
@@ -878,7 +880,7 @@ const AdminCourses = () => {
                             onClick={() => {
                                 const newContent = [
                                     ...(form.demo_content || []),
-                                    { title: "", video_url: "", note_url: "", is_locked: false }
+                                    { title: "", video_url: "", note_url: "", is_locked: false, sub_course_name: "", lecture_number: "" }
                                 ];
                                 setForm({ ...form, demo_content: newContent });
                             }}
@@ -897,6 +899,34 @@ const AdminCourses = () => {
                         {form.demo_content?.map((item, idx) => (
                             <div key={idx} className="border rounded-md p-4 flex gap-4 flex-col md:flex-row md:items-start">
                                 <div className="flex-1 space-y-3">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground mb-1 block">Sub-Course Name</Label>
+                                            <Input
+                                                value={item.sub_course_name || ""}
+                                                onChange={(e) => {
+                                                    const updated = [...(form.demo_content || [])];
+                                                    updated[idx] = { ...updated[idx], sub_course_name: e.target.value };
+                                                    setForm({ ...form, demo_content: updated });
+                                                }}
+                                                className="h-8"
+                                                placeholder="e.g. ICT Basic To Pro HSC-28"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label className="text-xs text-muted-foreground mb-1 block">Lecture Number</Label>
+                                            <Input
+                                                value={item.lecture_number || ""}
+                                                onChange={(e) => {
+                                                    const updated = [...(form.demo_content || [])];
+                                                    updated[idx] = { ...updated[idx], lecture_number: e.target.value };
+                                                    setForm({ ...form, demo_content: updated });
+                                                }}
+                                                className="h-8"
+                                                placeholder="e.g. 3"
+                                            />
+                                        </div>
+                                    </div>
                                     <div>
                                         <Label className="text-xs text-muted-foreground mb-1 block">Title</Label>
                                         <Input
@@ -907,7 +937,7 @@ const AdminCourses = () => {
                                                 setForm({ ...form, demo_content: updated });
                                             }}
                                             className="h-8"
-                                            placeholder="e.g. Introduction Class"
+                                            placeholder="e.g. লেকচার ০৩"
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
