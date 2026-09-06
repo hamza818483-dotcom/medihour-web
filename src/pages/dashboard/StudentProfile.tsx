@@ -46,8 +46,6 @@ const profileSchema = z.object({
     .refine((val) => val === "" || (/^\d{4}$/.test(val) && Number(val) >= 2000 && Number(val) <= 2100), {
       message: "Enter a valid year between 2000 and 2100",
     }),
-  father_name: z.string().optional(),
-  mother_name: z.string().optional(),
   college_name: z.string().optional(),
   hsc_batch: z.string().optional(),
   ssc_gpa: z.coerce.number().min(1).max(5).optional(),
@@ -240,10 +238,6 @@ const StudentProfile = () => {
       school: profile?.school ?? "",
       batch_year: profile?.batch_year ? String(profile.batch_year) : "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      father_name: (profile as any)?.father_name ?? "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mother_name: (profile as any)?.mother_name ?? "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       college_name: (profile as any)?.college_name ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       hsc_batch: (profile as any)?.hsc_batch ?? "",
@@ -260,10 +254,6 @@ const StudentProfile = () => {
       phone: profile?.phone ?? "",
       school: profile?.school ?? "",
       batch_year: profile?.batch_year ? String(profile.batch_year) : "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      father_name: (profile as any)?.father_name ?? "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      mother_name: (profile as any)?.mother_name ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       college_name: (profile as any)?.college_name ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -289,8 +279,6 @@ const StudentProfile = () => {
         phone: values.phone || null,
         school: values.school || null,
         batch_year: batchYearNumber,
-        father_name: values.father_name,
-        mother_name: values.mother_name,
         college_name: values.college_name,
         hsc_batch: values.hsc_batch,
         ssc_gpa: values.ssc_gpa,
@@ -525,14 +513,6 @@ const StudentProfile = () => {
                                 </Select>
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="father_name">Father's Name</Label>
-                                <Input id="father_name" {...form.register("father_name")} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="mother_name">Mother's Name</Label>
-                                <Input id="mother_name" {...form.register("mother_name")} />
-                            </div>
-                            <div className="space-y-2">
                                 <Label htmlFor="college_name">College Name</Label>
                                 <Input id="college_name" {...form.register("college_name")} />
                             </div>
@@ -608,8 +588,6 @@ const StudentProfile = () => {
                         {/* Guardian Group */}
                         <div className="pt-4 pb-2">
                             <h4 className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-2 px-1">Guardians</h4>
-                            <ProfileDetailItem label="Father's Name" value={(profile as any).father_name} />
-                            <ProfileDetailItem label="Mother's Name" value={(profile as any).mother_name} />
                         </div>
                     </div>
                 )
