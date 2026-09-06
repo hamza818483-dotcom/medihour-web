@@ -491,3 +491,56 @@ export function openSolvePdf(params: SolvePdfParams) {
   win.document.write(html);
   win.document.close();
 }
+
+// Plain/basic printable PDF — no fancy styling, replaces the designed
+// "Solve Sheet" system on request. Simple serial list: Q, options, correct
+// answer, user's answer, explanation.
+export function generatePlainSolvePdfHtml(params: SolvePdfParams): string {
+  const { examName, questions, style } = params;
+  const escape = escapeHtml;
+  let body = `<h1 style="font-family:sans-serif;">${escape(examName)}</h1>`;
+  body += `<div style="font-family:sans-serif; font-size:14px; line-height:1.6;">`;
+  questions.forEach((q, idx) => {
+    const opts: [string, string][] = [
+      ["A", q.option_a],
+      ["B", q.option_b],
+      ["C", q.option_c],
+      ["D", q.option_d],
+    ];
+    if (q.option_e) opts.push(["E", q.option_e]);
+    body += `<div style="margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid #ccc;">`;
+    body += `<div><strong>${idx + 1}.</strong> ${q.question_text}</div>`;
+    opts.forEach(([key, val]) => {
+      body += `<div style="margin-left:16px;">${key}. ${escape(val || "")}</div>`;
+    });
+    body += `<div style="margin-top:6px;">Correct Answer: <strong>${escape(q.correct_option || "-")}</strong></div>`;
+    body += `<div>Your Answer: <strong>${escape(q.user_answer || "Not answered")}</strong></div>`;
+    if (q.explanation) {
+      body += `<div style="margin-top:4px; color:#333;">Explanation: ${escape(q.explanation)}</div>`;
+    }
+    body += `</div>`;
+  });
+  body += `<button onclick="window.print()" style="padding:10px 16px; font-size:14px;">Print / Download PDF</button>`;
+  body += `</div>`;
+  return `<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><title>${escape(examName)}</title></head><body>${body}</body></html>`;
+}
+
+export function openPlainSolvePdf(params: SolvePdfParams) {
+  const html = generatePlainSolvePdfHtml(params);
+  const win = window.open("", "_blank");
+  if (!win) {
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "solution.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    return;
+  }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+}

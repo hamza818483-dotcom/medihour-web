@@ -1453,13 +1453,12 @@ const TakeExam = () => {
                           type="button"
                           role="switch"
                           aria-checked={omrMode}
+                          disabled
                           onClick={() => {
-                              const next = !omrMode;
-                              setOmrMode(next);
-                              if (next) setShowOmrPopup(true);
+                              // Temporarily disabled — feature kept in code for future re-enable.
                           }}
                           className={cn(
-                              "h-5 w-9 rounded-full border-2 transition-colors flex items-center px-0.5",
+                              "h-5 w-9 rounded-full border-2 transition-colors flex items-center px-0.5 opacity-40 cursor-not-allowed",
                               omrMode ? "bg-emerald-500 border-emerald-500 justify-end" : "bg-muted border-border justify-start"
                           )}
                       >

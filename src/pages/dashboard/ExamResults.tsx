@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { openSolvePdf, generateSolvePdfHtml } from "@/lib/solvePdf";
+import { openPlainSolvePdf, generatePlainSolvePdfHtml } from "@/lib/solvePdf";
 import { useToast } from "@/hooks/use-toast";
 import {
   Popover,
@@ -67,7 +67,7 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
                 return;
             }
             const userAnswers = (attempt.answers as any[]) || [];
-            const html = generateSolvePdfHtml({
+            const html = generatePlainSolvePdfHtml({
                 examName: attempt.exam.title,
                 questions: data.map((q: any, idx: number) => ({
                     question_text: q.question_text,
@@ -81,14 +81,13 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
                     explanation: q.explanation,
                 })),
                 totalMarks: data.length,
-                style: "style1",
             });
             if (pdfWindow) {
                 pdfWindow.document.open();
                 pdfWindow.document.write(html);
                 pdfWindow.document.close();
             } else {
-                openSolvePdf({
+                openPlainSolvePdf({
                     examName: attempt.exam.title,
                     questions: data.map((q: any, idx: number) => ({
                         question_text: q.question_text,
@@ -102,7 +101,6 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
                         explanation: q.explanation,
                     })),
                     totalMarks: data.length,
-                    style: "style1",
                 });
             }
         } catch (e: any) {
@@ -614,7 +612,7 @@ const ExamResults = () => {
 
               const handleMockPdf = () => {
                 if (!snapshot.length) return;
-                openSolvePdf({
+                openPlainSolvePdf({
                   examName: `${a.subject || "সাধারণ (বিষয় নেই)"}${a.chapter ? ` - ${a.chapter}` : ""}`,
                   questions: snapshot.map((q: any) => ({
                     question_text: q.question_text,
@@ -628,7 +626,6 @@ const ExamResults = () => {
                     explanation: q.explanation,
                   })),
                   totalMarks: snapshot.length,
-                  style: "style1",
                 });
               };
 
