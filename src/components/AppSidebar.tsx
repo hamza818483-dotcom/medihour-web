@@ -74,10 +74,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
-  const { isAdmin, isTeacher } = useAuth();
-
-  const isActive = (path: string) => {
-      // Exact match for dashboard root to avoid highlighting on sub-routes unless intended
+  const { isAdmin, isTeacher, profile } = useAuth();
       if (path === "/admin") {
           return currentPath === path;
       }
@@ -96,6 +93,23 @@ export function AppSidebar() {
       className="border-r border-sidebar-border bg-background text-sidebar-foreground w-56 data-[state=collapsed]:w-16 mt-14 h-[calc(100svh-3.5rem)] z-30"
     >
       <SidebarContent className="flex h-full flex-col overflow-y-auto no-scrollbar bg-background">
+        {profile?.registration_id && (
+          <div className="px-3 pt-3 pb-2">
+            <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/40 px-3 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-sidebar-foreground/60">
+                {state === "expanded" ? "Your Unique ID" : "ID"}
+              </p>
+              {state === "expanded" && (
+                <>
+                  <p className="text-sm font-bold text-sidebar-foreground truncate">{profile.registration_id}</p>
+                  <p className="mt-0.5 text-xs text-sidebar-foreground/70 truncate">
+                    {profile.full_name} ({String(profile.registration_id).slice(-5)})
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
         <SidebarGroup>
           <SidebarGroupLabel className="text-sidebar-foreground/70">Student</SidebarGroupLabel>
           <SidebarGroupContent>
