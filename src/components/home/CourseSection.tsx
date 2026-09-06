@@ -18,7 +18,7 @@ export const CourseSection = () => {
         queryFn: async () => {
           const { data, error } = await supabase
             .from("courses")
-            .select("id, name, short_description, price, original_price, image_url, slug, is_active, category, sub_category, priority, sub_category_order")
+            .select("id, name, short_description, price, original_price, image_url, slug, is_active, category, sub_category, priority, sub_category_order, show_enrollment_count")
             .eq("is_public", true)
             .eq("is_active", true)
             .order("priority", { ascending: true })
