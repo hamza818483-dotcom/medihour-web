@@ -117,7 +117,13 @@ export const PublicHeader = () => {
                   <SheetHeader>
                     <SheetTitle>মেনু</SheetTitle>
                     {user && profile?.registration_id && (
-                      <p className="text-sm text-muted-foreground">Reg ID: {profile.registration_id}</p>
+                      <div className="mt-1 rounded-lg border bg-secondary/40 px-3 py-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Your Unique ID</p>
+                        <p className="text-sm font-bold truncate">{profile.registration_id}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground truncate">
+                          {profile.full_name} ({String(profile.registration_id).slice(-5)})
+                        </p>
+                      </div>
                     )}
                   </SheetHeader>
                   <nav className="mt-6 flex flex-col gap-4">

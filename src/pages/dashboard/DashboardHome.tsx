@@ -305,7 +305,9 @@ const DashboardHome = () => {
         <CardContent className="p-3 flex flex-col items-center gap-2">
           <h1 className="text-2xl font-extrabold tracking-tight whitespace-nowrap animate-text-fade-sweep">Welcome to Dashboard</h1>
           {profile?.registration_id && (
-            <p className="text-sm text-muted-foreground">Reg ID: {profile.registration_id}</p>
+            <p className="text-sm text-muted-foreground">
+              Your Unique Id: {profile.full_name} ({String(profile.registration_id).slice(-5)})
+            </p>
           )}
           {tutorialVideoUrl && (
             <Button
