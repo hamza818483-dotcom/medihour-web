@@ -46,7 +46,6 @@ const profileSchema = z.object({
     .refine((val) => val === "" || (/^\d{4}$/.test(val) && Number(val) >= 2000 && Number(val) <= 2100), {
       message: "Enter a valid year between 2000 and 2100",
     }),
-  is_second_timer: z.enum(["yes", "no"]).optional(),
   father_name: z.string().optional(),
   mother_name: z.string().optional(),
   college_name: z.string().optional(),
@@ -241,8 +240,6 @@ const StudentProfile = () => {
       school: profile?.school ?? "",
       batch_year: profile?.batch_year ? String(profile.batch_year) : "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      is_second_timer: (profile as any)?.is_second_timer ? "yes" : "no",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       father_name: (profile as any)?.father_name ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mother_name: (profile as any)?.mother_name ?? "",
@@ -264,8 +261,6 @@ const StudentProfile = () => {
       school: profile?.school ?? "",
       batch_year: profile?.batch_year ? String(profile.batch_year) : "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      is_second_timer: (profile as any)?.is_second_timer ? "yes" : "no",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       father_name: (profile as any)?.father_name ?? "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mother_name: (profile as any)?.mother_name ?? "",
@@ -286,7 +281,6 @@ const StudentProfile = () => {
     if (!profile) return;
 
     const batchYearNumber = values.batch_year ? Number(values.batch_year) : null;
-    const isSecondTimer = values.is_second_timer === "yes";
 
     const canChangeName = !profile.name_changed_once;
     const nameChanged = canChangeName && values.full_name && values.full_name.trim() !== (profile.full_name || "").trim();
@@ -295,7 +289,6 @@ const StudentProfile = () => {
         phone: values.phone || null,
         school: values.school || null,
         batch_year: batchYearNumber,
-        is_second_timer: isSecondTimer,
         father_name: values.father_name,
         mother_name: values.mother_name,
         college_name: values.college_name,
@@ -563,21 +556,6 @@ const StudentProfile = () => {
                                 <Label htmlFor="batch_year">Batch year</Label>
                                 <Input id="batch_year" placeholder="2025" {...form.register("batch_year")} />
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="is_second_timer">Second Timer?</Label>
-                                <Select
-                                value={form.watch("is_second_timer")}
-                                onValueChange={(val: "yes" | "no") => form.setValue("is_second_timer", val)}
-                                >
-                                <SelectTrigger id="is_second_timer">
-                                    <SelectValue placeholder="Select..." />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="no">No</SelectItem>
-                                    <SelectItem value="yes">Yes</SelectItem>
-                                </SelectContent>
-                                </Select>
-                            </div>
                         </div>
 
                         <div className="pt-2 flex justify-end gap-2 border-t mt-4">
@@ -623,7 +601,6 @@ const StudentProfile = () => {
                             <h4 className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-2 px-1">Academic</h4>
                             <ProfileDetailItem label="College" value={(profile as any).college_name} />
                             <ProfileDetailItem label="HSC Batch" value={(profile as any).hsc_batch} />
-                            <ProfileDetailItem label="Second Timer" value={(profile as any).is_second_timer ? "Yes" : "No"} />
                             <ProfileDetailItem label="SSC GPA" value={(profile as any).ssc_gpa} />
                             <ProfileDetailItem label="HSC GPA" value={(profile as any).hsc_gpa} />
                         </div>

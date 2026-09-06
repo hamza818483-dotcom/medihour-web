@@ -22,7 +22,6 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSecondTimer, setIsSecondTimer] = useState(false);
   const [hscBatch, setHscBatch] = useState("2025");
   const [hscGpa, setHscGpa] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
@@ -172,7 +171,6 @@ const Register = () => {
             hsc_gpa: hscGpaForm,
             phone: phone,
             gender: gender,
-            is_second_timer: isSecondTimer,
             utm_source: utmParams.utm_source || null,
             utm_medium: utmParams.utm_medium || null,
             utm_campaign: utmParams.utm_campaign || null,
@@ -396,16 +394,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-2 py-2">
-                <Checkbox
-                  id="isSecondTimer"
-                  checked={isSecondTimer}
-                  onCheckedChange={(checked) => setIsSecondTimer(checked as boolean)}
-                />
-                <Label htmlFor="isSecondTimer" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  I am a Second Timer Student
-                </Label>
-              </div>
+
 
               <div className="flex items-start space-x-2 py-2">
                 <Checkbox

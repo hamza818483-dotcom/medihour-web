@@ -1090,7 +1090,7 @@ const Leaderboard = () => {
                 else if (globalIndex === 1) { rankIcon = "🥈"; cardClass = "bg-slate-100/50 dark:bg-slate-800/20"; }
                 else if (globalIndex === 2) { rankIcon = "🥉"; cardClass = "bg-orange-100/50 dark:bg-orange-900/20"; }
 
-                const isSecondTimer = attempt.profile?.is_second_timer;
+                const isSecondTimer = attempt.is_second_timer_attempt;
                 const isMe = myAttemptId === attempt.id;
 
                 return (
@@ -1192,7 +1192,7 @@ const Leaderboard = () => {
                         </span>
                     ) : null;
 
-                    const isSecondTimer = attempt.profile?.is_second_timer;
+                    const isSecondTimer = attempt.is_second_timer_attempt;
                     const isMe = myAttemptId === attempt.id;
 
                     return (

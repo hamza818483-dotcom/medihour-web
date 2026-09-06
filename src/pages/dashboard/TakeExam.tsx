@@ -205,6 +205,7 @@ const TakeExam = () => {
   const [violationCount, setViolationCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [agreedToInstructions, setAgreedToInstructions] = useState(false);
+  const [isSecondTimerAttempt, setIsSecondTimerAttempt] = useState(false);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState<number | null>(null);
   const [customTimeMinutes, setCustomTimeMinutes] = useState<number | null>(null);
   const [omrMode, setOmrMode] = useState(false);
@@ -847,6 +848,7 @@ const TakeExam = () => {
             p_answers: answersList,
             p_violation_count: violationCount,
             p_time_taken_seconds: timeTaken,
+            p_is_second_timer: isSecondTimerAttempt,
             ...(!user && guestInfo ? {
                 p_guest_name: guestInfo.name,
                 p_guest_hsc_batch: guestInfo.hscBatch,
@@ -1526,6 +1528,20 @@ const TakeExam = () => {
               {/* Card 3: Actions */}
               <Card className="w-full rounded-xl shadow-sm border">
                   <div className="p-3 md:p-4 space-y-2">
+                      <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-muted/50 transition-colors">
+                          <Checkbox
+                              id="secondTimer"
+                              checked={isSecondTimerAttempt}
+                              onCheckedChange={(c) => setIsSecondTimerAttempt(!!c)}
+                              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary h-4 w-4"
+                          />
+                          <label
+                              htmlFor="secondTimer"
+                              className="text-xs font-medium leading-none cursor-pointer flex-1"
+                          >
+                              আমি একজন সেকেন্ড টাইমার শিক্ষার্থী (মোট নম্বরের ৩% কাটা যাবে)
+                          </label>
+                      </div>
                       <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-muted/50 transition-colors">
                           <Checkbox
                               id="terms"

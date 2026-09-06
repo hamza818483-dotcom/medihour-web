@@ -154,7 +154,7 @@ const ExamReview = () => {
           if (!user) return null;
           const { data, error } = await supabase
               .from("profiles")
-              .select("is_second_timer, ssc_gpa, hsc_gpa")
+              .select("ssc_gpa, hsc_gpa")
               .eq("id", user.id)
               .single();
           if (error) throw error;
@@ -713,7 +713,7 @@ const ExamReview = () => {
                 </div>
 
                 {/* Second Timer Warning in Breakdown */}
-                {profile?.is_second_timer && (
+                {attempt?.is_second_timer_attempt && (
                     <div className="mt-4 pt-4 border-t border-dashed flex items-start gap-2 text-xs text-muted-foreground">
                         <AlertTriangle className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
                         <p>
