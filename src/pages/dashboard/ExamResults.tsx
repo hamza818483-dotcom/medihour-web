@@ -7,11 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { openPlainSolvePdf, generatePlainSolvePdfHtml } from "@/lib/solvePdf";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLive: boolean, navigate: any, profile: any }) => {
@@ -21,32 +16,6 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
     }
     const totalScoreWithGpa = Number(attempt.score) + gpaScore;
     const percentage = attempt.exam.total_marks > 0 ? ((Number(attempt.score) / Number(attempt.exam.total_marks)) * 100).toFixed(1) : null;
-
-    const { data: mistakeCounts } = useQuery({
-        queryKey: ["exam-mistake-counts", attempt.id],
-        queryFn: async () => {
-            const { data: reviewData } = await supabase.rpc("get_student_exam_review", {
-                p_attempt_id: attempt.id
-            });
-            if (!reviewData) return { wrong: 0, skip: 0 };
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const userAnswers = (attempt.answers as any[]) || [];
-            let wrong = 0, skip = 0;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            reviewData.forEach((q: any) => {
-                const ua = userAnswers.find((a: any) => a.question_id === q.question_id);
-                const selected = ua?.selected_option;
-                if (!selected) skip++;
-                else if (selected !== q.correct_option) wrong++;
-            });
-            return { wrong, skip };
-        },
-        staleTime: Infinity,
-    });
-
-    const wrongCount = mistakeCounts?.wrong ?? 0;
-    const skipCount = mistakeCounts?.skip ?? 0;
-    const hasMistakes = wrongCount > 0 || skipCount > 0;
 
     const { toast } = useToast();
     const [pdfLoading, setPdfLoading] = useState(false);
@@ -139,7 +108,7 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
             </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col flex-1 p-3 pt-0">
-            <div className={`grid gap-1.5 mt-auto ${attempt.exam.chapter === "Custom" ? "grid-cols-3" : "grid-cols-4"}`}>
+            <div className={`grid gap-1.5 mt-auto ${attempt.exam.chapter === "Custom" ? "grid-cols-2" : "grid-cols-3"}`}>
                 <Button
                     size="sm"
                     className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white border-none text-[10px] h-8 px-1 leading-tight whitespace-pre-line"
@@ -154,34 +123,6 @@ const ResultCard = ({ attempt, isLive, navigate, profile }: { attempt: any, isLi
                 >
                     Practice Again
                 </Button>
-
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            size="sm"
-                            disabled={!hasMistakes}
-                            className="rounded-lg bg-amber-500 hover:bg-amber-600 text-white border-none text-[10px] h-8 px-1 leading-tight whitespace-pre-line disabled:opacity-40"
-                        >
-                            Mistake Practice
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="center" className="w-56 p-1.5">
-                        <button
-                            disabled={wrongCount === 0}
-                            onClick={() => navigate("/dashboard/take-mistakes", { state: { examIds: [attempt.exam.id], filterMode: "wrong" } })}
-                            className="w-full text-left text-xs px-2.5 py-2 rounded-md hover:bg-muted disabled:opacity-40 disabled:pointer-events-none"
-                        >
-                            Only Wrong ({wrongCount})
-                        </button>
-                        <button
-                            disabled={wrongCount === 0 && skipCount === 0}
-                            onClick={() => navigate("/dashboard/take-mistakes", { state: { examIds: [attempt.exam.id], filterMode: "both" } })}
-                            className="w-full text-left text-xs px-2.5 py-2 rounded-md hover:bg-muted disabled:opacity-40 disabled:pointer-events-none"
-                        >
-                            Wrong + Skip ({wrongCount + skipCount})
-                        </button>
-                    </PopoverContent>
-                </Popover>
 
                 {attempt.exam.chapter !== "Custom" && (
                     <Button

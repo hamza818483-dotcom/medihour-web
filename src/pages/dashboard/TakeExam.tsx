@@ -947,46 +947,6 @@ const TakeExam = () => {
     }
   };
 
-  // After answering a question, auto-scroll to the next unanswered question.
-  // Skips already-answered ones; if none remain after current, wraps around to the
-  // earliest unanswered question in the whole exam.
-  const scrollToNextUnanswered = (currentQuestionId: string, latestAnswers: Record<string, string>) => {
-    const list = shuffledQuestions;
-    if (!list || list.length === 0) return;
-    const currentIndex = list.findIndex((q: any) => q.id === currentQuestionId);
-    if (currentIndex === -1) return;
-
-    let targetId: string | null = null;
-
-    // Search forward from the next question
-    for (let i = currentIndex + 1; i < list.length; i++) {
-      if (!latestAnswers[list[i].id]) {
-        targetId = list[i].id;
-        break;
-      }
-    }
-    // Wrap around: search from the start up to the current question
-    if (!targetId) {
-      for (let i = 0; i < currentIndex; i++) {
-        if (!latestAnswers[list[i].id]) {
-          targetId = list[i].id;
-          break;
-        }
-      }
-    }
-
-    if (!targetId) return; // all answered
-
-    const finalTargetId = targetId;
-    // Delay lets the answer actually register and the layout reflow settle
-    // before scrolling — too short and it can fire before the click/state
-    // update finishes, causing it to jump early.
-    setTimeout(() => {
-      requestAnimationFrame(() => {
-        questionRefs.current[finalTargetId]?.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
-    }, 250);
-  };
 
   // 0. Auth Loading / Profile Check
   if (authLoading || (!profile && user)) {
@@ -2207,7 +2167,6 @@ const TakeExam = () => {
                                         if (!isAnswered) {
                                             const updated = { ...answers, [q.id]: optionKey };
                                             setAnswers(updated);
-                                            scrollToNextUnanswered(q.id, updated);
                                         }
                                     }}
                                     className={cn("flex items-start gap-4 group max-w-full", !isAnswered && "cursor-pointer", isDisabled && "opacity-50 pointer-events-none")}
