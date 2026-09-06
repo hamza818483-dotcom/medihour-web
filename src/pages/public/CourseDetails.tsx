@@ -298,12 +298,9 @@ const CourseDetails = () => {
         <ArrowLeft className="h-4 w-4" /> ফিরে যান
       </Link>
 
-      {/* Auto-playing demo video takes priority over the static image */}
+      {/* Auto-playing intro video takes priority over the static image; demo class videos are never used here */}
       {(() => {
-        const demoItems: DemoContentItem[] = Array.isArray((course as any).demo_content)
-          ? ((course as any).demo_content as DemoContentItem[])
-          : [];
-        const firstVideo = course.video_url || demoItems.find((d) => d.video_url)?.video_url;
+        const firstVideo = course.video_url;
         if (firstVideo) {
           const embed = getEmbedUrl(firstVideo);
           if (embed) {
