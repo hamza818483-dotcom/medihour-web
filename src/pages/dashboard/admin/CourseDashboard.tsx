@@ -132,9 +132,6 @@ export default function CourseDashboard() {
             school,
             college_name,
             hsc_batch,
-            is_second_timer,
-            father_name,
-            mother_name,
             ssc_gpa,
             hsc_gpa
           )
@@ -404,7 +401,6 @@ export default function CourseDashboard() {
                         </td>
                         <td className="px-4 py-3 hidden xl:table-cell">
                             <div className="text-sm">Batch: {enrollment.profile?.hsc_batch || "N/A"}</div>
-                            {enrollment.profile?.is_second_timer && <span className="text-xs text-red-500 font-medium">2nd Timer</span>}
                         </td>
                         <td className="px-4 py-3 text-muted-foreground">{new Date(enrollment.created_at).toLocaleDateString()}</td>
                         <td className="px-4 py-3 text-right">

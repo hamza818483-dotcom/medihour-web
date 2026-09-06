@@ -15,13 +15,10 @@ interface Profile {
   current_session_id?: string | null;
   status?: string | null;
   // new fields
-  father_name?: string | null;
-  mother_name?: string | null;
   hsc_batch?: string | null;
   college_name?: string | null;
   ssc_gpa?: number | null;
   hsc_gpa?: number | null;
-  is_second_timer?: boolean;
   avatar_url?: string | null;
   name_changed_once?: boolean;
 }
