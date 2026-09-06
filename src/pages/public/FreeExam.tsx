@@ -16,6 +16,7 @@ const FreeExam = () => {
         .select("id, title, duration_minutes, total_marks, free_exam_category, subject, is_published")
         .is("course_id", null)
         .eq("is_published", true)
+        .order("free_sort_order", { ascending: false })
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
