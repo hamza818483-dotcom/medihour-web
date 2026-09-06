@@ -33,9 +33,7 @@ export const PublicHeader = () => {
 
   const loggedInMenuItems = [
     { href: "/", label: "Home", icon: Home },
-    { href: "/dashboard/profile", label: "Profile", icon: User },
     { href: "/all-courses", label: "Courses", icon: BookOpen },
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/instructors", label: "Instructors", icon: Users },
     { href: "/ebooks", label: "E-Books", icon: Library },
   ];
