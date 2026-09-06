@@ -22,7 +22,7 @@ export const ContactSection = () => {
     {
       href: facebookPage,
       icon: Facebook,
-      name: "MediHour - মেডিহাওয়ার পেজে মেসেজ করো",
+      name: "MediHour পেজে মেসেজ করো",
       sub: "আমাদের Facebook Page-এ যোগাযোগ করো",
       primary: true,
       iconBg: "bg-[#e8edff] dark:bg-blue-500/10 border-[#d5ddff] dark:border-blue-500/20",

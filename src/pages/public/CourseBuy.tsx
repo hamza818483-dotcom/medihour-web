@@ -603,7 +603,7 @@ const CourseBuy = () => {
                         </div>
                       </div>
                       <h3 className="font-bold text-xl text-yellow-900 dark:text-yellow-200 mb-4">
-                        মেডিআওয়ারের কোর্সে আপনাকে স্বাগতম।
+                        MediHour-এর কোর্সে আপনাকে স্বাগতম।
                       </h3>
                       <div className="text-sm text-yellow-800 dark:text-yellow-300 space-y-3 leading-relaxed max-w-lg mx-auto">
                         <p>
