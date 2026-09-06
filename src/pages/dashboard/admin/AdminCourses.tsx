@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { ChecklistEditor, ChecklistLine } from "@/components/ChecklistEditor";
+import { RichTextEditor } from "@/components/RichTextEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { Course } from "@/types/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
@@ -816,11 +816,10 @@ const AdminCourses = () => {
 
                     <div className="space-y-2">
                         <Label>Full description</Label>
-                        <Textarea
+                        <RichTextEditor
                             value={form.full_description || ""}
-                            onChange={(e) => setForm((prev) => ({ ...prev, full_description: e.target.value }))}
+                            onChange={(html) => setForm((prev) => ({ ...prev, full_description: html }))}
                             placeholder="Course details লিখুন..."
-                            className="min-h-[160px]"
                         />
                     </div>
 

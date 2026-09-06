@@ -519,9 +519,10 @@ const CourseDetails = () => {
             </h2>
           </div>
           <div className="mx-auto max-w-[95%] rounded-2xl border bg-card p-4 shadow-sm">
-            <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-              {(course as any).full_description}
-            </p>
+            <div
+              className="text-sm leading-relaxed text-muted-foreground [&_font[size='5']]:text-base [&_font[size='5']]:font-semibold"
+              dangerouslySetInnerHTML={{ __html: (course as any).full_description }}
+            />
           </div>
         </div>
       )}
