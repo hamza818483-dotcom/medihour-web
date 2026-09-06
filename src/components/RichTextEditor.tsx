@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Bold, Underline, Highlighter } from "lucide-react";
 import {
@@ -26,6 +26,8 @@ const FONT_SIZE_PX: Record<string, string> = {
   "7": "30px",
 };
 
+const DEFAULT_HIGHLIGHT = "#fde68a";
+
 // Simple contentEditable rich text editor: bold, underline, font size, highlight.
 // Stores content as HTML (spans/tags), never re-syncs from `value` prop on every
 // keystroke to avoid resetting cursor position (breaks typing, especially Bangla/IME).
@@ -37,10 +39,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isFirstRender = useRef(true);
-  // The Select dropdown steals focus from the editable div when opened, which
-  // collapses the text selection. We snapshot the Range on mousedown (before
-  // focus moves) and restore it right before applying the font size.
+  // The Select dropdown / color input steal focus from the editable div when
+  // opened, which collapses the text selection. We snapshot the Range on
+  // mousedown (before focus moves) and restore it right before applying.
   const savedRangeRef = useRef<Range | null>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
+  const [highlightColor, setHighlightColor] = useState(DEFAULT_HIGHLIGHT);
 
   useEffect(() => {
     if (ref.current && isFirstRender.current) {
@@ -64,29 +68,40 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   };
 
-  const setFontSize = (size: string) => {
-    const px = FONT_SIZE_PX[size];
-    if (!px || !ref.current) return;
-
+  // Restores the saved selection (if any) into the editable div and returns
+  // the live Selection object, or null if there's nothing usable to apply to.
+  const restoreSelection = (): Selection | null => {
+    if (!ref.current) return null;
     ref.current.focus();
     const sel = window.getSelection();
     if (sel && savedRangeRef.current) {
       sel.removeAllRanges();
       sel.addRange(savedRangeRef.current);
     }
-    if (!sel || sel.isCollapsed) {
-      // Nothing selected — nothing to resize.
-      return;
-    }
+    if (!sel || sel.isCollapsed) return null;
+    return sel;
+  };
+
+  // Wraps the current selection in a <span> with the given inline style,
+  // falling back to extract+re-wrap when the selection crosses partial node
+  // boundaries (surroundContents throws in that case).
+  const wrapSelection = (styleProp: "fontSize" | "backgroundColor", value: string) => {
+    const sel = restoreSelection();
+    if (!sel) return;
 
     const range = sel.getRangeAt(0);
     const span = document.createElement("span");
-    span.style.fontSize = px;
+    span.style[styleProp] = value;
+    if (styleProp === "backgroundColor") {
+      // Keep highlighted text fully opaque/dark so it stays legible against
+      // any highlight color, instead of inheriting a faded muted color.
+      span.style.color = "#111827";
+      span.style.borderRadius = "2px";
+      span.style.padding = "0 2px";
+    }
     try {
       range.surroundContents(span);
     } catch {
-      // Selection spans multiple elements (surroundContents fails on partial
-      // node boundaries) — fall back to extracting and re-wrapping contents.
       const frag = range.extractContents();
       span.appendChild(frag);
       range.insertNode(span);
@@ -95,10 +110,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     emit();
   };
 
-  const toggleHighlight = () => {
-    ref.current?.focus();
-    document.execCommand("hiliteColor", false, "#fde68a");
-    emit();
+  const setFontSize = (size: string) => {
+    const px = FONT_SIZE_PX[size];
+    if (px) wrapSelection("fontSize", px);
+  };
+
+  const applyHighlight = (color: string) => {
+    setHighlightColor(color);
+    wrapSelection("backgroundColor", color);
   };
 
   return (
@@ -144,17 +163,31 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             <SelectItem value="7">সবচেয়ে বড়</SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7"
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={toggleHighlight}
-          title="Highlight"
-        >
-          <Highlighter className="h-3.5 w-3.5" />
-        </Button>
+        <div className="relative">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              saveSelection();
+            }}
+            onClick={() => colorInputRef.current?.click()}
+            title="Highlight color"
+            style={{ color: highlightColor }}
+          >
+            <Highlighter className="h-3.5 w-3.5" />
+          </Button>
+          <input
+            ref={colorInputRef}
+            type="color"
+            defaultValue={DEFAULT_HIGHLIGHT}
+            className="absolute inset-0 h-7 w-7 cursor-pointer opacity-0"
+            onMouseDown={saveSelection}
+            onChange={(e) => applyHighlight(e.target.value)}
+          />
+        </div>
       </div>
       <div
         ref={ref}
