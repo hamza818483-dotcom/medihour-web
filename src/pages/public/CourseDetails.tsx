@@ -458,10 +458,12 @@ const CourseDetails = () => {
       {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
-          <div className="mx-auto mb-3 max-w-[92%] rounded-xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-100 px-5 py-4 text-center shadow-md dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-amber-900/40 dark:border-amber-700">
-            <h2 className="text-lg font-semibold underline underline-offset-4 sm:text-xl">
-              কোর্সের প্রধান ফিচার সমূহ
-            </h2>
+          <div className="mb-3 flex justify-center">
+            <div className="w-fit max-w-[92%] rounded-xl border-2 border-amber-400/60 bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-100 px-4 py-2 text-center shadow-md dark:from-amber-900/40 dark:via-yellow-900/20 dark:to-amber-900/40 dark:border-amber-700">
+              <h2 className="text-xl font-semibold sm:text-2xl">
+                কোর্সের প্রধান ফিচার সমূহ
+              </h2>
+            </div>
           </div>
         )}
 
