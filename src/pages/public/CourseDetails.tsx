@@ -485,26 +485,28 @@ const CourseDetails = () => {
 
       {/* Class routine: view + download, right under short description */}
       {(course as any).routine_url && (
-        <div className="mb-6 grid grid-cols-2 gap-3">
-          <Button
-            asChild
-            variant="outline"
-            className="gap-2 rounded-xl border-primary/40 font-semibold"
-          >
-            <a href={(course as any).routine_url} target="_blank" rel="noopener noreferrer">
-              <Eye className="h-4 w-4" />
-              রুটিন দেখো
-            </a>
-          </Button>
-          <Button
-            asChild
-            className="gap-2 rounded-xl bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-semibold"
-          >
-            <a href={(course as any).routine_url} download target="_blank" rel="noopener noreferrer">
-              <Download className="h-4 w-4" />
-              Download করো
-            </a>
-          </Button>
+        <div className="mb-6 rounded-2xl border border-primary/20 bg-card p-3 shadow-md">
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              asChild
+              variant="outline"
+              className="gap-2 rounded-xl border-primary/40 font-semibold"
+            >
+              <a href={(course as any).routine_url} target="_blank" rel="noopener noreferrer">
+                <Eye className="h-4 w-4" />
+                রুটিন দেখো
+              </a>
+            </Button>
+            <Button
+              asChild
+              className="gap-2 rounded-xl bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-semibold"
+            >
+              <a href={(course as any).routine_url} download target="_blank" rel="noopener noreferrer">
+                <Download className="h-4 w-4" />
+                Download করো
+              </a>
+            </Button>
+          </div>
         </div>
       )}
 
