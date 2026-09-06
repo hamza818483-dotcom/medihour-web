@@ -75,6 +75,8 @@ export function AppSidebar() {
   const location = useLocation();
   const currentPath = location.pathname;
   const { isAdmin, isTeacher, profile } = useAuth();
+
+  const isActive = (path: string) => {
       if (path === "/admin") {
           return currentPath === path;
       }

@@ -202,7 +202,7 @@ export const CourseSection = () => {
                                 <Button
                                     variant={selectedCategory === "all" ? "default" : "outline"}
                                     onClick={() => setSelectedCategory("all")}
-                                    className={`px-3 h-8 text-xs md:px-6 md:h-10 md:text-sm border transition-all ${
+                                    className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                         selectedCategory === "all"
                                         ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-md"
                                         : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
@@ -215,7 +215,7 @@ export const CourseSection = () => {
                                         key={cat}
                                         variant={selectedCategory === cat ? "default" : "outline"}
                                         onClick={() => setSelectedCategory(cat)}
-                                        className={`px-3 h-8 text-xs md:px-6 md:h-10 md:text-sm border transition-all ${
+                                        className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedCategory === cat
                                             ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-md"
                                             : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
@@ -234,7 +234,7 @@ export const CourseSection = () => {
                                     <Button
                                         variant={selectedSubCategory === "all" ? "default" : "outline"}
                                         onClick={() => setSelectedSubCategory("all")}
-                                        className={`px-3 h-8 text-xs md:px-6 md:h-10 md:text-sm border transition-all ${
+                                        className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedSubCategory === "all"
                                             ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-sm"
                                             : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
@@ -247,7 +247,7 @@ export const CourseSection = () => {
                                             key={sub}
                                             variant={selectedSubCategory === sub ? "default" : "outline"}
                                             onClick={() => setSelectedSubCategory(sub)}
-                                            className={`px-3 h-8 text-xs md:px-6 md:h-10 md:text-sm border transition-all ${
+                                            className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                                 selectedSubCategory === sub
                                                 ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-sm"
                                                 : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
