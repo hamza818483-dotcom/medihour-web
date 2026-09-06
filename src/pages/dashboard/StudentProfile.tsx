@@ -597,7 +597,8 @@ const StudentProfile = () => {
             </CardContent>
         </Card>
 
-        {/* OMR Credentials Card */}
+        {/* OMR Credentials Card — disabled/hidden for now */}
+        {false && (
         <Card className="border border-violet-200 dark:border-violet-800/40 shadow-sm">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
@@ -653,6 +654,7 @@ const StudentProfile = () => {
             )}
           </CardContent>
         </Card>
+        )}
 
         {/* Payments Section (Natively displayed) */}
         <div className="space-y-4">
