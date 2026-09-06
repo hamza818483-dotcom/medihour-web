@@ -54,7 +54,7 @@ export const QuickActionsSection = () => {
       <div className="grid grid-cols-2 gap-2">
         <Button
           onClick={() => handleScroll("courses", "courses")}
-          className="w-full h-10 text-sm font-bold rounded-xl border-0 bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 shadow-sm hover:shadow-md transition-all"
+          className="w-full h-10 text-sm font-bold rounded-xl border-0 bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] shadow-sm hover:shadow-md transition-all"
         >
           <LayoutGrid className="mr-2 h-4 w-4" /> All Courses
         </Button>

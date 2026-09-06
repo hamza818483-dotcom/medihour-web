@@ -204,8 +204,8 @@ export const CourseSection = () => {
                                     onClick={() => setSelectedCategory("all")}
                                     className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                         selectedCategory === "all"
-                                        ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-md"
-                                        : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
+                                        ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-md"
+                                        : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                     }`}
                                 >
                                     সব
@@ -217,8 +217,8 @@ export const CourseSection = () => {
                                         onClick={() => setSelectedCategory(cat)}
                                         className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedCategory === cat
-                                            ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-md"
-                                            : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
+                                            ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-md"
+                                            : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                         }`}
                                     >
                                         {cat}
@@ -236,8 +236,8 @@ export const CourseSection = () => {
                                         onClick={() => setSelectedSubCategory("all")}
                                         className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedSubCategory === "all"
-                                            ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-sm"
-                                            : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
+                                            ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                                            : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                         }`}
                                     >
                                         সব টাইপ
@@ -249,8 +249,8 @@ export const CourseSection = () => {
                                             onClick={() => setSelectedSubCategory(sub)}
                                             className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                                 selectedSubCategory === sub
-                                                ? "bg-green-600 hover:bg-green-700 text-white border-green-600 shadow-sm"
-                                                : "bg-transparent hover:bg-green-50 text-foreground border-border hover:border-green-200"
+                                                ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                                                : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                             }`}
                                         >
                                             {sub}
