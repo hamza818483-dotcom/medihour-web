@@ -102,12 +102,9 @@ export function AppSidebar() {
                 {state === "expanded" ? "Your Unique ID" : "ID"}
               </p>
               {state === "expanded" && (
-                <>
-                  <p className="text-sm font-bold text-sidebar-foreground truncate">{profile.registration_id}</p>
-                  <p className="mt-0.5 text-xs text-sidebar-foreground/70 truncate">
-                    {profile.full_name} ({String(profile.registration_id).slice(-5)})
-                  </p>
-                </>
+                <p className="mt-0.5 text-sm font-bold text-sidebar-foreground truncate">
+                  {profile.full_name} ({String(profile.registration_id).slice(-5)})
+                </p>
               )}
             </div>
           </div>

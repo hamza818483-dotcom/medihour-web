@@ -119,8 +119,7 @@ export const PublicHeader = () => {
                     {user && profile?.registration_id && (
                       <div className="mt-1 rounded-lg border bg-secondary/40 px-3 py-2">
                         <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Your Unique ID</p>
-                        <p className="text-sm font-bold truncate">{profile.registration_id}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground truncate">
+                        <p className="mt-0.5 text-sm font-bold truncate">
                           {profile.full_name} ({String(profile.registration_id).slice(-5)})
                         </p>
                       </div>
