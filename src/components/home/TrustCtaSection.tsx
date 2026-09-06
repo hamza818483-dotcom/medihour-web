@@ -33,7 +33,7 @@ export const TrustCtaSection = () => {
   if (!embedUrl) return null;
 
   return (
-    <section className="relative w-full overflow-hidden py-12 px-3 sm:px-4 lg:px-6 bg-gradient-to-br from-[#f7fbff] via-white to-[#fff8fc] dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
+    <section className="relative w-full overflow-hidden py-3 px-3 sm:px-4 lg:px-6 bg-gradient-to-br from-[#f7fbff] via-white to-[#fff8fc] dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
       <div className="relative z-[2] mx-auto w-full max-w-[1400px]">
         <div className="relative overflow-hidden rounded-[24px] border border-[#e6eef8] dark:border-white/10 bg-white dark:bg-slate-900 p-4 sm:p-6 shadow-[0_12px_35px_rgba(40,60,90,0.07)]">
           {data?.title && (
