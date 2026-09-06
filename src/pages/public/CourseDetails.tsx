@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Sparkles, Check, Loader2, Copy, Download, Eye } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -435,6 +436,23 @@ const CourseDetails = () => {
         {(enrollmentCount || 0).toLocaleString("en-BD")} জন ভর্তি হয়েছে
       </div>
 
+      <Tabs defaultValue="features" className="mb-6">
+        <TabsList className="mb-4 flex h-auto w-full rounded-2xl bg-white p-0 shadow-lg border-b">
+          <TabsTrigger
+            value="features"
+            className="flex-1 flex-col gap-1 rounded-none border-b-2 border-transparent py-4 px-6 font-medium text-gray-600 data-[state=active]:border-blue-600 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 hover:text-blue-600 hover:bg-gray-50"
+          >
+            Course Features
+          </TabsTrigger>
+          <TabsTrigger
+            value="demo"
+            className="flex-1 flex-col gap-1 rounded-none border-b-2 border-transparent py-4 px-6 font-medium text-gray-600 data-[state=active]:border-blue-600 data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 hover:text-blue-600 hover:bg-gray-50"
+          >
+            Demo Class
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="features" className="mt-0 space-y-0">
       {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
@@ -636,21 +654,6 @@ const CourseDetails = () => {
         </div>
       )}
 
-      {/* Demo content list */}
-      {Array.isArray((course as any).demo_content) && (course as any).demo_content.length > 0 && (
-        <div className="mb-6">
-          <h2 className="mb-3 text-lg font-bold">ডেমো কনটেন্ট</h2>
-          <div className="space-y-2">
-            {((course as any).demo_content as DemoContentItem[]).map((d, i) => (
-              <div key={i} className="flex items-center gap-2 rounded-xl border p-3">
-                <PlayCircle className="h-4 w-4 shrink-0 text-primary" />
-                <span className="truncate text-sm font-medium">{d.title}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* "এই কোর্স সম্পর্কে আরো" — admin-added Extra Links as premium full-width cards */}
       {Array.isArray((course as any).extra_links) &&
         (course as any).extra_links.length > 0 && (
@@ -678,6 +681,26 @@ const CourseDetails = () => {
             </div>
           </div>
         )}
+
+        </TabsContent>
+
+        <TabsContent value="demo" className="mt-0">
+      {/* Demo content list */}
+      {Array.isArray((course as any).demo_content) && (course as any).demo_content.length > 0 && (
+        <div className="mb-6">
+          <h2 className="mb-3 text-lg font-bold">ডেমো কনটেন্ট</h2>
+          <div className="space-y-2">
+            {((course as any).demo_content as DemoContentItem[]).map((d, i) => (
+              <div key={i} className="flex items-center gap-2 rounded-xl border p-3">
+                <PlayCircle className="h-4 w-4 shrink-0 text-primary" />
+                <span className="truncate text-sm font-medium">{d.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+        </TabsContent>
+      </Tabs>
 
       {/* Spacer so fixed enroll bar doesn't cover the last content */}
       <div className="h-24" />
