@@ -322,7 +322,7 @@ const Register = () => {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label htmlFor="fullName">Own Full Name</Label>
+                  <Label htmlFor="fullName">Student Full Name</Label>
                   <Input id="fullName" name="fullName" required placeholder="Your full name" className="h-11 rounded-xl border-[#e8dde3] text-[15px] shadow-sm transition-all placeholder:text-muted-foreground/60 focus-visible:border-[#2563eb] focus-visible:ring-[#2563eb]/20 dark:border-white/10" />
                   <p className="text-[11px] text-orange-600/90 dark:text-orange-400">Please provide your full name.</p>
                 </div>
