@@ -5,9 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import {
-  ArrowRight,
   Star,
-  Check,
   Monitor,
   Users,
   BookOpen,
@@ -21,7 +19,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import PublicHeader from "@/components/PublicHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { StudentReviews } from "@/components/StudentReviews";
@@ -80,24 +78,6 @@ const Index = () => {
     staleTime: 10 * 60 * 1000,
   });
 
-  const { data: specialExams } = useQuery({
-    queryKey: ["public-special-exams"],
-    queryFn: async () => {
-      // @ts-ignore
-      const { data, error } = await supabase
-        .from("special_exam_cards")
-        .select("*")
-        .eq("is_active", true)
-        .order("display_order", { ascending: true })
-        .limit(20);
-      if (error) {
-        if (error.code === '42P01') return [];
-        throw error;
-      };
-      return data || [];
-    },
-    staleTime: 10 * 60 * 1000,
-  });
 
   const { data: landingExams } = useQuery({
     queryKey: ["public-landing-exams"],
@@ -229,117 +209,6 @@ const Index = () => {
                 </div>
             </section>
         )}
-
-        {/* Special Exams Section */}
-        {specialExams && specialExams.length > 0 && (
-            <div className="animate-border-chase rounded-2xl border p-2.5 sm:p-3" style={{ ["--border-chase-color" as any]: "hsl(var(--primary))" }}>
-            <section id="special-exams" className="space-y-3">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h2 className="text-2xl font-bold tracking-tight">বিশেষ ঘোষণা</h2>
-                        <p className="text-sm text-muted-foreground mt-1">গুরুত্বপূর্ণ আপডেট এবং বিশেষ ঘোষণা সমূহ।</p>
-                    </div>
-                    <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold bg-primary/10 text-primary px-3 py-1.5 rounded-full">
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                        লাইভ আপডেট
-                    </span>
-                </div>
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    {(specialExams as any[]).map((exam: any) => {
-                      const isAnnouncement = exam.card_type === 'announcement';
-
-                      if (isAnnouncement) {
-                        return (
-                          <div key={exam.id} className="animate-border-chase relative flex flex-col overflow-hidden rounded-2xl border bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group" style={{ ["--border-chase-color" as any]: "hsl(271 81% 60%)" }}>
-                            {/* Accent gradient top bar */}
-                            <div className="h-1.5 w-full bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500" />
-                            {exam.image_url && (
-                              <div className="h-48 w-full overflow-hidden">
-                                <img src={exam.image_url} alt={exam.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                              </div>
-                            )}
-                            <div className="flex flex-grow flex-col gap-3 p-5">
-                              {/* Card badge */}
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold uppercase tracking-wider bg-violet-500/10 text-violet-700 dark:text-violet-300 px-2 py-0.5 rounded-full border border-violet-500/20">📢 বিজ্ঞপ্তি</span>
-                              </div>
-                              <h3 className="text-lg font-bold leading-tight text-foreground">{exam.title}</h3>
-                              {exam.details && (
-                                <p className="text-sm text-muted-foreground leading-relaxed">{exam.details}</p>
-                              )}
-                              {exam.instructions && (
-                                <div className="mt-auto rounded-xl bg-white/60 dark:bg-white/5 border border-violet-200/50 dark:border-violet-500/20 px-4 py-3 backdrop-blur-sm">
-                                  <p className="text-xs text-violet-700 dark:text-violet-300 leading-snug font-medium">{exam.instructions}</p>
-                                </div>
-                              )}
-                              {exam.action_link && (
-                                <a
-                                  href={exam.action_link}
-                                  className="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-xl transition-colors"
-                                >
-                                  {exam.button_text || "বিস্তারিত দেখুন"} <ArrowRight className="h-3.5 w-3.5" />
-                                </a>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      }
-
-                      // ── Exam Card ─────────────────────────────────────────────────
-                      return (
-                        <Card key={exam.id} className="animate-border-chase overflow-hidden flex flex-col hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 border-primary/10 hover:border-primary/30 group rounded-2xl" style={{ ["--border-chase-color" as any]: "hsl(var(--primary))" }}>
-                            {exam.image_url && (
-                                <div className="h-44 w-full overflow-hidden bg-muted">
-                                    <img src={exam.image_url} alt={exam.title} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                </div>
-                            )}
-                            <div className="h-1.5 w-full bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
-                            <CardHeader className="pb-3">
-                                <div className="flex items-start gap-2">
-                                    <span className="text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full border border-primary/20 mt-0.5">📋 বিশেষ পরীক্ষা</span>
-                                </div>
-                                <CardTitle className="text-xl font-bold mt-2">{exam.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex flex-grow flex-col gap-2 pt-0">
-                                {exam.details && (
-                                    <div className="space-y-1.5">
-                                        <div className="grid grid-cols-1 gap-y-1 text-xs text-muted-foreground">
-                                            {exam.details.split(/[,|\n]+/).filter((d: string) => d.trim().length > 0).map((detail: string, i: number) => (
-                                                <div key={i} className="flex items-start gap-2 bg-muted/40 rounded-lg px-3 py-1.5">
-                                                    <Check className="h-3.5 w-3.5 text-green-500 mt-0.5 shrink-0" />
-                                                    <span className="text-[11px] leading-tight">{detail.trim()}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                                
-                                {exam.instructions && (
-                                    <div className="mt-2 text-sm bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-xl flex items-start gap-3">
-                                        <Lightbulb className="h-5 w-5 text-yellow-600 shrink-0 mt-0.5" />
-                                        <p className="text-yellow-700 dark:text-yellow-500/90 text-xs leading-snug font-medium">
-                                            {exam.instructions}
-                                        </p>
-                                    </div>
-                                )}
-                            </CardContent>
-                            {exam.action_link && (
-                                <CardFooter className="pt-2 pb-4">
-                                    <Button asChild className="w-full text-sm h-10 rounded-xl" size="sm">
-                                        <a href={exam.action_link}>
-                                            {exam.button_text || "বিস্তারিত দেখুন"} <ArrowRight className="ml-2 h-4 w-4" />
-                                        </a>
-                                    </Button>
-                                </CardFooter>
-                            )}
-                        </Card>
-                      );
-                    })}
-                </div>
-            </section>
-            </div>
-        )}
-
 
         {/* Quick Actions (All Courses / Free Class / Free Exam / Quick Practice / Focus Timer / Pomodoro) */}
         <div className="rounded-2xl border py-1 px-1 sm:p-3">
