@@ -381,12 +381,12 @@ const Index = () => {
 
       </main>
 
-      {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
-      <SuccessGallerySection />
-
       {/* Student Reviews */}
       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <StudentReviews reviews={reviews as any} id="reviews" tagline={reviewsTagline} />
+
+      {/* Success Gallery (PhysicsHunters-style scrolling photo marquee) */}
+      <SuccessGallerySection />
 
       {/* Contact Section (PhysicsHunters-style) */}
       <ContactSection />
