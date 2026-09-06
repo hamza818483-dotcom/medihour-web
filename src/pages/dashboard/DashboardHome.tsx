@@ -44,7 +44,7 @@ const formatDate = (dateStr: string | null | undefined, options?: Intl.DateTimeF
 };
 
 const DashboardHome = () => {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, profile } = useAuth();
   const navigate = useNavigate();
   const [showTrackerReady, setShowTrackerReady] = useState(false);
 
@@ -304,6 +304,9 @@ const DashboardHome = () => {
       <Card className="w-full">
         <CardContent className="p-3 flex flex-col items-center gap-2">
           <h1 className="text-2xl font-extrabold tracking-tight whitespace-nowrap animate-text-fade-sweep">Welcome to Dashboard</h1>
+          {profile?.registration_id && (
+            <p className="text-sm text-muted-foreground">Reg ID: {profile.registration_id}</p>
+          )}
           {tutorialVideoUrl && (
             <Button
               size="sm"

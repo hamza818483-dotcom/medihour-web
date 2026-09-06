@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sheet";
 
 export const PublicHeader = () => {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { data: links } = useQuery({
     queryKey: ["official-links-public"],
     queryFn: async () => {
@@ -116,6 +116,9 @@ export const PublicHeader = () => {
                 <SheetContent side="right">
                   <SheetHeader>
                     <SheetTitle>মেনু</SheetTitle>
+                    {user && profile?.registration_id && (
+                      <p className="text-sm text-muted-foreground">Reg ID: {profile.registration_id}</p>
+                    )}
                   </SheetHeader>
                   <nav className="mt-6 flex flex-col gap-4">
                     {user ? (
