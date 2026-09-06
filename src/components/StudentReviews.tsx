@@ -55,7 +55,7 @@ export const StudentReviews = ({ reviews, id, tagline }: StudentReviewsProps) =>
         শিক্ষার্থীদের মতামত
       </h2>
       {tagline && (
-        <p className="-mt-4 text-center text-sm sm:text-base font-medium text-muted-foreground max-w-xl mx-auto">
+        <p className="-mt-2 text-center text-sm sm:text-base font-medium text-muted-foreground max-w-xl mx-auto">
           {tagline}
         </p>
       )}
