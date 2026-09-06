@@ -127,7 +127,6 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
         .from("exams")
         .select("*, course:courses(id, name)", { count: "exact" })
         .is("split_start", null)
-        .not("category", "cs", '{"Custom Exam"}')
         .order("created_at", { ascending: false });
 
       if (isFreeMode) {
