@@ -15,12 +15,9 @@ export const HelpCtaSection = () => {
           </div>
 
           <div className="min-w-0 flex-1 text-center sm:text-left">
-            <h3 className="m-0 mb-1 text-lg font-black tracking-tight text-[#202228] dark:text-white sm:text-xl">
-              সাহায্যের প্রয়োজন? <span className="text-[#ed3d78]">আমরা পাশে আছি</span>
+            <h3 className="m-0 text-lg font-black tracking-tight text-[#202228] dark:text-white sm:text-xl">
+              কোর্স রিলেটেড <span className="text-[#ed3d78]">যেকোনো প্রয়োজনে</span> যোগাযোগ করো
             </h3>
-            <p className="m-0 text-[13px] font-medium leading-relaxed text-[#777b84] dark:text-slate-400">
-              কোর্স সম্পর্কিত যেকোনো সমস্যা বা তথ্যের জন্য আমাদের সাথে যোগাযোগ করো।
-            </p>
           </div>
 
           <div className="flex flex-shrink-0 flex-wrap items-center justify-center gap-2.5">
