@@ -303,7 +303,7 @@ const CourseDetails = () => {
         const demoItems: DemoContentItem[] = Array.isArray((course as any).demo_content)
           ? ((course as any).demo_content as DemoContentItem[])
           : [];
-        const firstVideo = demoItems.find((d) => d.video_url)?.video_url || course.video_url;
+        const firstVideo = course.video_url || demoItems.find((d) => d.video_url)?.video_url;
         if (firstVideo) {
           const embed = getEmbedUrl(firstVideo);
           if (embed) {
