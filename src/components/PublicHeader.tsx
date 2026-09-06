@@ -1,4 +1,4 @@
-import { Menu, Home, BookOpen, Info, Phone, LayoutDashboard } from "lucide-react";
+import { Menu, Home, BookOpen, Info, Phone, LayoutDashboard, User, Users, Library } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,6 +29,15 @@ export const PublicHeader = () => {
     { href: "/", label: "হোম", icon: Home, active: true },
     { href: "/#courses", label: "কোর্স", icon: BookOpen },
     { href: "/#about", label: "আমাদের সম্পর্কে", icon: Info },
+  ];
+
+  const loggedInMenuItems = [
+    { href: "/", label: "Home", icon: Home },
+    { href: "/dashboard/profile", label: "Profile", icon: User },
+    { href: "/all-courses", label: "Courses", icon: BookOpen },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/instructors", label: "Instructors", icon: Users },
+    { href: "/ebooks", label: "E-Books", icon: Library },
   ];
 
   return (
@@ -86,7 +95,7 @@ export const PublicHeader = () => {
               className="inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
             >
               {user && <LayoutDashboard className="h-3.5 w-3.5" strokeWidth={2.5} />}
-              {user ? "ড্যাশবোর্ড" : "লগইন"}
+              {user ? "Dashboard" : "লগইন"}
             </a>
 
             {/* Mobile Menu */}
@@ -102,20 +111,36 @@ export const PublicHeader = () => {
                     <SheetTitle>মেনু</SheetTitle>
                   </SheetHeader>
                   <nav className="mt-6 flex flex-col gap-4">
-                    {navItems.map((item) => (
-                      <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
-                        <item.icon className="h-4 w-4" />
-                        {item.label}
-                      </a>
-                    ))}
-                    <a href={user ? "/dashboard" : "/login"} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
-                      {user && <LayoutDashboard className="h-4 w-4" />}
-                      {user ? "ড্যাশবোর্ড" : "লগইন"}
-                    </a>
-                    <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
-                      <Phone className="h-4 w-4" />
-                      {hotline}
-                    </a>
+                    {user ? (
+                      <>
+                        {loggedInMenuItems.map((item) => (
+                          <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                            <item.icon className="h-4 w-4" />
+                            {item.label}
+                          </a>
+                        ))}
+                        <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                          <Phone className="h-4 w-4" />
+                          {hotline}
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        {navItems.map((item) => (
+                          <a key={item.href} href={item.href} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                            <item.icon className="h-4 w-4" />
+                            {item.label}
+                          </a>
+                        ))}
+                        <a href="/login" className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                          লগইন
+                        </a>
+                        <a href={`tel:${hotline}`} className="flex items-center gap-2 text-lg font-medium hover:text-[#2563eb]">
+                          <Phone className="h-4 w-4" />
+                          {hotline}
+                        </a>
+                      </>
+                    )}
                   </nav>
                 </SheetContent>
               </Sheet>

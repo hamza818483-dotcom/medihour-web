@@ -111,6 +111,12 @@ export type Database = {
         Update: { access_unlimited_practice?: boolean | null; archive_full_access?: boolean | null; bkash_number?: string | null; category?: string[] | null; contact_info?: string | null; created_at?: string; demo_content?: Json | null; extra_links?: Json | null; full_description?: string | null; full_description_blocks?: Json | null; id?: string; image_url?: string | null; included_course_ids?: string[] | null; is_active?: boolean; is_hidden?: boolean; is_public?: boolean; linked_course_ids?: string[] | null; nagad_number?: string | null; name?: string; original_price?: number | null; price?: number | null; priority?: number | null; routine_url?: string | null; sections?: string[] | null; short_description?: string | null; short_description_lines?: Json | null; slug?: string | null; sub_category?: string[] | null; sub_category_order?: Json | null; updated_at?: string; video_url?: string | null; what_you_get?: string[] | null }
         Relationships: []
       }
+      ebooks: {
+        Row: { created_at: string; discount_price: number | null; display_order: number | null; download_url: string | null; id: string; image_url: string | null; is_active: boolean; name: string; original_price: number | null }
+        Insert: { created_at?: string; discount_price?: number | null; display_order?: number | null; download_url?: string | null; id?: string; image_url?: string | null; is_active?: boolean; name: string; original_price?: number | null }
+        Update: { created_at?: string; discount_price?: number | null; display_order?: number | null; download_url?: string | null; id?: string; image_url?: string | null; is_active?: boolean; name?: string; original_price?: number | null }
+        Relationships: []
+      }
       emi_logs: {
         Row: { admin_note: string | null; amount: number; course_id: string | null; id: string; payment_request_id: string | null; profile_id: string | null; recorded_at: string }
         Insert: { admin_note?: string | null; amount: number; course_id?: string | null; id?: string; payment_request_id?: string | null; profile_id?: string | null; recorded_at?: string }

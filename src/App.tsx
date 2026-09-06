@@ -23,6 +23,9 @@ import FreeClass from "./pages/public/FreeClass";
 import FreeExam from "./pages/public/FreeExam";
 import Reviews from "./pages/public/Reviews";
 import PrivacyPolicy from "./pages/public/PrivacyPolicy";
+import Instructors from "./pages/public/Instructors";
+import AllCourses from "./pages/public/AllCourses";
+import EBooks from "./pages/public/EBooks";
 import PublicLayout from "./layouts/PublicLayout";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -78,6 +81,7 @@ import AdminArchiveManager from "./pages/dashboard/admin/ArchiveManager";
 import AdminExamCalendar from "./pages/dashboard/admin/AdminExamCalendar";
 import AdminFreeContent from "./pages/dashboard/admin/AdminFreeContent";
 import AdminMentors from "./pages/dashboard/admin/AdminMentors";
+import AdminEbooks from "./pages/dashboard/admin/AdminEbooks";
 import AdminSuccessGallery from "./pages/dashboard/admin/AdminSuccessGallery";
 import AdminPromoCodes from "./pages/dashboard/admin/AdminPromoCodes";
 import AdminHeroes from "./pages/dashboard/admin/AdminHeroes";
@@ -134,6 +138,9 @@ const App = () => {
                 <Route path="/free-exam" element={<ErrorBoundary><FreeExam /></ErrorBoundary>} />
                 <Route path="/reviews" element={<ErrorBoundary><Reviews /></ErrorBoundary>} />
                 <Route path="/privacy-policy" element={<ErrorBoundary><PrivacyPolicy /></ErrorBoundary>} />
+                <Route path="/instructors" element={<ErrorBoundary><Instructors /></ErrorBoundary>} />
+                <Route path="/all-courses" element={<ErrorBoundary><AllCourses /></ErrorBoundary>} />
+                <Route path="/ebooks" element={<ErrorBoundary><EBooks /></ErrorBoundary>} />
               </Route>
 
               <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
@@ -189,6 +196,7 @@ const App = () => {
                 <Route path="payments" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><ErrorBoundary><AdminPayments /></ErrorBoundary></ProtectedRoute>} />
                 <Route path="payments/history" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminPaymentHistory /></ProtectedRoute>} />
                 <Route path="mentors" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminMentors /></ProtectedRoute>} />
+                <Route path="ebooks" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminEbooks /></ProtectedRoute>} />
                 <Route path="success-gallery" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminSuccessGallery /></ProtectedRoute>} />
                 <Route path="promos" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminPromoCodes /></ProtectedRoute>} />
                 <Route path="heroes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><AdminHeroes /></ProtectedRoute>} />
