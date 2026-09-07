@@ -61,8 +61,8 @@ export const QuickActionsSection = () => {
         <Button
           onClick={() => handleNavigate("/reviews", "reviews")}
           variant="outline"
-          className={`w-full h-10 text-sm font-bold rounded-xl border-0 transition-all ${
-            activeKey === "reviews" ? activeBtnClass : "bg-white/30 backdrop-blur-sm hover:bg-primary/10 dark:bg-white/10"
+          className={`w-full h-10 text-sm font-bold rounded-xl border-2 transition-all ${
+            activeKey === "reviews" ? activeBtnClass : "border-slate-300 bg-white/30 backdrop-blur-sm hover:border-primary hover:bg-primary/10 dark:border-slate-600 dark:bg-white/10"
           }`}
         >
           <Star className="mr-2 h-4 w-4" /> Course Review
