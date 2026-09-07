@@ -10,7 +10,7 @@ function getYoutubeEmbedUrl(url: string): string | null {
   ];
   for (const p of patterns) {
     const m = url.match(p);
-    if (m?.[1]) return `https://www.youtube.com/embed/${m[1]}`;
+    if (m?.[1]) return `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=0&playsinline=1&rel=0`;
   }
   return null;
 }
