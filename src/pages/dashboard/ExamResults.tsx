@@ -526,7 +526,8 @@ const ExamResults = () => {
                 else if (ua !== q.correct_option) wrongCount++;
                 else rightCount++;
               });
-              const hasMistakes = wrongCount > 0 || skipCount > 0;
+
+
 
               const startMockPracticeAgain = () => {
                 if (snapshot.length === 0) return;
@@ -534,19 +535,6 @@ const ExamResults = () => {
                 sessionStorage.setItem("unlimitedMockQuestions", JSON.stringify(snapshot));
                 sessionStorage.setItem("unlimitedMockTitle", a.title || `${a.subject || "সাধারণ (বিষয় নেই)"}${a.chapter ? ` - ${a.chapter}` : ""}`);
                 sessionStorage.setItem("unlimitedMockTime", String(Math.ceil(snapshot.length / 1.5)));
-                sessionStorage.setItem("unlimitedMockSessionId", newSessionId);
-                navigate("/mock-test/play");
-              };
-
-              const startMockMistakePractice = () => {
-                const wrongQs = snapshot.filter((q: any) => answers[q.id] && answers[q.id] !== q.correct_option);
-                const skippedQs = snapshot.filter((q: any) => !answers[q.id]);
-                const target = [...wrongQs, ...skippedQs];
-                if (target.length === 0) return;
-                const newSessionId = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-                sessionStorage.setItem("unlimitedMockQuestions", JSON.stringify(target));
-                sessionStorage.setItem("unlimitedMockTitle", `${a.subject || "সাধারণ (বিষয় নেই)"}${a.chapter ? ` - ${a.chapter}` : ""} — Mistake Practice`);
-                sessionStorage.setItem("unlimitedMockTime", String(Math.ceil(target.length / 1.5)));
                 sessionStorage.setItem("unlimitedMockSessionId", newSessionId);
                 navigate("/mock-test/play");
               };
@@ -583,7 +571,7 @@ const ExamResults = () => {
                     <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Wrong: {wrongCount}</span>
                     <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Skip: {skipCount}</span>
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5 mt-auto pt-1.5">
+                  <div className="grid grid-cols-2 gap-1.5 mt-auto pt-1.5">
                     <Button
                       size="sm"
                       disabled={!snapshot.length}
@@ -591,14 +579,6 @@ const ExamResults = () => {
                       onClick={startMockPracticeAgain}
                     >
                       Practice Again
-                    </Button>
-                    <Button
-                      size="sm"
-                      disabled={!hasMistakes}
-                      className="rounded-lg bg-amber-500 hover:bg-amber-600 text-white border-none text-[10px] h-8 px-1 leading-tight whitespace-pre-line disabled:opacity-40"
-                      onClick={startMockMistakePractice}
-                    >
-                      Mistake Practice
                     </Button>
                     <Button
                       size="sm"

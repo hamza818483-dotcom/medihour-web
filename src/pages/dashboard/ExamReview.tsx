@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import MathText from "@/components/MathText";
-import { ArrowLeft, Check, X, Trophy, Bookmark, AlertTriangle, Lock, Calculator, Flag, Repeat, FileDown, ListChecks, ListOrdered, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, X, Trophy, Bookmark, AlertTriangle, Lock, Calculator, Flag, Repeat, FileDown, ListOrdered, Sparkles } from "lucide-react";
 import { getExamSourceList } from "@/lib/examSourceTracker";
 import { openPlainSolvePdf } from "@/lib/solvePdf";
 import { cn } from "@/lib/utils";
@@ -138,7 +138,6 @@ const ExamReview = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<"all" | "correct" | "incorrect" | "skipped">("all");
-  const [isMistakeDialogOpen, setIsMistakeDialogOpen] = useState(false);
   const [isQpDialogOpen, setIsQpDialogOpen] = useState(false);
   const [qpCustomMode, setQpCustomMode] = useState(false);
   const [qpCustomCount, setQpCustomCount] = useState("");
@@ -298,15 +297,6 @@ const ExamReview = () => {
       }
   });
 
-  const handleStartMistakePractice = (mode: "wrong" | "both") => {
-      if (attempt?.exam_id) {
-        setIsMistakeDialogOpen(false);
-        navigate("/dashboard/take-mistakes", {
-          state: { examIds: [attempt.exam_id], filterMode: mode, sourceAttemptId: attemptId }
-        });
-      }
-  };
-
   const handleStartAllQuickPractice = () => {
       if (!attempt?.exam_id) return;
       setIsQpDialogOpen(false);
@@ -447,11 +437,6 @@ const ExamReview = () => {
                     <FileDown className="h-5 w-5 mr-1.5 text-blue-500 shrink-0" /> <span className="truncate">Solve PDF</span>
                  </Button>
                  {user && (
-                 <Button variant="outline" onClick={() => setIsMistakeDialogOpen(true)} className="h-10 px-2 py-2 w-full sm:w-auto">
-                    <ListChecks className="h-5 w-5 mr-1 text-red-500 shrink-0" /> <span className="text-sm whitespace-nowrap">Mistake Practice</span>
-                 </Button>
-                 )}
-                 {user && (
                  <Button variant="outline" onClick={() => navigate(getExamSourceList(attempt.exam_id))} className="h-10 px-3 py-2 w-full sm:w-auto">
                     <ListOrdered className="h-5 w-5 mr-1.5 text-emerald-500 shrink-0" /> <span className="truncate">Exam List</span>
                  </Button>
@@ -461,7 +446,7 @@ const ExamReview = () => {
 
         {!user && (
           <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm text-center">
-            আরও ফিচার (Leaderboard, Mistake Practice, ইত্যাদি) পেতে <a href="/register" className="font-bold text-primary underline">অ্যাকাউন্ট খোলো</a> — সম্পূর্ণ ফ্রি।
+            আরও ফিচার (Leaderboard, ইত্যাদি) পেতে <a href="/register" className="font-bold text-primary underline">অ্যাকাউন্ট খোলো</a> — সম্পূর্ণ ফ্রি।
           </div>
         )}
 
@@ -515,34 +500,6 @@ const ExamReview = () => {
                         </div>
                     </div>
                 )}
-            </DialogContent>
-        </Dialog>
-
-        {/* Mistake Practice Mood Select Dialog */}
-        <Dialog open={isMistakeDialogOpen} onOpenChange={setIsMistakeDialogOpen}>
-            <DialogContent className="max-w-sm">
-                <DialogHeader>
-                    <DialogTitle>Mistake Practice</DialogTitle>
-                    <DialogDescription>Kon question gulo practice korte chao?</DialogDescription>
-                </DialogHeader>
-                <div className="flex flex-col gap-3 py-2">
-                    <button
-                        onClick={() => handleStartMistakePractice("wrong")}
-                        disabled={wrongCount === 0}
-                        className="p-4 border rounded-lg text-left hover:bg-muted/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                        <div className="font-semibold">Only Wrong ({wrongCount})</div>
-                        <div className="text-xs text-muted-foreground">Shudhu vul kora question gulo</div>
-                    </button>
-                    <button
-                        onClick={() => handleStartMistakePractice("both")}
-                        disabled={(wrongCount + skippedCount) === 0}
-                        className="p-4 border rounded-lg text-left hover:bg-muted/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                        <div className="font-semibold">Wrong + Skip ({wrongCount + skippedCount})</div>
-                        <div className="text-xs text-muted-foreground">Vul o baad deya shob question</div>
-                    </button>
-                </div>
             </DialogContent>
         </Dialog>
 
