@@ -171,6 +171,19 @@ const Footer = () => {
               © {currentYear} MediHour. সর্বস্বত্ব সংরক্ষিত।
             </span>
           </div>
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-center text-[9.5px] leading-relaxed text-white/40 sm:justify-start">
+            <span>
+              Developed By{" "}
+              <a
+                href="https://wa.me/8801754365403"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/55 hover:text-[#25D366] transition-colors"
+              >
+                Amir Hamza Rafi
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
