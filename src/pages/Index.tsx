@@ -143,7 +143,7 @@ const Index = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#eef0fd] via-[#f3eefb] to-[#faf3f8] text-foreground flex flex-col dark:from-background dark:via-background dark:to-background">
+    <div className="min-h-screen bg-[#e6e9fd] text-foreground flex flex-col dark:bg-background">
       <PublicHeader />
 
       {/* Hero Section (Full Width, LMS-style) */}
