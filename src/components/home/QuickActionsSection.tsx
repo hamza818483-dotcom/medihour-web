@@ -49,7 +49,7 @@ export const QuickActionsSection = () => {
   };
 
   return (
-    <section className="rounded-2xl border-2 border-slate-300 bg-white px-0.5 py-2.5 sm:px-1.5 space-y-2 -mt-1 shadow-md dark:border-slate-700 dark:bg-slate-900">
+    <section className="rounded-2xl border-2 border-slate-300 bg-white px-0.5 py-2.5 sm:px-1.5 space-y-2 -mt-1 dark:border-slate-700 dark:bg-slate-900">
       {/* Row 1: All Courses / Course Review */}
       <div className="grid grid-cols-2 gap-2">
         <Button
@@ -73,8 +73,8 @@ export const QuickActionsSection = () => {
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={() => handleNavigate("/free-class", "free-class")}
-          className={`group flex flex-col items-center justify-center gap-1 rounded-xl py-2.5 border transition-all ${
-            activeKey === "free-class" ? activeBtnClass : "border-primary/30 bg-white/20 backdrop-blur-sm hover:border-primary hover:bg-primary/10 dark:bg-white/5"
+          className={`group flex flex-col items-center justify-center gap-1 rounded-xl py-2.5 border-2 transition-all ${
+            activeKey === "free-class" ? activeBtnClass : "border-slate-300 bg-white/20 backdrop-blur-sm hover:border-primary hover:bg-primary/10 dark:border-slate-600 dark:bg-white/5"
           }`}
         >
           <Video className={`h-4 w-4 ${activeKey === "free-class" ? "text-primary-foreground" : "text-primary"}`} />
@@ -82,8 +82,8 @@ export const QuickActionsSection = () => {
         </button>
         <button
           onClick={() => handleNavigate("/free-exam", "free-exam")}
-          className={`group flex flex-col items-center justify-center gap-1 rounded-xl py-2.5 border transition-all ${
-            activeKey === "free-exam" ? activeBtnClass : "border-primary/30 bg-white/20 backdrop-blur-sm hover:border-primary hover:bg-primary/10 dark:bg-white/5"
+          className={`group flex flex-col items-center justify-center gap-1 rounded-xl py-2.5 border-2 transition-all ${
+            activeKey === "free-exam" ? activeBtnClass : "border-slate-300 bg-white/20 backdrop-blur-sm hover:border-primary hover:bg-primary/10 dark:border-slate-600 dark:bg-white/5"
           }`}
         >
           <FileQuestion className={`h-4 w-4 ${activeKey === "free-exam" ? "text-primary-foreground" : "text-primary"}`} />
@@ -95,8 +95,8 @@ export const QuickActionsSection = () => {
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={() => handleRestrictedNavigate("/focus-timer", "focus-timer")}
-          className={`group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 border transition-all ${
-            activeKey === "focus-timer" ? activeBtnClass : "bg-white/20 backdrop-blur-sm border-violet-500/20 hover:border-violet-500/50 hover:shadow-md dark:bg-white/5"
+          className={`group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 border-2 transition-all ${
+            activeKey === "focus-timer" ? activeBtnClass : "bg-white/20 backdrop-blur-sm border-violet-400 hover:border-violet-500 hover:shadow-md dark:border-violet-700 dark:bg-white/5"
           }`}
         >
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-sm">
@@ -106,8 +106,8 @@ export const QuickActionsSection = () => {
         </button>
         <button
           onClick={() => handleRestrictedNavigate("/syllabus-tracker", "syllabus-tracker")}
-          className={`group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 border transition-all ${
-            activeKey === "syllabus-tracker" ? activeBtnClass : "bg-white/20 backdrop-blur-sm border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-md dark:bg-white/5"
+          className={`group flex flex-col items-center justify-center gap-1.5 rounded-xl py-2.5 border-2 transition-all ${
+            activeKey === "syllabus-tracker" ? activeBtnClass : "bg-white/20 backdrop-blur-sm border-emerald-400 hover:border-emerald-500 hover:shadow-md dark:border-emerald-700 dark:bg-white/5"
           }`}
         >
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
