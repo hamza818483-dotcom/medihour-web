@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader2, AlertCircle, FileDown } from "lucide-react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +18,7 @@ const MyMistakes = () => {
 
     const [category, setCategory] = useState<"all" | "live" | "practice" | "readymade">("all");
     const [readymadeSubCategory, setReadymadeSubCategory] = useState<string | null>(null);
-    const [selectedExamIds, setSelectedExamIds] = useState<string[]>([]);
+    const [listDialog, setListDialog] = useState<{ examTitle: string; type: "wrong" | "skip"; questions: any[] } | null>(null);
 
     const { data: exams, isLoading } = useQuery({
         queryKey: ["my-mistakes-exams", user?.id],
@@ -75,6 +75,8 @@ const MyMistakes = () => {
                         answers: attempt.answers || [],
                         wrongCount: 0,
                         skipCount: 0,
+                        wrongQuestions: [],
+                        skippedQuestions: [],
                     });
                 }
             });
@@ -90,15 +92,24 @@ const MyMistakes = () => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const userAnswers = (exam.answers as any[]) || [];
                 let wrong = 0, skip = 0;
+                const wrongQuestions: any[] = [];
+                const skippedQuestions: any[] = [];
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 reviewData.forEach((reviewQ: any) => {
                     const userAnswerObj = userAnswers.find((a: any) => a.question_id === reviewQ.question_id);
                     const selected = userAnswerObj?.selected_option;
-                    if (!selected) skip++;
-                    else if (selected !== reviewQ.correct_option) wrong++;
+                    if (!selected) {
+                        skip++;
+                        skippedQuestions.push({ ...reviewQ, user_answer: null });
+                    } else if (selected !== reviewQ.correct_option) {
+                        wrong++;
+                        wrongQuestions.push({ ...reviewQ, user_answer: selected });
+                    }
                 });
                 exam.wrongCount = wrong;
                 exam.skipCount = skip;
+                exam.wrongQuestions = wrongQuestions;
+                exam.skippedQuestions = skippedQuestions;
             }));
 
             return uniqueExams;
@@ -117,20 +128,6 @@ const MyMistakes = () => {
         }
         return e.category === category;
     });
-
-    const handleSelectAll = () => {
-        setSelectedExamIds(categoryFilteredExams.map((e: any) => e.id));
-    };
-
-    const handleDeselectAll = () => {
-        setSelectedExamIds([]);
-    };
-
-    const toggleExam = (id: string) => {
-        setSelectedExamIds(prev =>
-            prev.includes(id) ? prev.filter(e => e !== id) : [...prev, id]
-        );
-    };
 
     const totalWrong = categoryFilteredExams.reduce((s: number, e: any) => s + (e.wrongCount || 0), 0);
     const totalSkip = categoryFilteredExams.reduce((s: number, e: any) => s + (e.skipCount || 0), 0);
@@ -285,14 +282,10 @@ const MyMistakes = () => {
                     </div>
                 )}
 
-                {/* Exam Selection List */}
+                {/* Exam List */}
                 <Card className="lg:col-span-2 w-full mx-0">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 py-2.5 px-3">
-                        <CardTitle className="text-sm">Select Exams</CardTitle>
-                        <div className="flex gap-1.5">
-                            <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={handleSelectAll}>All</Button>
-                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={handleDeselectAll}>None</Button>
-                        </div>
+                    <CardHeader className="py-2.5 px-3">
+                        <CardTitle className="text-sm">Exams</CardTitle>
                     </CardHeader>
                     <CardContent className="px-3 pb-3">
                         {categoryFilteredExams.length > 0 ? (
@@ -301,21 +294,13 @@ const MyMistakes = () => {
                                     {categoryFilteredExams.map((exam: any) => (
                                         <div
                                             key={exam.id}
-                                            className="flex items-start space-x-2 p-2 rounded-md border active:bg-muted/50 select-none"
+                                            className="p-2 rounded-md border select-none"
                                         >
-                                            <Checkbox
-                                                id={exam.id}
-                                                checked={selectedExamIds.includes(exam.id)}
-                                                onCheckedChange={() => toggleExam(exam.id)}
-                                            />
-                                            <div className="grid gap-1 leading-none w-full min-w-0 cursor-pointer" onClick={() => toggleExam(exam.id)}>
+                                            <div className="grid gap-1 leading-none w-full min-w-0">
                                                 <div className="flex justify-between items-start gap-2">
-                                                    <label
-                                                        htmlFor={exam.id}
-                                                        className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer truncate min-w-0"
-                                                    >
+                                                    <span className="text-xs font-medium leading-none truncate min-w-0">
                                                         {exam.title}
-                                                    </label>
+                                                    </span>
                                                     {exam.subject && (
                                                         <Badge variant="outline" className="text-[10px] shrink-0">{exam.subject}</Badge>
                                                     )}
@@ -324,8 +309,20 @@ const MyMistakes = () => {
                                                     Last attempt: {format(new Date(exam.lastAttempt), "PP")}
                                                 </p>
                                                 <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
-                                                    <Badge variant="outline" className="text-[10px] text-red-600 dark:text-red-400 border-red-300 dark:border-red-900">Wrong: {exam.wrongCount}</Badge>
-                                                    <Badge variant="outline" className="text-[10px] text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-900">Skip: {exam.skipCount}</Badge>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="text-[10px] text-red-600 dark:text-red-400 border-red-300 dark:border-red-900 cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                        onClick={() => setListDialog({ examTitle: exam.title, type: "wrong", questions: exam.wrongQuestions })}
+                                                    >
+                                                        Wrong: {exam.wrongCount}
+                                                    </Badge>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="text-[10px] text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-900 cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                                                        onClick={() => setListDialog({ examTitle: exam.title, type: "skip", questions: exam.skippedQuestions })}
+                                                    >
+                                                        Skip: {exam.skipCount}
+                                                    </Badge>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,6 +338,46 @@ const MyMistakes = () => {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Question List Dialog (Wrong / Skip) */}
+            <Dialog open={!!listDialog} onOpenChange={(open) => !open && setListDialog(null)}>
+                <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle className="text-sm">
+                            {listDialog?.examTitle} — {listDialog?.type === "wrong" ? "Wrong" : "Skipped"} Questions
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3">
+                        {listDialog?.questions?.length ? (
+                            listDialog.questions.map((q: any, i: number) => (
+                                <div key={q.question_id || i} className="p-2.5 border rounded-md space-y-1">
+                                    <p className="text-xs font-medium">{i + 1}. {q.question_text}</p>
+                                    <div className="text-[11px] text-muted-foreground space-y-0.5">
+                                        <p>A. {q.option_a}</p>
+                                        <p>B. {q.option_b}</p>
+                                        <p>C. {q.option_c}</p>
+                                        <p>D. {q.option_d}</p>
+                                        {q.option_e && <p>E. {q.option_e}</p>}
+                                    </div>
+                                    <div className="flex items-center gap-3 pt-1 text-[11px] flex-wrap">
+                                        <span className="text-emerald-600 dark:text-emerald-400 font-medium">Correct: {q.correct_option}</span>
+                                        {q.user_answer ? (
+                                            <span className="text-red-600 dark:text-red-400 font-medium">Your answer: {q.user_answer}</span>
+                                        ) : (
+                                            <span className="text-amber-600 dark:text-amber-400 font-medium">Skipped</span>
+                                        )}
+                                    </div>
+                                    {q.explanation && (
+                                        <p className="text-[11px] text-muted-foreground pt-1 border-t">{q.explanation}</p>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-xs text-center text-muted-foreground py-4">No questions found.</p>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };
