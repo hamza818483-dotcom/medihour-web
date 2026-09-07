@@ -33,23 +33,21 @@ export const TrustCtaSection = () => {
   if (!embedUrl) return null;
 
   return (
-    <section className="relative w-full overflow-hidden py-3 px-3 sm:px-4 lg:px-6 bg-gradient-to-br from-[#f7fbff] via-white to-[#fff8fc] dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
-      <div className="relative z-[2] mx-auto w-full max-w-[1400px]">
-        <div className="relative overflow-hidden rounded-[24px] border border-[#e6eef8] dark:border-white/10 bg-white dark:bg-slate-900 p-4 sm:p-6 shadow-[0_12px_35px_rgba(40,60,90,0.07)]">
-          {data?.title && (
-            <h2 className="mb-4 text-center text-[clamp(20px,3vw,32px)] font-extrabold leading-[1.25] text-[#252525] dark:text-white">
-              {data.title}
-            </h2>
-          )}
-          <div className="relative w-full overflow-hidden rounded-[16px]" style={{ aspectRatio: "16/9" }}>
-            <iframe
-              src={embedUrl}
-              title={data?.title || "Promo Video"}
-              className="absolute inset-0 h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+    <section className="relative w-full overflow-hidden py-3 px-3 sm:px-4 lg:px-6 rounded-[24px] border border-[#e6eef8] dark:border-white/10 bg-white dark:bg-slate-900 shadow-[0_12px_35px_rgba(40,60,90,0.07)]">
+      <div className="relative z-[2] mx-auto w-full max-w-[1500px]">
+        {data?.title && (
+          <h2 className="mb-4 text-center text-[clamp(20px,3vw,32px)] font-extrabold leading-[1.25] text-[#252525] dark:text-white">
+            {data.title}
+          </h2>
+        )}
+        <div className="relative w-full overflow-hidden rounded-[16px]" style={{ aspectRatio: "16/9" }}>
+          <iframe
+            src={embedUrl}
+            title={data?.title || "Promo Video"}
+            className="absolute inset-0 h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
       </div>
     </section>

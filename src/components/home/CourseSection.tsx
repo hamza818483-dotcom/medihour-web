@@ -207,7 +207,7 @@ export const CourseSection = () => {
                                     className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                         selectedCategory === "all"
                                         ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-md"
-                                        : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
+                                        : "bg-white hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                     }`}
                                 >
                                     সব
@@ -220,7 +220,7 @@ export const CourseSection = () => {
                                         className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedCategory === cat
                                             ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-md"
-                                            : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
+                                            : "bg-white hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                         }`}
                                     >
                                         {cat}
@@ -239,7 +239,7 @@ export const CourseSection = () => {
                                         className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                             selectedSubCategory === "all"
                                             ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
-                                            : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
+                                            : "bg-white hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                         }`}
                                     >
                                         সব টাইপ
@@ -252,7 +252,7 @@ export const CourseSection = () => {
                                             className={`px-4 h-10 text-sm md:px-8 md:h-12 md:text-base border transition-all ${
                                                 selectedSubCategory === sub
                                                 ? "bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
-                                                : "bg-transparent hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
+                                                : "bg-white hover:bg-blue-50 text-foreground border-border hover:border-blue-200"
                                             }`}
                                         >
                                             {sub}
