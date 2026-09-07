@@ -489,7 +489,7 @@ const CourseDetails = () => {
         </TabsList>
 
         <TabsContent value="features" className="mt-0 space-y-0">
-      <div className="mb-6 rounded-2xl border bg-card p-4 shadow-sm">
+      <div className="mb-6 rounded-2xl border-2 border-slate-300 bg-card p-4 shadow-md dark:border-slate-700">
       {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
