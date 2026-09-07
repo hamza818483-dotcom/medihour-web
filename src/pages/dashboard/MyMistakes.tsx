@@ -5,8 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from "react-router-dom";
-import { Loader2, AlertCircle, PlayCircle, FileDown } from "lucide-react";
+import { Loader2, AlertCircle, FileDown } from "lucide-react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { openSolvePdf } from "@/lib/solvePdf";
@@ -15,7 +14,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const MyMistakes = () => {
     const { user } = useAuth();
-    const navigate = useNavigate();
     const { toast } = useToast();
     const [pdfLoading, setPdfLoading] = useState<"wrong" | "both" | null>(null);
     const [singlePdfLoadingId, setSinglePdfLoadingId] = useState<string | null>(null);
@@ -68,7 +66,6 @@ const MyMistakes = () => {
         }
     };
 
-    const [filterMode, setFilterMode] = useState<"wrong" | "skipped" | "both">("both");
     const [category, setCategory] = useState<"all" | "live" | "practice" | "readymade">("all");
     const [readymadeSubCategory, setReadymadeSubCategory] = useState<string | null>(null);
     const [selectedExamIds, setSelectedExamIds] = useState<string[]>([]);
@@ -185,13 +182,6 @@ const MyMistakes = () => {
         );
     };
 
-    const handleStart = () => {
-        if (selectedExamIds.length === 0) return;
-        navigate("/dashboard/take-mistakes", {
-            state: { examIds: selectedExamIds, filterMode }
-        });
-    };
-
     const totalWrong = categoryFilteredExams.reduce((s: number, e: any) => s + (e.wrongCount || 0), 0);
     const totalSkip = categoryFilteredExams.reduce((s: number, e: any) => s + (e.skipCount || 0), 0);
 
@@ -299,52 +289,6 @@ const MyMistakes = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-1.5 px-0.5 w-full">
-                {/* Configuration Panel */}
-                <Card className="lg:col-span-1 h-fit w-full mx-0">
-                    <CardHeader className="py-2.5 px-3">
-                        <CardTitle className="text-sm">Configuration</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3 px-3 pb-3">
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium">Question Filter</label>
-                            <div className="flex flex-col gap-1.5">
-                                <div
-                                    className={`p-2 border rounded-md cursor-pointer transition-all ${filterMode === 'wrong' ? 'border-primary bg-primary/5' : 'hover:bg-muted/50'}`}
-                                    onClick={() => setFilterMode('wrong')}
-                                >
-                                    <div className="text-xs font-medium">Wrong Only</div>
-                                    <div className="text-[10px] text-muted-foreground">Questions you attempted but got wrong</div>
-                                </div>
-                                <div
-                                    className={`p-2 border rounded-md cursor-pointer transition-all ${filterMode === 'skipped' ? 'border-primary bg-primary/5' : 'hover:bg-muted/50'}`}
-                                    onClick={() => setFilterMode('skipped')}
-                                >
-                                    <div className="text-xs font-medium">Skipped Only</div>
-                                    <div className="text-[10px] text-muted-foreground">Questions you didn't answer</div>
-                                </div>
-                                <div
-                                    className={`p-2 border rounded-md cursor-pointer transition-all ${filterMode === 'both' ? 'border-primary bg-primary/5' : 'hover:bg-muted/50'}`}
-                                    onClick={() => setFilterMode('both')}
-                                >
-                                    <div className="text-xs font-medium">Both</div>
-                                    <div className="text-[10px] text-muted-foreground">All incorrect and unattempted questions</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <Button
-                            className="w-full h-10"
-                            disabled={selectedExamIds.length === 0}
-                            onClick={handleStart}
-                        >
-                            <PlayCircle className="mr-2 h-4 w-4" /> Start Practice
-                        </Button>
-                        <p className="text-[11px] text-center text-muted-foreground">
-                            {selectedExamIds.length} exams selected
-                        </p>
-                    </CardContent>
-                </Card>
-
                 {/* Category Row */}
                 <div className="lg:col-span-3 grid grid-cols-4 gap-1.5">
                     {([

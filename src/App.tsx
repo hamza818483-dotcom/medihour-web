@@ -40,7 +40,6 @@ import TakeExam from "./pages/dashboard/TakeExam";
 import QuickPractice from "./pages/dashboard/QuickPractice";
 import FocusTimer from "./pages/public/FocusTimer";
 import StudyHistory from "./pages/public/StudyHistory";
-import TakeMistakeExam from "./pages/dashboard/TakeMistakeExam";
 import ExamReview from "./pages/dashboard/ExamReview";
 import Leaderboard from "./pages/dashboard/Leaderboard";
 import Bookmarks from "./pages/dashboard/Bookmarks";
@@ -148,7 +147,6 @@ const App = () => {
                 <Route path="recordings" element={<ErrorBoundary><Recordings /></ErrorBoundary>} />
                 <Route path="live-exam" element={<ErrorBoundary><LiveExam /></ErrorBoundary>} />
                 <Route path="take-exam/:examId" element={<ErrorBoundary><TakeExam /></ErrorBoundary>} />
-                <Route path="take-mistakes" element={<ErrorBoundary><TakeMistakeExam /></ErrorBoundary>} />
                 <Route path="past-exam" element={<ErrorBoundary><PastExamCatalog /></ErrorBoundary>} />
                 <Route path="results" element={<ErrorBoundary><ExamResults /></ErrorBoundary>} />
                 <Route path="exam-review/:attemptId" element={<ErrorBoundary><ExamReview /></ErrorBoundary>} />
