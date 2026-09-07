@@ -250,8 +250,6 @@ const AdminHeroes = () => {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="image">Standard Image</SelectItem>
-                              <SelectItem value="countdown">Exam Countdown</SelectItem>
-                              <SelectItem value="announcement">Rich Announcement</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
