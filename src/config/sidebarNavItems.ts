@@ -3,7 +3,6 @@ import {
   BookOpen,
   Send,
   CalendarClock,
-  CalendarRange,
   FileText,
   GraduationCap,
   ListChecks,
@@ -66,7 +65,6 @@ export const studentItems: SidebarNavItem[] = [
   { title: "Bookmarks", url: "/dashboard/bookmarks", icon: Bookmark, color: "text-emerald-500" },
   { title: "FB & Telegram Group", url: "/dashboard/community", icon: Users, color: "text-cyan-500" },
   { title: "Exam Analytics", url: "/dashboard/analytics", icon: Settings2, color: "text-slate-500" },
-  { title: "Exam Routine", url: "/dashboard/calendar", icon: CalendarClock, color: "text-indigo-500" },
 ];
 
 export const adminItems: AdminSidebarNavItem[] = [
@@ -82,7 +80,6 @@ export const adminItems: AdminSidebarNavItem[] = [
   { title: "Official Links", url: "/admin/official-links", icon: Send, roles: ["admin", "teacher"], color: "text-cyan-700" },
   { title: "Community Manager", url: "/admin/community", icon: Users, roles: ["admin", "teacher"], color: "text-teal-600" },
   { title: "Archive Manager", url: "/admin/archive", icon: BookOpen, roles: ["admin", "teacher"], color: "text-purple-500" },
-  { title: "Exam Routine Manager", url: "/admin/calendar", icon: CalendarRange, roles: ["admin", "teacher"], color: "text-rose-500" },
   { title: "Free Manager", url: "/admin/free-content", icon: StickyNote, roles: ["admin", "teacher"], color: "text-indigo-500" },
   { title: "Payments", url: "/admin/payments", icon: CreditCard, roles: ["admin", "teacher"], color: "text-emerald-600" },
   { title: "Promo Codes", url: "/admin/promos", icon: Tag, roles: ["admin", "teacher"], color: "text-cyan-600" },
