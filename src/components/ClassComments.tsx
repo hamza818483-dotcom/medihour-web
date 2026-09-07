@@ -38,7 +38,7 @@ const colorForName = (name: string) => {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 };
 
-const ClassComments = ({ classId, isLive = false }: { classId: string; isLive?: boolean }) => {
+const ClassComments = ({ classId, isLive = false, className }: { classId: string; isLive?: boolean; className?: string }) => {
   const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -139,7 +139,7 @@ const ClassComments = ({ classId, isLive = false }: { classId: string; isLive?: 
   };
 
   return (
-    <div className="flex flex-col h-full rounded-xl border bg-card overflow-hidden">
+    <div className={`flex flex-col ${className ?? "h-[420px]"} rounded-xl border bg-card overflow-hidden`}>
       <div className="flex items-center gap-2 px-4 py-3 border-b shrink-0">
         {isLive ? (
           <span className="flex items-center gap-1 text-xs font-bold text-red-600">
@@ -158,16 +158,18 @@ const ClassComments = ({ classId, isLive = false }: { classId: string; isLive?: 
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-3 py-2 space-y-2 min-h-[300px]"
+        className="flex-1 overflow-y-auto px-3 py-2 space-y-2"
       >
         {isLoading ? (
           <div className="flex justify-center py-6">
             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         ) : !comments || comments.length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-6">
-            {isLive ? "লাইভ চ্যাট শুরু হয়নি — প্রথম কমেন্টটি করুন!" : "এখনো কোনো কমেন্ট নেই।"}
-          </p>
+          <div className="flex h-full items-center justify-center">
+            <p className="text-xs text-muted-foreground text-center">
+              {isLive ? "লাইভ চ্যাট শুরু হয়নি — প্রথম কমেন্টটি করুন!" : "এখনো কোনো কমেন্ট নেই।"}
+            </p>
+          </div>
         ) : (
           comments.map((c) => {
             const name = c.profiles?.full_name || "User";
