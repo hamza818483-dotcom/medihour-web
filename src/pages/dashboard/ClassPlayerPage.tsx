@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { FileText, ArrowLeft, Calendar, Eye } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import ClassComments from "@/components/ClassComments";
 
 const ClassPlayerPage = () => {
   const { classId } = useParams();
@@ -213,12 +212,6 @@ const ClassPlayerPage = () => {
         </div>
 
         <div className="space-y-6">
-            {isActuallyLive && (
-                <div className="lg:sticky lg:top-4 lg:h-[calc(100vh-8rem)]">
-                    <ClassComments classId={classItem.id} isLive className="h-full" />
-                </div>
-            )}
-
             {classItem.topic && (
                 <Card>
                     <CardHeader>
@@ -249,7 +242,6 @@ const ClassPlayerPage = () => {
                 </Card>
             )}
 
-            {!isActuallyLive && <ClassComments classId={classItem.id} />}
         </div>
       </div>
     </div>
