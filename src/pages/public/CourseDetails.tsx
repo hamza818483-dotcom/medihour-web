@@ -472,7 +472,7 @@ const CourseDetails = () => {
       </div>
       {/* End of top card */}
 
-      <Tabs defaultValue="features" className="mb-6 rounded-2xl border bg-white p-3 shadow-lg dark:bg-slate-900">
+      <Tabs defaultValue="features" className="mb-6 rounded-2xl border-2 border-slate-300 bg-white p-3 shadow-lg dark:border-slate-700 dark:bg-slate-900">
         <TabsList className="mb-4 flex h-auto w-full rounded-2xl bg-white p-0 shadow-lg border-b">
           <TabsTrigger
             value="features"
