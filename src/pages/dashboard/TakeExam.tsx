@@ -18,6 +18,7 @@ import { Progress } from "@/components/ui/progress";
 import { useAntiCheat } from "@/hooks/useAntiCheat";
 import { useStudyToolsOptional } from "@/contexts/StudyToolsContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { useEnrollments } from "@/hooks/useEnrollments";
 import { OmrExamScanner } from "@/components/exam/OmrExamScanner";
 import { RIGHT_PACKS, WRONG_PACKS, playSound } from "@/lib/quizSounds";
@@ -1407,6 +1408,21 @@ const TakeExam = () => {
 
               {/* Card 2: Instructions */}
               <Card className="w-full rounded-xl shadow-sm border relative">
+                  <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
+                      <div className="flex items-center gap-1.5">
+                          <label htmlFor="secondTimer" className="text-[10px] font-medium text-muted-foreground cursor-pointer">
+                              2nd Timer?
+                          </label>
+                          <Switch
+                              id="secondTimer"
+                              checked={isSecondTimerAttempt}
+                              onCheckedChange={(c) => setIsSecondTimerAttempt(!!c)}
+                          />
+                      </div>
+                      {isSecondTimerAttempt && (
+                          <span className="text-[9px] text-muted-foreground">৩% নম্বর কাটা যাবে</span>
+                      )}
+                  </div>
                   <div className="p-3 md:p-4 pr-28 space-y-1.5">
                       <h3 className="text-xs font-semibold flex items-center gap-1.5">
                           <AlertTriangle className="h-4 w-4 text-amber-500" />
@@ -1469,20 +1485,6 @@ const TakeExam = () => {
               {/* Card 3: Actions */}
               <Card className="w-full rounded-xl shadow-sm border">
                   <div className="p-3 md:p-4 space-y-2">
-                      <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-muted/50 transition-colors">
-                          <Checkbox
-                              id="secondTimer"
-                              checked={isSecondTimerAttempt}
-                              onCheckedChange={(c) => setIsSecondTimerAttempt(!!c)}
-                              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary h-4 w-4"
-                          />
-                          <label
-                              htmlFor="secondTimer"
-                              className="text-xs font-medium leading-none cursor-pointer flex-1"
-                          >
-                              আমি একজন সেকেন্ড টাইমার শিক্ষার্থী (মোট নম্বরের ৩% কাটা যাবে)
-                          </label>
-                      </div>
                       <div className="flex items-center space-x-2 p-1 rounded-lg hover:bg-muted/50 transition-colors">
                           <Checkbox
                               id="terms"
