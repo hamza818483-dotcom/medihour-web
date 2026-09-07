@@ -298,6 +298,8 @@ const CourseDetails = () => {
         <ArrowLeft className="h-4 w-4" /> ফিরে যান
       </Link>
 
+      {/* Top card: video/image + title + coupon + enroll, all grouped together */}
+      <div className="mb-6 rounded-2xl border bg-white p-4 shadow-lg dark:bg-slate-900">
       {/* Auto-playing intro video takes priority over the static image; demo class videos are never used here */}
       {(() => {
         const firstVideo = course.video_url;
@@ -467,6 +469,8 @@ const CourseDetails = () => {
           <Link to={getEnrollUrl()}>ভর্তি হন</Link>
         </Button>
       </div>
+      </div>
+      {/* End of top card */}
 
       <Tabs defaultValue="features" className="mb-6 rounded-2xl border bg-white p-3 shadow-lg dark:bg-slate-900">
         <TabsList className="mb-4 flex h-auto w-full rounded-2xl bg-white p-0 shadow-lg border-b">
@@ -671,34 +675,6 @@ const CourseDetails = () => {
         </div>
       )}
 
-      {/* "এই কোর্স সম্পর্কে আরো" — admin-added Extra Links as premium full-width cards */}
-      {Array.isArray((course as any).extra_links) &&
-        (course as any).extra_links.length > 0 && (
-          <div className="mb-6">
-            <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
-            <div className="flex flex-col gap-3">
-              {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => {
-                const rawUrl = (l.url || "").trim();
-                const safeUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
-                return (
-                  <a
-                    key={i}
-                    href={safeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex w-full items-center gap-4 rounded-2xl border bg-gradient-to-br from-card to-secondary/40 p-4 shadow-sm transition hover:shadow-md hover:border-primary/40"
-                  >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <PlayCircle className="h-6 w-6" />
-                    </div>
-                    <span className="flex-1 text-sm font-semibold leading-relaxed">{l.label}</span>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         </TabsContent>
 
         <TabsContent value="demo" className="mt-0">
@@ -746,6 +722,34 @@ const CourseDetails = () => {
       })()}
         </TabsContent>
       </Tabs>
+
+      {/* "এই কোর্স সম্পর্কে আরো" — admin-added Extra Links, moved below the tabs card as its own separate section */}
+      {Array.isArray((course as any).extra_links) &&
+        (course as any).extra_links.length > 0 && (
+          <div className="mb-6">
+            <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
+            <div className="flex flex-col gap-3">
+              {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => {
+                const rawUrl = (l.url || "").trim();
+                const safeUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+                return (
+                  <a
+                    key={i}
+                    href={safeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex w-full items-center gap-4 rounded-2xl border bg-gradient-to-br from-card to-secondary/40 p-4 shadow-sm transition hover:shadow-md hover:border-primary/40"
+                  >
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <PlayCircle className="h-6 w-6" />
+                    </div>
+                    <span className="flex-1 text-sm font-semibold leading-relaxed">{l.label}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        )}
     </div>
   );
 };
