@@ -7,6 +7,7 @@ import 'katex/dist/katex.min.css';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Clock, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getEmbedUrl } from '@/lib/videoUtils';
 
 interface HeroCarouselItemProps {
   hero: any;
@@ -80,11 +81,21 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
     ? { background: `linear-gradient(135deg, ${bgConfig.from} 0%, ${bgConfig.to} 100%)` }
     : { backgroundColor: bgConfig.from };
 
+  const heroEmbed = hero.video_url ? getEmbedUrl(hero.video_url) : "";
+
   if (isImageOnly) {
     return (
       <section className="min-w-0 flex-[0_0_100%]">
         <a href={hero.cta_link || "#"} className="block relative w-full h-auto aspect-video md:h-[700px] overflow-hidden bg-background cursor-pointer hover:opacity-95 transition-opacity">
-          {hero.image_url ? (
+          {heroEmbed ? (
+            <iframe
+              src={`${heroEmbed}&autoplay=1&mute=0`}
+              title={hero.title}
+              className="h-full w-full pointer-events-none"
+              allow="autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+            />
+          ) : hero.image_url ? (
             <div className="h-full w-full relative flex items-center justify-center">
               <img
                 src={hero.image_url}

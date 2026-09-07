@@ -309,7 +309,7 @@ const CourseDetails = () => {
             return (
               <div className="mb-5 aspect-video w-full overflow-hidden rounded-2xl border">
                 <iframe
-                  src={`${embed}&autoplay=1&mute=1`}
+                  src={`${embed}&autoplay=1&mute=0`}
                   title={course.name}
                   className="h-full w-full"
                   allow="autoplay; encrypted-media; picture-in-picture"

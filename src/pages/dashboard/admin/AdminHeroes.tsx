@@ -43,6 +43,7 @@ const heroSchema = z.object({
   title: z.string().min(1, "Title is required"),
   subtitle: z.string().optional(),
   image_url: z.string().optional(),
+  video_url: z.string().optional(),
   cta_text: z.string().optional(),
   cta_link: z.string().optional(),
   display_order: z.coerce.number().default(0),
@@ -71,6 +72,7 @@ const AdminHeroes = () => {
       title: "",
       subtitle: "",
       image_url: "",
+      video_url: "",
       cta_text: "শুরু করুন",
       cta_link: "/courses",
       display_order: 0,
@@ -104,6 +106,7 @@ const AdminHeroes = () => {
           ...values,
           countdown_target: values.countdown_target || null,
           image_url: values.image_url || null,
+          video_url: values.video_url || null,
           subtitle: values.subtitle || null,
           cta_text: values.cta_text || null,
           cta_link: values.cta_link || null,
@@ -170,6 +173,7 @@ const AdminHeroes = () => {
       title: hero.title,
       subtitle: hero.subtitle || "",
       image_url: hero.image_url || "",
+      video_url: hero.video_url || "",
       cta_text: hero.cta_text || "",
       cta_link: hero.cta_link || "",
       display_order: hero.display_order,
@@ -188,6 +192,7 @@ const AdminHeroes = () => {
       title: "",
       subtitle: "",
       image_url: "",
+      video_url: "",
       cta_text: "শুরু করুন",
       cta_link: "/courses",
       display_order: 0,
@@ -266,6 +271,20 @@ const AdminHeroes = () => {
                               onChange={field.onChange}
                               placeholder="https://... or upload"
                             />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="video_url"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Video URL (YouTube — takes priority over Image, autoplays with sound)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://youtube.com/watch?v=..." {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
