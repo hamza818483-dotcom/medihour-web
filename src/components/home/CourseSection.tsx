@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Check, Tag, Users } from "lucide-react";
 
@@ -10,6 +11,7 @@ import { Check, Tag, Users } from "lucide-react";
 const FEATURED_CATEGORIES: string[] = [];
 
 export const CourseSection = () => {
+    const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [selectedSubCategory, setSelectedSubCategory] = useState<string>("all");
 
@@ -276,10 +278,15 @@ export const CourseSection = () => {
                         const idOrSlug = course.slug || course.id;
                         const enrollCount = enrollmentCounts?.[course.id] || 0;
 
+        const handleCardClick = () => {
+            navigate(`/courses/${idOrSlug}`);
+        };
+
                         return (
                             <article
                                 key={course.id}
-                                className="group relative w-full rounded-[24px] p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.85),0_8px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-[7px] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.95),0_15px_35px_rgba(37,99,235,0.16)]"
+                                onClick={handleCardClick}
+                                className="group relative w-full cursor-pointer rounded-[24px] p-[2px] shadow-[0_0_0_1px_rgba(0,0,0,0.85),0_8px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 hover:-translate-y-[7px] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.95),0_15px_35px_rgba(37,99,235,0.16)]"
                                 style={{
                                     background: "linear-gradient(120deg, #111 0%, #2563eb 25%, #111 50%, #60a5fa 75%, #111 100%)",
                                     backgroundSize: "350% 350%",
@@ -341,6 +348,7 @@ export const CourseSection = () => {
                                             </div>
                                             <a
                                                 href={`/courses/${idOrSlug}`}
+                                                onClick={(e) => e.stopPropagation()}
                                                 className="group/btn relative flex min-w-[110px] flex-shrink-0 items-center justify-center gap-1.5 overflow-hidden rounded-[12px] bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] px-4 py-2.5 text-[12px] font-extrabold text-white shadow-[0_8px_20px_rgba(37,99,235,0.22)] transition-all hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(37,99,235,0.32)]"
                                             >
                                                 <span className="absolute -left-[120%] top-0 h-full w-4/5 -skew-x-[20deg] bg-gradient-to-r from-transparent via-white/35 to-transparent transition-all duration-500 group-hover/btn:left-[140%]" />
