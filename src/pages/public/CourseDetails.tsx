@@ -489,6 +489,7 @@ const CourseDetails = () => {
         </TabsList>
 
         <TabsContent value="features" className="mt-0 space-y-0">
+      <div className="mb-6 rounded-2xl border bg-card p-4 shadow-sm">
       {/* Eye-catching bg box for the section heading above the checklist */}
       {Array.isArray((course as any).short_description_lines) &&
         (course as any).short_description_lines.length > 0 && (
@@ -507,7 +508,7 @@ const CourseDetails = () => {
           <div className="mb-5 space-y-1.5">
             {((course as any).short_description_lines as { text: string; bold?: boolean }[]).map(
               (line, i) => (
-                <div key={i} className="flex items-start gap-2 rounded-lg border bg-card p-2">
+                <div key={i} className="flex items-start gap-2 rounded-lg border bg-muted/40 p-2">
                   <CheckCircle2
                     className="mt-0.5 h-4 w-4 shrink-0 text-green-500"
                     style={{ animation: `check-pop 1.6s ease-in-out ${i * 0.15}s infinite` }}
@@ -548,7 +549,7 @@ const CourseDetails = () => {
 
       {/* Full description: plain text set by admin */}
       {(course as any).full_description && (
-        <div className="mb-6 space-y-3">
+        <div className="mt-8 space-y-3">
           <div className="mb-1 flex justify-center">
             <div className="w-fit max-w-[92%] rounded-xl border-2 border-sky-400/60 bg-gradient-to-r from-sky-100 via-cyan-50 to-sky-100 px-4 py-2 text-center shadow-md dark:from-sky-900/40 dark:via-cyan-900/20 dark:to-sky-900/40 dark:border-sky-700">
               <h2 className="text-xl font-semibold sm:text-2xl">
@@ -556,14 +557,13 @@ const CourseDetails = () => {
               </h2>
             </div>
           </div>
-          <div className="mx-auto max-w-[95%] rounded-2xl border bg-card p-4 shadow-sm">
-            <div
-              className="space-y-2 text-sm leading-relaxed text-foreground [&_div]:min-h-[1em]"
-              dangerouslySetInnerHTML={{ __html: (course as any).full_description }}
-            />
-          </div>
+          <div
+            className="space-y-2 text-sm leading-relaxed text-foreground [&_div]:min-h-[1em]"
+            dangerouslySetInnerHTML={{ __html: (course as any).full_description }}
+          />
         </div>
       )}
+      </div>
 
       {whatYouGet.length > 0 && (
         <div className="mb-6">
