@@ -465,7 +465,7 @@ export const DashboardLayout = () => {
           <div className="print:hidden">
             <AppSidebar hasPendingPayments={hasPendingPayments} />
           </div>
-          <main className="flex-1 bg-background px-4 py-4 sm:px-6 sm:py-6 overflow-y-auto w-full print:overflow-visible print:h-auto print:w-full print:px-0 print:py-0">
+          <main className="flex-1 bg-[#e6e9fd] dark:bg-background px-4 py-4 sm:px-6 sm:py-6 overflow-y-auto w-full print:overflow-visible print:h-auto print:w-full print:px-0 print:py-0">
             <Outlet />
           </main>
         </div>
