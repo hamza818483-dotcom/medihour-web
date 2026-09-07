@@ -435,7 +435,40 @@ const CourseDetails = () => {
         </div>
       )}
 
-      <Tabs defaultValue="features" className="mb-6">
+      {/* Enroll card: price + button, placed right under the image/video and coupon area */}
+      <div className="mb-6 flex items-center justify-between gap-3 rounded-2xl border-2 border-primary/20 bg-gradient-to-br from-card to-secondary/30 p-4 shadow-md">
+        <div>
+          {discountedPrice != null && appliedCoupon ? (
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm text-muted-foreground line-through">
+                ৳{Number(course.price).toLocaleString("en-BD")}
+              </span>
+              <span className="text-xl font-extrabold text-green-600">
+                {discountedPrice === 0 ? "ফ্রি!" : `৳${discountedPrice.toLocaleString("en-BD")}`}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-extrabold text-[#2563eb]">
+                ৳{Number(course.price).toLocaleString("en-BD")}
+              </span>
+              {discountPct > 0 && (
+                <span className="text-sm text-muted-foreground line-through">
+                  ৳{Number(course.original_price).toLocaleString("en-BD")}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+        <Button
+          asChild
+          className="bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-bold"
+        >
+          <Link to={getEnrollUrl()}>ভর্তি হন</Link>
+        </Button>
+      </div>
+
+      <Tabs defaultValue="features" className="mb-6 rounded-2xl border bg-white p-3 shadow-lg dark:bg-slate-900">
         <TabsList className="mb-4 flex h-auto w-full rounded-2xl bg-white p-0 shadow-lg border-b">
           <TabsTrigger
             value="features"
@@ -713,43 +746,6 @@ const CourseDetails = () => {
       })()}
         </TabsContent>
       </Tabs>
-
-      {/* Spacer so fixed enroll bar doesn't cover the last content */}
-      <div className="h-24" />
-
-      <div className="fixed inset-x-0 bottom-0 z-[1000] border-t bg-background/95 p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] backdrop-blur">
-        <div className="mx-auto flex w-full max-w-[900px] items-center justify-between gap-3 px-4">
-        <div>
-          {discountedPrice != null && appliedCoupon ? (
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm text-muted-foreground line-through">
-                ৳{Number(course.price).toLocaleString("en-BD")}
-              </span>
-              <span className="text-xl font-extrabold text-green-600">
-                {discountedPrice === 0 ? "ফ্রি!" : `৳${discountedPrice.toLocaleString("en-BD")}`}
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl font-extrabold text-[#2563eb]">
-                ৳{Number(course.price).toLocaleString("en-BD")}
-              </span>
-              {discountPct > 0 && (
-                <span className="text-sm text-muted-foreground line-through">
-                  ৳{Number(course.original_price).toLocaleString("en-BD")}
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-        <Button
-          asChild
-          className="bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-bold"
-        >
-          <Link to={getEnrollUrl()}>ভর্তি হন</Link>
-        </Button>
-        </div>
-      </div>
     </div>
   );
 };
