@@ -2041,9 +2041,9 @@ const TakeExam = () => {
 
       <div className="container max-w-full lg:max-w-[92rem] mx-auto px-0.5 py-4 md:px-3 md:py-8 space-y-3 overflow-x-hidden">
         {/* fixed (not sticky) so it stays visible no matter which ancestor actually
-            scrolls on mobile. top offset clears the dashboard's own 56px header when
-            logged in — guests hit this page standalone (no such header) so it sits at 0. */}
-        <div ref={fixedHeaderRef} className={cn("fixed left-0 right-0 z-40 bg-background/95 backdrop-blur border-b py-2 px-2 md:px-3 space-y-2", user ? "top-14" : "top-0")}>
+            scrolls on mobile. Always pinned to the very top (top-0) with no gap,
+            regardless of dashboard header, during an active exam. */}
+        <div ref={fixedHeaderRef} className="fixed left-0 right-0 top-0 z-50 bg-background/95 backdrop-blur border-b py-2 px-2 md:px-3 space-y-2">
           <div className="container max-w-full lg:max-w-[92rem] mx-auto px-0 md:px-0 space-y-2">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
