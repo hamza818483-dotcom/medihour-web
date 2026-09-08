@@ -197,18 +197,27 @@ export function MultiImageUploader({ values, onChange, className }: MultiImageUp
     setIsUploading(true);
     const uploaded: string[] = [];
     try {
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
         try {
           const url = await uploadOne(file);
-          if (url) uploaded.push(url);
+          if (url) {
+            uploaded.push(url);
+          } else {
+            toast({ title: "Upload skipped", description: `${file.name}: server didn't return a URL.`, variant: "destructive" });
+          }
         } catch (err) {
           console.error("Upload error:", err);
           toast({ title: "Upload failed", description: `Could not upload ${file.name}.`, variant: "destructive" });
         }
+        // Small delay between uploads to avoid overwhelming/rate-limiting the upload server
+        if (i < files.length - 1) {
+          await new Promise((r) => setTimeout(r, 400));
+        }
       }
       if (uploaded.length > 0) {
         onChange([...values, ...uploaded]);
-        toast({ title: "Images uploaded", description: `${uploaded.length} image(s) uploaded successfully.` });
+        toast({ title: "Images uploaded", description: `${uploaded.length} of ${files.length} image(s) uploaded successfully.` });
       }
     } finally {
       setIsUploading(false);
