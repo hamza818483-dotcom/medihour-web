@@ -9,7 +9,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Bell, CheckCircle, CheckCircle2, AlertTriangle, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { NotificationPermissionToggle } from "@/components/NotificationPermissionToggle";
 
 
 const Announcements = () => {
@@ -213,7 +212,6 @@ const Announcements = () => {
           <h1 className="text-2xl font-semibold tracking-tight">Announcements</h1>
           <p className="text-sm text-muted-foreground">Important updates and notices from your courses.</p>
         </div>
-        <NotificationPermissionToggle />
       </header>
 
       <div className="grid grid-cols-2 gap-2">
