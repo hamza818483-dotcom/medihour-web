@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { StudyTrackerProgress } from "@/components/admin/StudyTrackerProgress";
 import { StudyTrackerRevision } from "@/components/admin/StudyTrackerRevision";
 
-type Mode = "hsc" | "medical";
+type Mode = "hsc" | "medical" | "varsity";
 type StBox = "dashboard" | "syllabus" | "routine" | "progress" | "revision";
 
 const AdminSyllabusTracker = () => {
@@ -48,7 +48,10 @@ const AdminSyllabusTracker = () => {
       const { count: medCount } = await (supabase.from as any)("st_subjects")
         .select("id", { count: "exact", head: true })
         .eq("mode", "medical");
-      return { hsc: hscCount || 0, medical: medCount || 0 };
+      const { count: varCount } = await (supabase.from as any)("st_subjects")
+        .select("id", { count: "exact", head: true })
+        .eq("mode", "varsity");
+      return { hsc: hscCount || 0, medical: medCount || 0, varsity: varCount || 0 };
     },
   });
 
@@ -364,7 +367,7 @@ const AdminSyllabusTracker = () => {
             <div className="font-bold text-sm mb-1">Syllabus Tracker</div>
             <div className="text-xs text-muted-foreground">HSC ও Medical বিষয়, অধ্যায়, টপিক</div>
             <div className="text-xs mt-2" style={{ color: "#7C83FF" }}>
-              {dashCounts ? `HSC: ${dashCounts.hsc} বিষয় · Medical: ${dashCounts.medical} বিষয়` : "লোড হচ্ছে..."}
+              {dashCounts ? `HSC: ${dashCounts.hsc} · Medical: ${dashCounts.medical} · Varsity: ${dashCounts.varsity} বিষয়` : "লোড হচ্ছে..."}
             </div>
           </button>
 
@@ -399,7 +402,7 @@ const AdminSyllabusTracker = () => {
             <div className="font-bold text-sm mb-1">Revision Planner</div>
             <div className="text-xs text-muted-foreground">HSC ও Medical রিভিশন কন্টেন্ট</div>
             <div className="text-xs mt-2" style={{ color: "#A855F7" }}>
-              {dashCounts ? `HSC: ${dashCounts.hsc} বিষয় · Medical: ${dashCounts.medical} বিষয়` : "লোড হচ্ছে..."}
+              {dashCounts ? `HSC: ${dashCounts.hsc} · Medical: ${dashCounts.medical} · Varsity: ${dashCounts.varsity} বিষয়` : "লোড হচ্ছে..."}
             </div>
           </button>
         </div>
@@ -450,13 +453,16 @@ const AdminSyllabusTracker = () => {
         <Button variant={mode === "medical" ? "default" : "outline"} onClick={() => { setMode("medical"); setExpandedSubject(null); setExpandedChapter(null); }}>
           Medical Admission
         </Button>
+        <Button variant={mode === "varsity" ? "default" : "outline"} onClick={() => { setMode("varsity"); setExpandedSubject(null); setExpandedChapter(null); }}>
+          Varsity
+        </Button>
       </div>
 
       {/* Add subject */}
       <Card>
         <CardHeader className="px-3 sm:px-4">
           <CardTitle className="text-base">নতুন বিষয় যোগ করুন</CardTitle>
-          <CardDescription>মোড: {mode === "hsc" ? "HSC" : "Medical Admission"}</CardDescription>
+          <CardDescription>মোড: {mode === "hsc" ? "HSC" : mode === "medical" ? "Medical Admission" : "Varsity"}</CardDescription>
         </CardHeader>
         <CardContent className="flex gap-2 px-3 sm:px-4">
           <Input
