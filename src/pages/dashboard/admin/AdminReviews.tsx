@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { MultiImageUploader } from "@/components/ui/image-uploader";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Star, Edit2 } from "lucide-react";
 
@@ -167,17 +168,12 @@ const AdminReviews = () => {
                           </select>
                       </div>
                       <div className="col-span-1 md:col-span-2 space-y-2">
-                          <Label>Album Images (One URL per line)</Label>
-                          <Textarea
-                              className="h-24"
-                              value={form.images?.join('\n') || form.post_image_url || ""}
-                              onChange={e => {
-                                  const lines = e.target.value.split('\n').map(l => l.trim()).filter(Boolean);
-                                  setForm({...form, images: lines, post_image_url: lines.length > 0 ? lines[0] : ""});
-                              }}
-                              placeholder="https://image1.jpg&#10;https://image2.jpg"
+                          <Label>Album Images</Label>
+                          <MultiImageUploader
+                              values={form.images || (form.post_image_url ? [form.post_image_url] : [])}
+                              onChange={(urls) => setForm({...form, images: urls, post_image_url: urls.length > 0 ? urls[0] : ""})}
                           />
-                          <p className="text-[10px] text-muted-foreground">Add multiple image URLs here to create an album. One on each line.</p>
+                          <p className="text-[10px] text-muted-foreground">Upload multiple images to create an album.</p>
                       </div>
                       <div className="col-span-1 md:col-span-2 space-y-2">
                           <Label>Review Text</Label>
