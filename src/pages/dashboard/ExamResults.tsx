@@ -154,14 +154,13 @@ const ExamResults = () => {
     setClassCategoryState(c);
     sessionStorage.setItem("classHistoryCategory", c);
   };
-  const [category, setCategoryState] = useState<"all" | "live" | "practice" | "mock" | "quick" | "custom">(
+  const [category, setCategoryState] = useState<"all" | "live" | "practice">(
     () => (sessionStorage.getItem("examHistoryCategory") as any) || "all"
   );
-  const setCategory = (c: "all" | "live" | "practice" | "mock" | "quick" | "custom") => {
+  const setCategory = (c: "all" | "live" | "practice") => {
     setCategoryState(c);
     sessionStorage.setItem("examHistoryCategory", c);
   };
-  const [subjectSubCategory, setSubjectSubCategory] = useState<string | null>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
 
@@ -211,68 +210,10 @@ const ExamResults = () => {
     enabled: !!user,
   });
 
-  const { data: mockAttempts, isLoading: mockLoading } = useQuery({
-    queryKey: ["mock-exam-attempts-history-for-results", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("mock_exam_attempts")
-        .select("*")
-        .eq("user_id", user.id)
-        .not("submitted_at", "is", null)
-        .not("questions_snapshot", "is", null)
-        .order("submitted_at", { ascending: false });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!user,
-  });
-
-  const { data: qpAttemptsRaw, isLoading: qpLoading } = useQuery({
-    queryKey: ["qp-attempts-history-for-results", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("qp_attempts")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!user,
-  });
-
-  // Resolve subject names for qp_attempts via their chapter_ids -> qp_chapters -> qp_subjects.
-  const { data: qpChapterSubjectMap } = useQuery({
-    queryKey: ["qp-chapter-subject-map"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("qp_chapters")
-        .select("id, subject_id, qp_subjects(name)");
-      if (error) throw error;
-      const map: Record<number, string> = {};
-      (data || []).forEach((row: any) => {
-        const subj = Array.isArray(row.qp_subjects) ? row.qp_subjects[0] : row.qp_subjects;
-        map[row.id] = subj?.name || "সাধারণ জ্ঞান";
-      });
-      return map;
-    },
-    enabled: !!user,
-  });
-
-  const qpAttempts = (qpAttemptsRaw || []).map((a: any) => {
-    const detailSubject = Array.isArray(a.details) && a.details.length > 0 ? a.details[0]?.subject_name : null;
-    const firstChapterId = Array.isArray(a.chapter_ids) ? a.chapter_ids[0] : null;
-    const subject = detailSubject || (firstChapterId && qpChapterSubjectMap?.[firstChapterId]) || "সাধারণ জ্ঞান";
-    return { ...a, subject };
-  });
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const categorize = (attempt: any) => {
     const exam = attempt.exam;
     if (!exam) return "practice";
-    if (exam.chapter === "Custom" && exam.exam_type === "practice") return "custom";
     // If the student actually attempted this live exam, it stays "Live" in
     // their history regardless of whether the window has since expired —
     // "Practice" is only for live exams they never attended (missed).
@@ -280,25 +221,13 @@ const ExamResults = () => {
     return "practice";
   };
 
-  const mockSubjects = Array.from(new Set((mockAttempts || []).map((a: any) => a.subject || "সাধারণ (বিষয় নেই)")));
-  const qpSubjects = Array.from(new Set(qpAttempts.map((a: any) => a.subject)));
-
   const filteredAttempts = (attempts || []).filter(a => {
     const cat = categorize(a);
     if (category === "all") return true;
-    if (category === "mock" || category === "quick") return false;
     return cat === category;
   });
 
-  const filteredMockAttempts = category === "mock"
-    ? (mockAttempts || []).filter((a: any) => !subjectSubCategory || (a.subject || "সাধারণ (বিষয় নেই)") === subjectSubCategory)
-    : [];
-
-  const filteredQpAttempts = category === "quick"
-    ? qpAttempts.filter((a: any) => !subjectSubCategory || a.subject === subjectSubCategory)
-    : [];
-
-  const isLoadingAny = isLoading || mockLoading || qpLoading;
+  const isLoadingAny = isLoading;
 
   return (
     <div className="w-full px-0.5 py-3 space-y-3">
@@ -406,200 +335,15 @@ const ExamResults = () => {
             size="sm"
             variant={category === c.key ? "default" : "outline"}
             className="h-7 px-2.5 text-xs shrink-0"
-            onClick={() => {
-              setCategory(category === c.key ? "all" : c.key);
-              setSubjectSubCategory(null);
-            }}
+            onClick={() => setCategory(category === c.key ? "all" : c.key)}
           >
             {c.label}
           </Button>
         ))}
       </div>
-
-      {/* Category Row 2 */}
-      <div className="flex flex-nowrap gap-1.5 px-1 overflow-x-auto no-scrollbar">
-        {([
-          { key: "mock", label: "Mock Test" },
-          { key: "quick", label: "Quick Practice" },
-          { key: "custom", label: "Custom Exam" },
-        ] as const).map(c => (
-          <Button
-            key={c.key}
-            size="sm"
-            variant={category === c.key ? "default" : "outline"}
-            className="h-7 px-2.5 text-xs shrink-0"
-            onClick={() => {
-              setCategory(category === c.key ? "all" : c.key);
-              setSubjectSubCategory(null);
-            }}
-          >
-            {c.label}
-          </Button>
-        ))}
-      </div>
-
-      {/* Mock Test Sub-category (Subject) Row */}
-      {category === "mock" && mockSubjects.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 px-1 pl-2.5">
-          {mockSubjects.map((subj: string) => (
-            <Button
-              key={subj}
-              size="sm"
-              variant={subjectSubCategory === subj ? "secondary" : "ghost"}
-              className="h-6 px-2 text-[11px]"
-              onClick={() => setSubjectSubCategory(subjectSubCategory === subj ? null : subj)}
-            >
-              {subj}
-            </Button>
-          ))}
-        </div>
-      )}
-
-      {/* Quick Practice Sub-category (Subject) Row */}
-      {category === "quick" && qpSubjects.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 px-1 pl-2.5">
-          {qpSubjects.map((subj: string) => (
-            <Button
-              key={subj}
-              size="sm"
-              variant={subjectSubCategory === subj ? "secondary" : "ghost"}
-              className="h-6 px-2 text-[11px]"
-              onClick={() => setSubjectSubCategory(subjectSubCategory === subj ? null : subj)}
-            >
-              {subj}
-            </Button>
-          ))}
-        </div>
-      )}
 
       {isLoadingAny ? (
         <div className="text-sm text-muted-foreground px-1">Loading...</div>
-      ) : category === "mock" ? (
-        filteredMockAttempts.length === 0 ? (
-          <Card className="border border-foreground/50 mx-1">
-            <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-              No mock test results found.
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 px-0.5">
-            {filteredMockAttempts.map((a: any) => {
-              const snapshot = (a.questions_snapshot as any[]) || [];
-              const answers = (a.answers as Record<string, string>) || {};
-              let wrongCount = 0, skipCount = 0, rightCount = 0;
-              snapshot.forEach((q: any) => {
-                const ua = answers[q.id];
-                if (!ua) skipCount++;
-                else if (ua !== q.correct_option) wrongCount++;
-                else rightCount++;
-              });
-
-
-
-              const startMockPracticeAgain = () => {
-                if (snapshot.length === 0) return;
-                const newSessionId = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-                sessionStorage.setItem("unlimitedMockQuestions", JSON.stringify(snapshot));
-                sessionStorage.setItem("unlimitedMockTitle", a.title || `${a.subject || "সাধারণ (বিষয় নেই)"}${a.chapter ? ` - ${a.chapter}` : ""}`);
-                sessionStorage.setItem("unlimitedMockTime", String(Math.ceil(snapshot.length / 1.5)));
-                sessionStorage.setItem("unlimitedMockSessionId", newSessionId);
-                navigate("/mock-test/play");
-              };
-
-              const handleMockPdf = () => {
-                if (!snapshot.length) return;
-                openPlainSolvePdf({
-                  examName: `${a.subject || "সাধারণ (বিষয় নেই)"}${a.chapter ? ` - ${a.chapter}` : ""}`,
-                  questions: snapshot.map((q: any) => ({
-                    question_text: q.question_text,
-                    option_a: q.option_a,
-                    option_b: q.option_b,
-                    option_c: q.option_c,
-                    option_d: q.option_d,
-                    option_e: q.option_e,
-                    correct_option: q.correct_option,
-                    user_answer: answers[q.id] || null,
-                    explanation: q.explanation,
-                  })),
-                  totalMarks: snapshot.length,
-                });
-              };
-
-              return (
-              <Card key={a.id} className="border rounded-2xl shadow-sm flex flex-col h-full">
-                <CardContent className="p-3 space-y-1.5 flex flex-col flex-1">
-                  <p className="text-sm font-semibold">{a.subject || "সাধারণ (বিষয় নেই)"} {a.chapter ? `- ${a.chapter}` : ""}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Score: <span className="font-bold text-foreground">{a.score ?? "-"}</span> / {a.total_marks ?? a.total_questions ?? "-"}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground">{a.submitted_at && new Date(a.submitted_at).toLocaleDateString()}</p>
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Right: {rightCount}</span>
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">Wrong: {wrongCount}</span>
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">Skip: {skipCount}</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5 mt-auto pt-1.5">
-                    <Button
-                      size="sm"
-                      disabled={!snapshot.length}
-                      className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white border-none text-[10px] h-8 px-1 leading-tight whitespace-pre-line disabled:opacity-40"
-                      onClick={startMockPracticeAgain}
-                    >
-                      Practice Again
-                    </Button>
-                    <Button
-                      size="sm"
-                      disabled={!snapshot.length}
-                      className="rounded-lg bg-blue-600 hover:bg-blue-700 text-white border-none text-[10px] h-8 px-1 leading-tight whitespace-pre-line disabled:opacity-40"
-                      onClick={handleMockPdf}
-                    >
-                      Solve PDF
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );})}
-          </div>
-        )
-      ) : category === "quick" ? (
-        filteredQpAttempts.length === 0 ? (
-          <Card className="border border-foreground/50 mx-1">
-            <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-              No quick practice results found.
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-2 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 px-0.5">
-            {filteredQpAttempts.map((a: any) => (
-              <Card key={a.id} className="border rounded-2xl shadow-sm">
-                <CardContent className="p-3 space-y-1.5 flex flex-col">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-semibold">{a.subject}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Correct: <span className="font-bold text-foreground">{a.correct_count}</span> / {a.total_questions} · Points: {a.points_earned}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground">{a.created_at && new Date(a.created_at).toLocaleDateString()}</p>
-                    </div>
-                    <Button
-                      size="sm"
-                      disabled={!a.question_ids?.length}
-                      className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white border-none text-[10px] h-8 px-2 shrink-0 disabled:opacity-40"
-                      onClick={() => {
-                        if (!a.question_ids?.length) return;
-                        sessionStorage.removeItem("qp_practice_state");
-                        sessionStorage.setItem("qp_practice_mode", JSON.stringify({ type: "replay", mcqIds: a.question_ids }));
-                        navigate("/quick-practice/play");
-                      }}
-                    >
-                      Practice Again
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )
       ) : filteredAttempts.length === 0 ? (
         <Card className="border border-foreground/50 mx-1">
           <CardContent className="pt-6 text-center text-sm text-muted-foreground">
