@@ -20,7 +20,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEnrollments } from "@/hooks/useEnrollments";
 import ProfileCompletionReminder from "@/components/ProfileCompletionReminder";
 import { CommunityJoinReminder } from "@/components/CommunityJoinReminder";
-import { AdminReportAlert } from "@/components/AdminReportAlert";
 import { StudyToolsProvider } from "@/contexts/StudyToolsContext";
 import { PushPermissionPrompt } from "@/components/PushPermissionPrompt";
 
@@ -463,7 +462,7 @@ export const DashboardLayout = () => {
         </div>
         <ProfileCompletionReminder />
         {!isAdmin && !isTeacher && <CommunityJoinReminder />}
-        {(isAdmin || isTeacher) && <AdminReportAlert />}
+        
       </div>
     </SidebarProvider>
     </StudyToolsProvider>

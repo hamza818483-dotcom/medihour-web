@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AdminReportAlert } from "@/components/AdminReportAlert";
 
 export const AdminLayout = () => {
   const { profile, signOut, isAdmin, isTeacher } = useAuth();
@@ -150,7 +149,7 @@ export const AdminLayout = () => {
           </main>
         </div>
       </div>
-      {(isAdmin || isTeacher) && <AdminReportAlert />}
+      
     </SidebarProvider>
   );
 };
