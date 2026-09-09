@@ -418,11 +418,6 @@ const ExamReview = () => {
                 <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
             </Button>
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-                 {user && exam.is_readymade && (
-                 <Button variant="outline" onClick={() => setIsQpDialogOpen(true)} className="h-10 px-3 py-2 w-full sm:w-auto">
-                    <Sparkles className="h-5 w-5 mr-1.5 text-violet-500 shrink-0" /> <span className="truncate">Quick Practice</span>
-                 </Button>
-                 )}
                  {user && exam?.chapter !== "Custom" && (
                  <Button variant="outline" onClick={() => navigate(`/dashboard/leaderboard/${attempt.exam_id}`)} className="h-10 px-3 py-2 w-full sm:w-auto">
                     <Trophy className="h-5 w-5 mr-1.5 text-yellow-500 shrink-0" /> <span className="truncate">Leaderboard</span>
