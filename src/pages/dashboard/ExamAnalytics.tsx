@@ -13,7 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 const DAY_RANGES = [
@@ -46,20 +45,6 @@ const DayRangeSelector = ({ value, onChange }: { value: RangeKey, onChange: (v: 
     ))}
   </div>
 );
-
-type ReadymadeAttempt = {
-  attempt_id: string;
-  exam_id: string;
-  title: string;
-  subject: string[] | null;
-  chapter: string | null;
-  total_marks: number | null;
-  score: number;
-  rank: number;
-  total_participants: number;
-  attempt_date: string;
-};
-
 
 type AnalyticsExam = {
   id: string;
@@ -518,108 +503,6 @@ const RoutinewiseReport = ({ analyticsData, isLoading }: { analyticsData: Analyt
   );
 };
 
-const ReadymadeReport = ({ user }: { user: any }) => {
-  const [range, setRange] = useState<RangeKey>("total");
-
-  const { data: readymadeData, isLoading } = useQuery({
-    queryKey: ["readymade-exam-analytics-rpc-v1", user?.id],
-    queryFn: async () => {
-      if (!user) return null;
-      const { data, error } = await supabase.rpc('get_student_readymade_exam_analytics' as any);
-      if (error) {
-        console.error("Error fetching readymade analytics:", error);
-        throw error;
-      }
-      return (data as any) as ReadymadeAttempt[];
-    },
-    enabled: !!user,
-  });
-
-  const rangedData = useMemo(() => {
-    if (!readymadeData) return [];
-    return filterByRange(readymadeData, r => new Date(r.attempt_date), range);
-  }, [readymadeData, range]);
-
-  const sortedRangedData = useMemo(() => {
-    return rangedData.slice().sort((a, b) => new Date(b.attempt_date).getTime() - new Date(a.attempt_date).getTime());
-  }, [rangedData]);
-
-  const graphData = useMemo(() => {
-    return rangedData
-      .slice()
-      .sort((a, b) => new Date(a.attempt_date).getTime() - new Date(b.attempt_date).getTime())
-      .map(r => ({
-        name: r.title.length > 15 ? r.title.slice(0, 15) + "..." : r.title,
-        fullTitle: r.title,
-        date: new Date(r.attempt_date).toLocaleDateString([], { month: 'short', day: 'numeric' }),
-        score: Number(r.score),
-        total: r.total_marks,
-      }));
-  }, [rangedData]);
-
-  const scoredRows = useMemo(() => {
-    return rangedData.map(r => ({ score: Number(r.score), total_marks: r.total_marks, rank: r.rank }));
-  }, [rangedData]);
-
-  const averages = useMemo(() => computeAverages(scoredRows), [scoredRows]);
-
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading analysis...</p>;
-
-  if (!readymadeData || readymadeData.length === 0) {
-    return (
-      <Card className="border border-foreground/60">
-        <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-          এখনো কোনো Readymade Exam attempt করা হয়নি।
-        </CardContent>
-      </Card>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <DayRangeSelector value={range} onChange={setRange} />
-      <CompactTrendGraph data={graphData} title="Readymade Performance Trend" />
-      <StatBoxRow
-        totalAttended={scoredRows.length}
-        avgScore50={averages.avgScore50}
-        avgScore100={averages.avgScore100}
-        avgRank50={averages.avgRank50}
-        avgRank100={averages.avgRank100}
-      />
-      {sortedRangedData.length === 0 ? (
-        <Card className="border border-foreground/60">
-          <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-            No attempts in this range.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-2">
-          {sortedRangedData.map(item => (
-            <Card key={item.attempt_id} className="shadow-sm border">
-              <CardContent className="p-3 flex items-center justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                  <div className="font-medium text-sm leading-tight line-clamp-1">{item.title}</div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">
-                    {new Date(item.attempt_date).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
-                    {" · "}
-                    {new Date(item.attempt_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </div>
-                <div className="text-right whitespace-nowrap">
-                  <div className="font-bold text-sm">{item.score} <span className="text-[10px] text-muted-foreground font-normal">/ {item.total_marks}</span></div>
-                  <span className="inline-flex items-center justify-center h-5 px-2 mt-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">
-                    #{item.rank} / {item.total_participants}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
 const ExamAnalytics = () => {
   const { user } = useAuth();
 
@@ -651,18 +534,7 @@ const ExamAnalytics = () => {
         </p>
       </header>
 
-      <Tabs defaultValue="routinewise" className="space-y-4">
-        <TabsList className="w-full grid grid-cols-2 h-auto">
-          <TabsTrigger value="routinewise" className="text-[11px] xs:text-xs sm:text-sm px-1 py-2 whitespace-pre-line leading-tight">Routinewise Exam Report</TabsTrigger>
-          <TabsTrigger value="readymade" className="text-[11px] xs:text-xs sm:text-sm px-1 py-2 whitespace-pre-line leading-tight">ReadyMade Exam Report</TabsTrigger>
-        </TabsList>
-        <TabsContent value="routinewise">
-          <RoutinewiseReport analyticsData={analyticsData} isLoading={isLoading} />
-        </TabsContent>
-        <TabsContent value="readymade">
-          <ReadymadeReport user={user} />
-        </TabsContent>
-      </Tabs>
+      <RoutinewiseReport analyticsData={analyticsData} isLoading={isLoading} />
     </section>
   );
 };
