@@ -21,6 +21,7 @@ export interface Review {
   gender: string;
   image_url?: string;
   post_image_url?: string;
+  images?: string[];
 }
 
 interface StudentReviewsProps {
@@ -117,11 +118,37 @@ export const StudentReviews = ({ reviews, id, tagline }: StudentReviewsProps) =>
                       <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-4">
                         "{review.review_text}"
                       </p>
-                      {review.post_image_url && (
-                        <div className="mt-4 rounded-lg overflow-hidden border border-border/50">
-                            <img src={review.post_image_url} alt="Review attachment" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500" />
-                        </div>
-                      )}
+                      {(() => {
+                        const gallery = review.images && review.images.length > 0
+                          ? review.images
+                          : review.post_image_url
+                            ? [review.post_image_url]
+                            : [];
+                        if (gallery.length === 0) return null;
+                        if (gallery.length === 1) {
+                          return (
+                            <div className="mt-4 rounded-lg overflow-hidden border border-border/50">
+                              <img src={gallery[0]} alt="Review attachment" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500" />
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="mt-4 flex gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+                            {gallery.map((img, idx) => (
+                              <div
+                                key={idx}
+                                className="shrink-0 w-[80%] snap-start rounded-lg overflow-hidden border border-border/50"
+                              >
+                                <img
+                                  src={img}
+                                  alt={`Review attachment ${idx + 1}`}
+                                  className="w-full h-48 object-cover"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </CardContent>
                   </Card>
                 </div>
