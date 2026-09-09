@@ -35,7 +35,6 @@ import LiveClass from "./pages/dashboard/LiveClass";
 import Recordings from "./pages/dashboard/Recordings";
 import LiveExam from "./pages/dashboard/LiveExam";
 import ExamResults from "./pages/dashboard/ExamResults";
-import PastExamCatalog from "./pages/dashboard/PastExamCatalog";
 import TakeExam from "./pages/dashboard/TakeExam";
 import QuickPractice from "./pages/dashboard/QuickPractice";
 import FocusTimer from "./pages/public/FocusTimer";
@@ -146,7 +145,6 @@ const App = () => {
                 <Route path="recordings" element={<ErrorBoundary><Recordings /></ErrorBoundary>} />
                 <Route path="live-exam" element={<ErrorBoundary><LiveExam /></ErrorBoundary>} />
                 <Route path="take-exam/:examId" element={<ErrorBoundary><TakeExam /></ErrorBoundary>} />
-                <Route path="past-exam" element={<ErrorBoundary><PastExamCatalog /></ErrorBoundary>} />
                 <Route path="results" element={<ErrorBoundary><ExamResults /></ErrorBoundary>} />
                 <Route path="exam-review/:attemptId" element={<ErrorBoundary><ExamReview /></ErrorBoundary>} />
                 <Route path="leaderboard/:examId" element={<ErrorBoundary><Leaderboard /></ErrorBoundary>} />

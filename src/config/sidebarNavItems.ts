@@ -51,7 +51,6 @@ export const studentItems: SidebarNavItem[] = [
   { title: "Live Class", url: "/dashboard/live-class", icon: CalendarClock, color: "text-red-500" },
   { title: "Live Exam", url: "/dashboard/live-exam", icon: ListChecks, color: "text-purple-500" },
   { title: "Record Class", url: "/dashboard/recordings", icon: BookOpen, color: "text-orange-500" },
-  { title: "Past Exams", url: "/dashboard/past-exam", icon: FileText, color: "text-yellow-500" },
   { title: "Live Study Room", url: "/focus-timer", icon: Timer, color: "text-violet-500" },
   { title: "Study Tracker", url: "/syllabus-tracker", icon: BarChart3, color: "text-sky-600" },
   { title: "Archive Class & Exam", url: "/dashboard/archive", icon: Archive, color: "text-gray-500" },

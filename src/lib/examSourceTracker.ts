@@ -3,7 +3,7 @@
 // Uses sessionStorage keyed by examId — does not touch routing or component props.
 
 const KEY_PREFIX = "examSourceList:";
-const FALLBACK = "/dashboard/past-exam";
+const FALLBACK = "/dashboard/archive";
 
 export function setExamSourceList(examId: string, path: string) {
   try {
