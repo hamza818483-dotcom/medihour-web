@@ -11,7 +11,6 @@ import { Search, Trophy, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SUBJECTS } from "@/lib/constants";
 import { setExamSourceList } from "@/lib/examSourceTracker";
-import { cn } from "@/lib/utils";
 
 const PastExamCatalog = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
@@ -160,24 +159,6 @@ const PastExamCatalog = () => {
             ))}
           </SelectContent>
         </Select>
-      </div>
-
-      {/* Subject category quick-filter: 2 per row, "All Subjects" first */}
-      <div className="grid grid-cols-2 gap-2">
-        {["all", ...SUBJECTS].map((s) => (
-          <button
-            key={s}
-            onClick={() => setSelectedSubject(s)}
-            className={cn(
-              "h-10 rounded-lg border-2 px-2 text-xs font-semibold truncate transition-colors",
-              selectedSubject === s
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border text-muted-foreground hover:border-primary/40"
-            )}
-          >
-            {s === "all" ? "All Subjects" : s}
-          </button>
-        ))}
       </div>
 
       {isLoading ? (
