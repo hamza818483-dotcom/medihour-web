@@ -154,14 +154,13 @@ const ExamResults = () => {
     setClassCategoryState(c);
     sessionStorage.setItem("classHistoryCategory", c);
   };
-  const [category, setCategoryState] = useState<"all" | "live" | "practice" | "readymade" | "mock" | "quick" | "custom">(
+  const [category, setCategoryState] = useState<"all" | "live" | "practice" | "mock" | "quick" | "custom">(
     () => (sessionStorage.getItem("examHistoryCategory") as any) || "all"
   );
-  const setCategory = (c: "all" | "live" | "practice" | "readymade" | "mock" | "quick" | "custom") => {
+  const setCategory = (c: "all" | "live" | "practice" | "mock" | "quick" | "custom") => {
     setCategoryState(c);
     sessionStorage.setItem("examHistoryCategory", c);
   };
-  const [readymadeSubCategory, setReadymadeSubCategory] = useState<string | null>(null);
   const [subjectSubCategory, setSubjectSubCategory] = useState<string | null>(null);
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -273,8 +272,7 @@ const ExamResults = () => {
   const categorize = (attempt: any) => {
     const exam = attempt.exam;
     if (!exam) return "practice";
-    if (exam.chapter === "Custom" && exam.exam_type === "practice" && exam.is_readymade === false) return "custom";
-    if (exam.is_readymade || exam.readymade_topic) return "readymade";
+    if (exam.chapter === "Custom" && exam.exam_type === "practice") return "custom";
     // If the student actually attempted this live exam, it stays "Live" in
     // their history regardless of whether the window has since expired —
     // "Practice" is only for live exams they never attended (missed).
@@ -282,23 +280,12 @@ const ExamResults = () => {
     return "practice";
   };
 
-  const readymadeTopics = Array.from(new Set(
-    (attempts || [])
-      .filter(a => categorize(a) === "readymade" && a.exam?.readymade_topic)
-      .map(a => a.exam.readymade_topic)
-  ));
-
   const mockSubjects = Array.from(new Set((mockAttempts || []).map((a: any) => a.subject || "সাধারণ (বিষয় নেই)")));
   const qpSubjects = Array.from(new Set(qpAttempts.map((a: any) => a.subject)));
 
   const filteredAttempts = (attempts || []).filter(a => {
     const cat = categorize(a);
     if (category === "all") return true;
-    if (category === "readymade") {
-      if (cat !== "readymade") return false;
-      if (readymadeSubCategory) return a.exam.readymade_topic === readymadeSubCategory;
-      return true;
-    }
     if (category === "mock" || category === "quick") return false;
     return cat === category;
   });
@@ -413,7 +400,6 @@ const ExamResults = () => {
           { key: "all", label: "All" },
           { key: "live", label: "Live Exam" },
           { key: "practice", label: "Practice Exam" },
-          { key: "readymade", label: "Readymade Exam" },
         ] as const).map(c => (
           <Button
             key={c.key}
@@ -422,7 +408,6 @@ const ExamResults = () => {
             className="h-7 px-2.5 text-xs shrink-0"
             onClick={() => {
               setCategory(category === c.key ? "all" : c.key);
-              setReadymadeSubCategory(null);
               setSubjectSubCategory(null);
             }}
           >
@@ -445,7 +430,6 @@ const ExamResults = () => {
             className="h-7 px-2.5 text-xs shrink-0"
             onClick={() => {
               setCategory(category === c.key ? "all" : c.key);
-              setReadymadeSubCategory(null);
               setSubjectSubCategory(null);
             }}
           >
@@ -453,23 +437,6 @@ const ExamResults = () => {
           </Button>
         ))}
       </div>
-
-      {/* Readymade Sub-category Row */}
-      {category === "readymade" && readymadeTopics.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 px-1 pl-2.5">
-          {readymadeTopics.map((topic: string) => (
-            <Button
-              key={topic}
-              size="sm"
-              variant={readymadeSubCategory === topic ? "secondary" : "ghost"}
-              className="h-6 px-2 text-[11px]"
-              onClick={() => setReadymadeSubCategory(readymadeSubCategory === topic ? null : topic)}
-            >
-              {topic}
-            </Button>
-          ))}
-        </div>
-      )}
 
       {/* Mock Test Sub-category (Subject) Row */}
       {category === "mock" && mockSubjects.length > 0 && (
