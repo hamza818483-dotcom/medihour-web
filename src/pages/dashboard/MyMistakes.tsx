@@ -16,8 +16,7 @@ const MyMistakes = () => {
     const { toast } = useToast();
     const [pdfLoading, setPdfLoading] = useState<"wrong" | "both" | null>(null);
 
-    const [category, setCategory] = useState<"all" | "live" | "practice" | "readymade">("all");
-    const [readymadeSubCategory, setReadymadeSubCategory] = useState<string | null>(null);
+    const [category, setCategory] = useState<"all" | "live" | "practice">("all");
     const [listDialog, setListDialog] = useState<{ examTitle: string; type: "wrong" | "skip"; questions: any[] } | null>(null);
 
     const { data: exams, isLoading } = useQuery({
@@ -37,8 +36,6 @@ const MyMistakes = () => {
                         title,
                         subject,
                         exam_type,
-                        readymade_topic,
-                        is_readymade,
                         time_window_end
                     )
                 `)
@@ -58,11 +55,10 @@ const MyMistakes = () => {
                         ? examData.subject.join(", ")
                         : (examData.subject || "General");
 
-                    const isReadymade = !!examData.readymade_topic || !!examData.is_readymade;
                     // Attempted live exams stay "live" in history even after
                     // the window expires — "practice" is only for missed
                     // (unattempted) live exams elsewhere in the app.
-                    const category = isReadymade ? 'readymade' : (examData.exam_type === 'live' ? 'live' : 'practice');
+                    const category = examData.exam_type === 'live' ? 'live' : 'practice';
 
                     uniqueExamsMap.set(attempt.exam_id, {
                         id: examData.id,
@@ -71,7 +67,6 @@ const MyMistakes = () => {
                         subject: subjectDisplay,
                         lastAttempt: attempt.submitted_at,
                         category,
-                        readymadeTopic: examData.readymade_topic || null,
                         answers: attempt.answers || [],
                         wrongCount: 0,
                         skipCount: 0,
@@ -117,15 +112,8 @@ const MyMistakes = () => {
         enabled: !!user
     });
 
-    const readymadeTopics = Array.from(new Set((exams || []).filter((e: any) => e.category === 'readymade' && e.readymadeTopic).map((e: any) => e.readymadeTopic)));
-
     const categoryFilteredExams = (exams || []).filter((e: any) => {
         if (category === 'all') return true;
-        if (category === 'readymade') {
-            if (e.category !== 'readymade') return false;
-            if (readymadeSubCategory) return e.readymadeTopic === readymadeSubCategory;
-            return true;
-        }
         return e.category === category;
     });
 
@@ -237,12 +225,11 @@ const MyMistakes = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-1.5 px-0.5 w-full">
                 {/* Category Row */}
-                <div className="lg:col-span-3 grid grid-cols-4 gap-1.5">
+                <div className="lg:col-span-3 grid grid-cols-3 gap-1.5">
                     {([
                         { key: 'all', label: 'All' },
                         { key: 'live', label: 'Live' },
                         { key: 'practice', label: 'Practice' },
-                        { key: 'readymade', label: 'Readymade' },
                     ] as const).map(c => (
                         <Button
                             key={c.key}
@@ -255,32 +242,12 @@ const MyMistakes = () => {
                                 } else {
                                     setCategory(c.key);
                                 }
-                                setReadymadeSubCategory(null);
                             }}
                         >
                             <span className="truncate">{c.label}</span>
                         </Button>
                     ))}
                 </div>
-
-                {/* Readymade Sub-category Row */}
-                {category === 'readymade' && readymadeTopics.length > 0 && (
-                    <div className="lg:col-span-3 flex flex-wrap gap-1.5 pl-1">
-                        {readymadeTopics.map((topic: string) => (
-                            <Button
-                                key={topic}
-                                size="sm"
-                                variant={readymadeSubCategory === topic ? 'secondary' : 'ghost'}
-                                className="h-6 px-2 text-[11px]"
-                                onClick={() => {
-                                    setReadymadeSubCategory(readymadeSubCategory === topic ? null : topic);
-                                }}
-                            >
-                                {topic}
-                            </Button>
-                        ))}
-                    </div>
-                )}
 
                 {/* Exam List */}
                 <Card className="lg:col-span-2 w-full mx-0">
