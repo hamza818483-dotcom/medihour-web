@@ -11,14 +11,13 @@ import { useToast } from "@/hooks/use-toast";
 
 import { getExamCategory } from "@/lib/examCategory";
 
-type CategoryFilter = "all" | "live" | "practice" | "readymade";
+type CategoryFilter = "all" | "live" | "practice";
 
 const Bookmarks = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<CategoryFilter>("all");
-  const [readymadeSubCat, setReadymadeSubCat] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Bookmarks – Atlas";
@@ -36,7 +35,7 @@ const Bookmarks = () => {
             created_at,
             question:exam_questions (
                 *,
-                exam:exams(title, exam_type, is_readymade, readymade_category, time_window_end)
+                exam:exams(title, exam_type, time_window_end)
             )
         `)
         .eq("profile_id", user.id)
@@ -51,31 +50,16 @@ const Bookmarks = () => {
   const getCategory = (b: any): Exclude<CategoryFilter, "all"> => getExamCategory(b.question?.exam);
 
   const categoryCounts = useMemo(() => {
-    const counts = { all: bookmarks?.length || 0, live: 0, practice: 0, readymade: 0 };
+    const counts = { all: bookmarks?.length || 0, live: 0, practice: 0 };
     (bookmarks || []).forEach((b: any) => {
       counts[getCategory(b)]++;
     });
     return counts;
   }, [bookmarks]);
 
-  const readymadeSubCats = useMemo(() => {
-    const set = new Set<string>();
-    (bookmarks || []).forEach((b: any) => {
-      if (getCategory(b) === "readymade") {
-        const cat = b.question?.exam?.readymade_category;
-        if (cat) set.add(cat);
-      }
-    });
-    return Array.from(set);
-  }, [bookmarks]);
-
   const filteredBookmarks = useMemo(() => {
-    let list = filter === "all" ? (bookmarks || []) : (bookmarks || []).filter((b: any) => getCategory(b) === filter);
-    if (filter === "readymade" && readymadeSubCat) {
-      list = list.filter((b: any) => b.question?.exam?.readymade_category === readymadeSubCat);
-    }
-    return list;
-  }, [bookmarks, filter, readymadeSubCat]);
+    return filter === "all" ? (bookmarks || []) : (bookmarks || []).filter((b: any) => getCategory(b) === filter);
+  }, [bookmarks, filter]);
 
   const removeBookmarkMutation = useMutation({
       mutationFn: async (bookmarkId: string) => {
@@ -106,11 +90,10 @@ const Bookmarks = () => {
           { key: "all", label: "All" },
           { key: "live", label: "Live" },
           { key: "practice", label: "Practice" },
-          { key: "readymade", label: "Readymade" },
         ] as const).map((f) => (
           <button
             key={f.key}
-            onClick={() => { setFilter(f.key); setReadymadeSubCat(null); }}
+            onClick={() => setFilter(f.key)}
             className={cn(
               "px-3.5 py-1.5 rounded-full text-xs font-semibold border shrink-0 transition-colors",
               filter === f.key
@@ -122,36 +105,6 @@ const Bookmarks = () => {
           </button>
         ))}
       </div>
-
-      {filter === "readymade" && readymadeSubCats.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
-          <button
-            onClick={() => setReadymadeSubCat(null)}
-            className={cn(
-              "px-3 py-1 rounded-full text-[11px] font-semibold border shrink-0 transition-colors",
-              !readymadeSubCat
-                ? "bg-primary/15 text-primary border-primary/40"
-                : "bg-background text-muted-foreground border-border hover:bg-muted"
-            )}
-          >
-            সব
-          </button>
-          {readymadeSubCats.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setReadymadeSubCat(cat)}
-              className={cn(
-                "px-3 py-1 rounded-full text-[11px] font-semibold border shrink-0 transition-colors",
-                readymadeSubCat === cat
-                  ? "bg-primary/15 text-primary border-primary/40"
-                  : "bg-background text-muted-foreground border-border hover:bg-muted"
-              )}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      )}
 
       {filteredBookmarks && filteredBookmarks.length > 0 ? (
         <div className="space-y-6">
