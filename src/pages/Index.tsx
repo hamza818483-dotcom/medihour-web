@@ -6,14 +6,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Star,
-  Monitor,
-  Users,
-  BookOpen,
-  Lightbulb,
-  FileText,
   MessageCircle,
-  Smartphone,
-  BarChart,
   User,
   Send,
 } from "lucide-react";
@@ -31,17 +24,6 @@ import HeroCarouselItem from "@/components/home/HeroCarouselItem";
 import Footer from "@/components/Footer";
 import { ContactSection } from "@/components/home/ContactSection";
 import { SuccessGallerySection } from "@/components/home/SuccessGallerySection";
-
-const FEATURES = [
-    { icon: Monitor, title: "অনলাইন প্রোগ্রাম", desc: "ঘরে বসেই সেরা প্রস্তুতি।" },
-    { icon: Users, title: "অভিজ্ঞ শিক্ষকবৃন্দ", desc: "সেরা মেন্টরদের সান্নিধ্যে।" },
-    { icon: BookOpen, title: "স্টাডি ম্যাটেরিয়ালস", desc: "মানসম্মত নোট এবং রিসোর্স।" },
-    { icon: Lightbulb, title: "কনসেপ্ট ভিত্তিক ক্লাস", desc: "বেসিক হোক শক্তিশালী।" },
-    { icon: FileText, title: "ইউনিক এক্সাম সিস্টেম", desc: "নিজেকে যাচাইয়ের সেরা মাধ্যম।" },
-    { icon: MessageCircle, title: "Q&A সাপোর্ট", desc: "তাৎক্ষণিক সমস্যার সমাধান।" },
-    { icon: Smartphone, title: "সঠিক গাইডলাইন", desc: "সাফল্যের পথে এগিয়ে চলুন।" },
-    { icon: BarChart, title: "এক্সাম লিডারবোর্ড", desc: "অন্যদের সাথে নিজের অবস্থান যাচাই।" },
-];
 
 const Index = () => {
   const navigate = useNavigate();
@@ -220,33 +202,6 @@ const Index = () => {
 
         {/* Paid Courses Section (Grid View) */}
         <CourseSection />
-
-        {/* Benefits Section (PhysicsHunters-style dark cards) */}
-        <section className="overflow-hidden py-2">
-            <div className="mx-auto w-full max-w-[1180px] px-1">
-                <h2 className="relative mx-auto mb-6 table px-3.5 pb-2.5 text-center text-[22px] sm:text-[25px] font-black leading-tight tracking-tight text-[#202124] dark:text-white before:absolute before:-z-10 before:left-[3%] before:right-[3%] before:bottom-[3px] before:h-[10px] before:-skew-x-12 before:rounded-[20px] before:bg-gradient-to-r before:from-[rgba(255,178,56,0.2)] before:via-[rgba(255,105,55,0.2)] before:to-[rgba(221,38,117,0.2)] after:absolute after:left-[30%] after:right-[30%] after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-[#ffb238] after:via-[#ff6937] after:to-[#dd2675]">
-                    আমাদের বিশেষত্ব
-                </h2>
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                    {FEATURES.map((feature, i) => (
-                        <div
-                            key={i}
-                            className="group relative isolate overflow-hidden rounded-[22px] border border-white/[0.16] bg-[radial-gradient(130%_130%_at_0%_0%,_#383838_0%,_#1b1b1b_42%,_#0d0d0d_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_7px_22px_rgba(0,0,0,0.22)] transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.28] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07),0_15px_35px_rgba(0,0,0,0.32),0_0_28px_rgba(221,38,117,0.08)]"
-                        >
-                            <div className="relative z-[5] flex h-full w-full flex-col items-center justify-center gap-2 p-4 text-center">
-                                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-all duration-300 group-hover:scale-110 group-hover:bg-white/[0.12]">
-                                    <feature.icon className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <h3 className="text-[13px] font-black leading-tight text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.65)] sm:text-[15px]">{feature.title}</h3>
-                                    <p className="mt-1 max-w-[220px] text-[10px] font-medium leading-snug text-white/80 sm:text-xs">{feature.desc}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
 
       </main>
 
