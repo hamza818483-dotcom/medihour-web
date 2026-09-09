@@ -9,7 +9,6 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SUBJECTS } from "@/lib/constants";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
 
 const Recordings = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
@@ -126,24 +125,20 @@ const Recordings = () => {
             <SelectItem value="old">Old to Recent</SelectItem>
           </SelectContent>
         </Select>
-      </div>
 
-      {/* Subject category quick-filter: 2 per row, "All Subjects" first */}
-      <div className="grid grid-cols-2 gap-2">
-        {["all", ...SUBJECTS].map((s) => (
-          <button
-            key={s}
-            onClick={() => setSelectedSubject(s)}
-            className={cn(
-              "h-10 rounded-lg border-2 px-2 text-xs font-semibold truncate transition-colors",
-              selectedSubject === s
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border text-muted-foreground hover:border-primary/40"
-            )}
-          >
-            {s === "all" ? "All Subjects" : s}
-          </button>
-        ))}
+        <Select value={selectedSubject} onValueChange={setSelectedSubject}>
+          <SelectTrigger className="h-10">
+            <SelectValue placeholder="All Subjects" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Subjects</SelectItem>
+            {SUBJECTS.map((subject) => (
+              <SelectItem key={subject} value={subject}>
+                {subject}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading ? (
