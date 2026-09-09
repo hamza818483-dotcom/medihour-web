@@ -62,7 +62,6 @@ import AdmissionTest from "./pages/dashboard/AdmissionTest";
 import AdmissionTestPlay from "./pages/dashboard/AdmissionTestPlay";
 import ClassPlayerPage from "./pages/dashboard/ClassPlayerPage";
 import DemoClassPlayerPage from "./pages/dashboard/DemoClassPlayerPage";
-import Program from "./pages/dashboard/Program";
 import AdminDashboardHome from "./pages/dashboard/admin/AdminDashboardHome";
 import AdminCourses from "./pages/dashboard/admin/AdminCourses";
 import AdminStudents from "./pages/dashboard/admin/AdminStudents";
@@ -162,7 +161,6 @@ const App = () => {
                 <Route path="announcements" element={<ErrorBoundary><Announcements /></ErrorBoundary>} />
                 <Route path="profile" element={<ErrorBoundary><StudentProfile /></ErrorBoundary>} />
                 <Route path="analytics" element={<ErrorBoundary><ExamAnalytics /></ErrorBoundary>} />
-                <Route path="program" element={<ErrorBoundary><Program /></ErrorBoundary>} />
                 <Route path="admission-test" element={<ErrorBoundary><AdmissionTest /></ErrorBoundary>} />
                 <Route path="admission-test/play" element={<ErrorBoundary><AdmissionTestPlay /></ErrorBoundary>} />
                 <Route path="archive" element={<ErrorBoundary><Archive /></ErrorBoundary>} />
