@@ -416,27 +416,22 @@ const ExamResults = () => {
         ))}
       </div>
 
-      {/* Category Row 2 */}
-      <div className="flex flex-nowrap gap-1.5 px-1 overflow-x-auto no-scrollbar">
-        {([
-          { key: "mock", label: "Mock Test" },
-          { key: "quick", label: "Quick Practice" },
-          { key: "custom", label: "Custom Exam" },
-        ] as const).map(c => (
-          <Button
-            key={c.key}
-            size="sm"
-            variant={category === c.key ? "default" : "outline"}
-            className="h-7 px-2.5 text-xs shrink-0"
-            onClick={() => {
-              setCategory(category === c.key ? "all" : c.key);
-              setSubjectSubCategory(null);
-            }}
-          >
-            {c.label}
-          </Button>
-        ))}
-      </div>
+      {/* Readymade Sub-category Row */}
+      {category === "readymade" && readymadeTopics.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 px-1 pl-2.5">
+          {readymadeTopics.map((topic: string) => (
+            <Button
+              key={topic}
+              size="sm"
+              variant={readymadeSubCategory === topic ? "secondary" : "ghost"}
+              className="h-6 px-2 text-[11px]"
+              onClick={() => setReadymadeSubCategory(readymadeSubCategory === topic ? null : topic)}
+            >
+              {topic}
+            </Button>
+          ))}
+        </div>
+      )}
 
       {/* Mock Test Sub-category (Subject) Row */}
       {category === "mock" && mockSubjects.length > 0 && (
