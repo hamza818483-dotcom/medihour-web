@@ -1422,6 +1422,25 @@ const TakeExam = () => {
                       {isSecondTimerAttempt && (
                           <span className="text-[9px] text-muted-foreground">৩% নম্বর কাটা যাবে</span>
                       )}
+                      <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] font-bold text-muted-foreground">OMR এ পরীক্ষা</span>
+                          <button
+                              type="button"
+                              role="switch"
+                              aria-checked={omrMode}
+                              onClick={() => {
+                                  const next = !omrMode;
+                                  setOmrMode(next);
+                                  if (next) setShowOmrPopup(true);
+                              }}
+                              className={cn(
+                                  "h-5 w-9 rounded-full border-2 transition-colors flex items-center px-0.5",
+                                  omrMode ? "bg-emerald-500 border-emerald-500 justify-end" : "bg-muted border-border justify-start"
+                              )}
+                          >
+                              <span className="h-3.5 w-3.5 rounded-full bg-white shadow-sm" />
+                          </button>
+                      </div>
                   </div>
                   <div className="p-3 md:p-4 pr-28 space-y-1.5">
                       <h3 className="text-xs font-semibold flex items-center gap-1.5">
