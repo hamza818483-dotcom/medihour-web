@@ -1459,7 +1459,7 @@ const TakeExam = () => {
                               variant="outline"
                               className="w-full justify-start h-auto py-2.5"
                               onClick={() => {
-                                  window.open("/omr/atlas-omr-sheet.pdf", "_blank");
+                                  window.open("/omr/medihour-omr-sheet.pdf", "_blank");
                               }}
                           >
                               <div className="text-left">

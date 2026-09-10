@@ -397,7 +397,7 @@ export function generateSolvePdfHtml({ examName, questions, style = "style2", hi
 
     const page1Cols = splitInto3(page1Qs, 1, true);
     const page1 = `<div class="omr-page-grid"><div class="omr-grid-inner omr-cut-line-wrap">
-      <div class="omr-grid-imgcol"><img src="/omr/atlas-omr-sheet.png" alt="OMR Sheet" /></div>
+      <div class="omr-grid-imgcol"><img src="/omr/medihour-omr-sheet.png" alt="OMR Sheet" /></div>
       <div class="omr-grid-qcols-fixed">${page1Cols.map((c) => `<div class="omr-qcol">${c}</div>`).join("")}</div>
     </div></div>`;
 

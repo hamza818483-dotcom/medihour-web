@@ -396,6 +396,9 @@ export const DashboardLayout = () => {
                     <Link to="/dashboard/recordings" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
                         <History className="h-4 w-4 text-orange-500" /> Record Class
                     </Link>
+                    <Link to="/dashboard/past-exam" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
+                        <BookOpen className="h-4 w-4 text-yellow-500" /> Past Exams
+                    </Link>
                     <Link to="/dashboard/archive" className="flex items-center gap-2 py-2 px-2 hover:bg-muted rounded-md">
                         <Archive className="h-4 w-4 text-gray-500" /> Archive Class & Exam
                     </Link>
