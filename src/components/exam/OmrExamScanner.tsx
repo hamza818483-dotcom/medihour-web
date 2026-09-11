@@ -337,7 +337,13 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
       }
     } catch (err) {
       console.error("OMR scan error:", err);
-      const msg = err instanceof Error ? err.message : "Could not connect to OMR server.";
+      let msg = err instanceof Error ? err.message : "Could not connect to OMR server.";
+      // "Failed to fetch" is a generic browser-level network error with no
+      // status code — surface the URL being called and likely causes so a
+      // screenshot of the popup is actually diagnosable.
+      if (msg === "Failed to fetch") {
+        msg = `Could not reach OMR server at ${OMR_API_URL}. Possible causes: (1) server is down/sleeping, (2) CORS is blocking this domain, (3) the API URL is misconfigured. Configured URL: ${OMR_API_URL || "(not set)"}`;
+      }
       setScanError(msg);
       setStep(rawImage ? "crop" : "upload");
       toast({ title: "Scan Failed", description: msg, variant: "destructive" });

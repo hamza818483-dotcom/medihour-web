@@ -272,10 +272,13 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
       toast({ title: "Scan Complete", description: `Detected ${data.extracted_nodes.length} questions.` });
     } catch (err) {
       console.error("OMR scan error:", err);
-      const msg =
+      let msg =
         err instanceof Error
           ? err.message
           : "Could not connect to OMR server.";
+      if (msg === "Failed to fetch") {
+        msg = `Could not reach OMR server at ${OMR_API_URL}. Possible causes: (1) server is down/sleeping, (2) CORS is blocking this domain, (3) the API URL is misconfigured. Configured URL: ${OMR_API_URL || "(not set)"}`;
+      }
       setScanError(msg);
       // Stay on crop to show warped image
       setStep(rawImage ? "crop" : "upload");
