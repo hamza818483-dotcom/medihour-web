@@ -181,6 +181,18 @@ def process_omr_logic(image_bytes, corners=None):
     # STEP 2: 6 MAIN BLOCKS EXTRACTION
     # ==========================================
     process_gray = cv2.cvtColor(processing_mat, cv2.COLOR_BGR2GRAY)
+
+    # Color-aware "ink distance" map — used only for bubble fill detection.
+    # Standard grayscale luminance (0.299R+0.587G+0.114B) makes low-saturation
+    # or lighter-pressure pen strokes (including some reds) blend too close to
+    # white paper, letting a real mark slip under the Otsu cutoff and get
+    # missed. Instead, measure each pixel's Euclidean distance from pure white
+    # in BGR space — any ink color (black, blue, red, etc.) that's visibly
+    # different from blank paper scores as "dark" here, regardless of hue.
+    _proc_f = processing_mat.astype(np.float32)
+    _dist_from_white = np.sqrt(np.sum((_proc_f - 255.0) ** 2, axis=2))
+    _dist_from_white = np.clip(_dist_from_white / (255.0 * np.sqrt(3)) * 255.0, 0, 255)
+    ink_map = (255 - _dist_from_white).astype(np.uint8)  # low value = strong ink, matches process_gray's convention
     block_thresh = cv2.adaptiveThreshold(process_gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 25, 6)
 
     h_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
@@ -228,13 +240,16 @@ def process_omr_logic(image_bytes, corners=None):
         """Returns the % of dark (ink) pixels inside a bubble's sampling
         region, using Otsu auto-thresholding so it adapts to scan
         lighting/contrast per-image instead of relying on a fixed gray
-        cutoff."""
+        cutoff. Uses the color-aware ink_map (not plain grayscale) so
+        colored ink — not just black — is weighted by how different it is
+        from white paper, catching lighter/colored marks that pure
+        luminance would under-count."""
         roi_x = int(col_x + c_width * SHRINK)
         roi_y = int(row_y + c_height * SHRINK)
         roi_w = int(c_width * (1 - 2 * SHRINK))
         roi_h = int(c_height * (1 - 2 * SHRINK))
 
-        roi = process_gray[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+        roi = ink_map[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
         if roi.size == 0:
             return 0.0
 
