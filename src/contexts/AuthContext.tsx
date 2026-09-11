@@ -191,8 +191,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (resolvedEmail) {
           email = resolvedEmail;
         } else {
-          // Fallback to legacy synthetic email pattern for old accounts
-          email = `${identifier}@beshijoss.com`;
+          throw new Error("এই ফোন নম্বর/আইডি দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি।");
         }
       }
 
