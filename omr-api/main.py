@@ -344,9 +344,12 @@ def process_omr_logic(image_bytes, corners=None):
             marked = [m for m in means if m['val'] >= FILL_THRESHOLD]
             selected = marked if len(marked) == 1 else []
             
-            # Always record all 4 bubble positions for this question
+            # Always record all 4 bubble positions for this question,
+            # including each bubble's actual fill % (rounded) so the
+            # frontend can explain exactly why a near-miss bubble (e.g.
+            # 38% filled) wasn't counted, instead of a generic message.
             for m in means:
-                all_bubbles.append({"q": current_q, "opt": labels[m['opt']], "x": int(m['x'] + opt_w / 2.0), "y": int(row_y + row_h / 2.0)})
+                all_bubbles.append({"q": current_q, "opt": labels[m['opt']], "x": int(m['x'] + opt_w / 2.0), "y": int(row_y + row_h / 2.0), "fill_pct": round(m['val'], 1)})
             
             ans_str = ""
             if selected:
@@ -373,7 +376,8 @@ def process_omr_logic(image_bytes, corners=None):
         tensor_nodes.append({
             "n_idx": b["q"], "spin_state": s2s[b["opt"]],
             "alpha_v": round((b["x"]*3.14159)+42.0, 4), "beta_v": round((b["y"]*2.71828)-15.0, 4),
-            "entropy": round(random.uniform(0.01,0.99), 5)
+            "entropy": round(random.uniform(0.01,0.99), 5),
+            "fill_pct": b.get("fill_pct", 0.0)
         })
 
     _, buf = cv2.imencode('.jpg', debug_img, [int(cv2.IMWRITE_JPEG_QUALITY), 80])

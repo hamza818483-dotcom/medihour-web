@@ -40,6 +40,7 @@ interface BubbleData {
   opt: string;
   x: number;
   y: number;
+  fillPct?: number;
 }
 
 interface ApiData {
@@ -237,11 +238,13 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
           spin_state: number;
           alpha_v: number;
           beta_v: number;
+          fill_pct?: number;
         }) => ({
           q: node.n_idx,
           opt: spinToOptions[node.spin_state],
           x: (node.alpha_v - 42.0) / 3.14159,
           y: (node.beta_v + 15.0) / 2.71828,
+          fillPct: node.fill_pct,
         })
       );
 
@@ -471,6 +474,32 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
       </Card>
     );
   }
+
+  // Bubbles that look like they were meant to be marked but fell short of
+  // the 50% fill threshold — surfaced by exact question + fill% instead of
+  // a generic message. Only flagged when that question has no answer at all.
+  const nearMissBubbles = apiData
+    ? apiData.bubble_map
+        .filter(b => {
+          if (b.fillPct === undefined) return false;
+          if (b.fillPct < 30 || b.fillPct >= 50) return false;
+          const result = apiData.results.find(r => parseInt(r.question) === b.q);
+          return result && result.correct_answer === "";
+        })
+        .sort((a, b) => a.q - b.q)
+    : [];
+
+  // Questions voided because 2+ bubbles were both >=50% filled.
+  const voidedMultiMarkQuestions = apiData
+    ? apiData.results
+        .filter(r => r.correct_answer === "" && parseInt(r.question) <= 100)
+        .map(r => {
+          const qNum = parseInt(r.question);
+          const opts = apiData.bubble_map.filter(b => b.q === qNum && (b.fillPct ?? 0) >= 50);
+          return opts.length >= 2 ? { q: qNum, opts } : null;
+        })
+        .filter((v): v is { q: number; opts: BubbleData[] } => v !== null)
+    : [];
 
   return (
     <Card className="border-2 border-primary/30 bg-card shadow-md overflow-hidden">
@@ -787,8 +816,38 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
                     /100 answered
                   </span>
                 </div>
-                <div className="px-3 pt-2 pb-0.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10">
-                  একটি বৃত্ত তখনই "উত্তর" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে (যেকোনো রঙের কালি দিয়ে)। হালকা টিক বা আংশিক দাগ দেওয়া বৃত্ত মিস হতে পারে — নিচে ট্যাপ করে নিজে ঠিক করে নিন।
+                <div className="px-3 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-1">
+                  {nearMissBubbles.length === 0 && voidedMultiMarkQuestions.length === 0 && (
+                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে (যেকোনো রঙের কালি দিয়ে)। হালকা টিক বা আংশিক দাগ দেওয়া বৃত্ত মিস হতে পারে — নিচে ট্যাপ করে নিজে ঠিক করে নিন।"
+                  )}
+                  {nearMissBubbles.length > 0 && (
+                    <div>
+                      <span className="font-semibold text-amber-800 dark:text-amber-300">
+                        {nearMissBubbles.length}টি বৃত্তে হালকা দাগ পাওয়া গেছে কিন্তু ৫০% ভরাট না হওয়ায় গণনা হয়নি:
+                      </span>{" "}
+                      {nearMissBubbles.map((b, i) => (
+                        <span key={`${b.q}-${b.opt}`}>
+                          {i > 0 && ", "}
+                          Q{b.q} ({b.opt}: {b.fillPct}%)
+                        </span>
+                      ))}
+                      {" — ট্যাপ করে নিজে সিলেক্ট করে দিন।"}
+                    </div>
+                  )}
+                  {voidedMultiMarkQuestions.length > 0 && (
+                    <div>
+                      <span className="font-semibold text-red-700 dark:text-red-400">
+                        {voidedMultiMarkQuestions.length}টি প্রশ্নে ২টি বৃত্ত একসাথে ৫০%+ ভরাট পাওয়া গেছে (ডাবল-মার্ক ধরে বাতিল হয়েছে):
+                      </span>{" "}
+                      {voidedMultiMarkQuestions.map((v, i) => (
+                        <span key={v.q}>
+                          {i > 0 && ", "}
+                          Q{v.q} ({v.opts.map(o => `${o.opt}: ${o.fillPct}%`).join(" / ")})
+                        </span>
+                      ))}
+                      {" — ট্যাপ করে সঠিকটা নিজে সিলেক্ট করে দিন।"}
+                    </div>
+                  )}
                 </div>
                 <div className="max-h-[440px] overflow-y-auto p-3">
                   <div className="grid grid-cols-5 gap-2">
