@@ -89,7 +89,7 @@ def detect_paper_edges(img):
     return cv2.warpPerspective(img, M, (dstWidth, dstHeight))
 
 
-def process_omr_logic(image_bytes, corners=None):
+def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
     np_arr = np.frombuffer(image_bytes, np.uint8)
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
     if image is None: 
@@ -181,18 +181,7 @@ def process_omr_logic(image_bytes, corners=None):
     # STEP 2: 6 MAIN BLOCKS EXTRACTION
     # ==========================================
     process_gray = cv2.cvtColor(processing_mat, cv2.COLOR_BGR2GRAY)
-
-    # Color-aware "ink distance" map — used only for bubble fill detection.
-    # Standard grayscale luminance (0.299R+0.587G+0.114B) makes low-saturation
-    # or lighter-pressure pen strokes (including some reds) blend too close to
-    # white paper, letting a real mark slip under the Otsu cutoff and get
-    # missed. Instead, measure each pixel's Euclidean distance from pure white
-    # in BGR space — any ink color (black, blue, red, etc.) that's visibly
-    # different from blank paper scores as "dark" here, regardless of hue.
-    _proc_f = processing_mat.astype(np.float32)
-    _dist_from_white = np.sqrt(np.sum((_proc_f - 255.0) ** 2, axis=2))
-    _dist_from_white = np.clip(_dist_from_white / (255.0 * np.sqrt(3)) * 255.0, 0, 255)
-    ink_map = (255 - _dist_from_white).astype(np.uint8)  # low value = strong ink, matches process_gray's convention
+    process_hsv = cv2.cvtColor(processing_mat, cv2.COLOR_BGR2HSV)
     block_thresh = cv2.adaptiveThreshold(process_gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 25, 6)
 
     h_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
@@ -235,27 +224,162 @@ def process_omr_logic(image_bytes, corners=None):
     quiz_data, bubble_map, all_bubbles = [], [], []
 
     SHRINK = 0.20
+    RECENTER_JITTER = 0.18  # search up to 18% of cell size around the expected position
+    _recenter_cache = {}
+
+    def _circle_mask(h, w):
+        """Boolean mask selecting only the pixels inside an inscribed circle
+        of an h x w box (radius = min(h, w) / 2, centered). Cached by shape
+        since every bubble ROI in a sheet uses the same cell size."""
+        key = (h, w)
+        cached = _circle_mask.cache.get(key)
+        if cached is not None:
+            return cached
+        yy, xx = np.ogrid[:h, :w]
+        cy, cx = h / 2.0, w / 2.0
+        r = min(h, w) / 2.0
+        mask = ((yy - cy) ** 2 + (xx - cx) ** 2) <= (r ** 2)
+        _circle_mask.cache[key] = mask
+        return mask
+    _circle_mask.cache = {}
+
+    def _recenter(col_x, row_y, c_width, c_height, prefer_black=True):
+        """Small geometric misalignment (fixed ratio calibration vs a real
+        photo) can cause the sampling box to miss part of an actually-filled
+        bubble, undercounting a real >=50% mark as empty. Search a small
+        neighborhood around the expected position and snap to the offset
+        whose CIRCULAR window (an inscribed disc matching the actual bubble
+        shape, not the full rectangular cell) has the most ink coverage.
+
+        Using a circular mask instead of the raw rectangle matters because a
+        bubble is round: the corners of a rectangular sampling box sit
+        outside the real bubble outline and often fall inside a NEIGHBORING
+        bubble's ink once ink bleeds/smudges across the row. A rectangle
+        recenter can therefore drift onto (or be inflated by) an adjacent
+        bubble's mark. Masking to the inscribed circle before scoring keeps
+        every candidate score's ink strictly within the true circular bubble
+        footprint, so the search converges on the actual bubble the student
+        filled even when neighboring ink is present.
+
+        prefer_black=True (student/strict mode) scores candidates using
+        ONLY black/gray ink, never colored ink — otherwise a red mark from
+        an adjacent bubble sitting inside the jitter range could pull the
+        sampling window off the intended black bubble entirely (mis-scoring
+        red as darker/better and snapping onto it), which was silently
+        corrupting results for any row near colored ink. Cached per exact
+        input position + mode since get_fill_percent and
+        get_raw_dark_percent both call this for the same bubble."""
+        cache_key = (round(col_x, 2), round(row_y, 2), round(c_width, 2), round(c_height, 2), prefer_black)
+        if cache_key in _recenter_cache:
+            return _recenter_cache[cache_key]
+
+        step_x = c_width * 0.06
+        step_y = c_height * 0.06
+        max_off_x = c_width * RECENTER_JITTER
+        max_off_y = c_height * RECENTER_JITTER
+
+        best_val = -1.0
+        best_xy = (col_x, row_y)
+        dx = -max_off_x
+        while dx <= max_off_x + 1e-6:
+            dy = -max_off_y
+            while dy <= max_off_y + 1e-6:
+                rx = int(col_x + dx + c_width * SHRINK)
+                ry = int(row_y + dy + c_height * SHRINK)
+                rw = int(c_width * (1 - 2 * SHRINK))
+                rh = int(c_height * (1 - 2 * SHRINK))
+                roi = process_gray[ry:ry+rh, rx:rx+rw]
+                if roi.size > 0:
+                    circ_mask = _circle_mask(roi.shape[0], roi.shape[1])
+                    _, roi_bin = cv2.threshold(roi, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+                    dark_mask = (roi_bin > 0) & circ_mask
+                    if prefer_black:
+                        roi_hsv = process_hsv[ry:ry+rh, rx:rx+rw]
+                        hue = roi_hsv[:, :, 0]
+                        sat = roi_hsv[:, :, 1]
+                        is_red_hue = (hue <= 10) | (hue >= 170)
+                        sat_cutoff = np.where(is_red_hue, 90, 115)
+                        dark_mask = dark_mask & (sat < sat_cutoff)
+                    denom = int(np.count_nonzero(circ_mask))
+                    val = float(np.count_nonzero(dark_mask)) / denom if denom > 0 else 0.0
+                    if val > best_val:
+                        best_val = val
+                        best_xy = (col_x + dx, row_y + dy)
+                dy += step_y
+            dx += step_x
+
+        _recenter_cache[cache_key] = best_xy
+        return best_xy
 
     def get_fill_percent(col_x, row_y, c_width, c_height):
-        """Returns the % of dark (ink) pixels inside a bubble's sampling
-        region, using Otsu auto-thresholding so it adapts to scan
-        lighting/contrast per-image instead of relying on a fixed gray
-        cutoff. Uses the color-aware ink_map (not plain grayscale) so
-        colored ink — not just black — is weighted by how different it is
-        from white paper, catching lighter/colored marks that pure
-        luminance would under-count."""
+        """Returns the % of dark BLACK ink pixels inside the bubble's actual
+        CIRCULAR footprint (inscribed circle of the sampling cell), not the
+        full rectangle. Uses Otsu auto-thresholding on grayscale darkness,
+        masks to the circle so corner pixels (never part of a round bubble,
+        and the most likely place for a neighboring bubble's ink to bleed
+        in) can't count, then further masks out any pixel that is actually
+        colored (red/blue/green pen etc, high HSV saturation) so colored ink
+        is never mistaken for a black-filled bubble."""
+        col_x, row_y = _recenter(col_x, row_y, c_width, c_height, prefer_black=(color_mode != "any_color"))
         roi_x = int(col_x + c_width * SHRINK)
         roi_y = int(row_y + c_height * SHRINK)
         roi_w = int(c_width * (1 - 2 * SHRINK))
         roi_h = int(c_height * (1 - 2 * SHRINK))
 
-        roi = ink_map[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+        roi = process_gray[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
         if roi.size == 0:
             return 0.0
 
+        circ_mask = _circle_mask(roi.shape[0], roi.shape[1])
+        circ_count = int(np.count_nonzero(circ_mask))
+        if circ_count == 0:
+            return 0.0
+
         _, roi_bin = cv2.threshold(roi, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        dark_pixels = int(np.count_nonzero(roi_bin))
-        return (dark_pixels / roi_bin.size) * 100.0
+
+        if color_mode == "any_color":
+            # Admin answer-key mode: any dark ink color counts (black, red,
+            # blue, green pen etc) — no color filtering, circle-masked only.
+            dark_pixels = int(np.count_nonzero((roi_bin > 0) & circ_mask))
+            return (dark_pixels / circ_count) * 100.0
+
+        roi_hsv = process_hsv[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+        hue = roi_hsv[:, :, 0]
+        saturation = roi_hsv[:, :, 1]
+        # Black/gray/graphite ink has LOW saturation regardless of hue.
+        # Colored ink (red/blue/green pen) keeps enough saturation to be
+        # detectable even when photographed/compressed and washed out —
+        # EXCEPT red, which can wash out to unusually low saturation under
+        # poor lighting/JPEG compression. So: reject on saturation using a
+        # stricter cutoff for red hues (OpenCV hue wraps at 0/180, red sits
+        # at both ends) than for other colors.
+        is_red_hue = (hue <= 10) | (hue >= 170)
+        sat_cutoff = np.where(is_red_hue, 90, 115)
+        black_mask = saturation < sat_cutoff
+
+        dark_pixels = int(np.count_nonzero((roi_bin > 0) & black_mask & circ_mask))
+        return (dark_pixels / circ_count) * 100.0
+
+    def get_raw_dark_percent(col_x, row_y, c_width, c_height):
+        """Same as get_fill_percent but WITHOUT the black-only color mask —
+        used only to tell apart 'truly empty bubble' from 'something dark
+        (possibly colored ink) was marked here', for accurate skip reasons.
+        Also circle-masked so it stays consistent with get_fill_percent."""
+        col_x, row_y = _recenter(col_x, row_y, c_width, c_height, prefer_black=False)
+        roi_x = int(col_x + c_width * SHRINK)
+        roi_y = int(row_y + c_height * SHRINK)
+        roi_w = int(c_width * (1 - 2 * SHRINK))
+        roi_h = int(c_height * (1 - 2 * SHRINK))
+        roi = process_gray[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
+        if roi.size == 0:
+            return 0.0
+        circ_mask = _circle_mask(roi.shape[0], roi.shape[1])
+        circ_count = int(np.count_nonzero(circ_mask))
+        if circ_count == 0:
+            return 0.0
+        _, roi_bin = cv2.threshold(roi, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        dark_pixels = int(np.count_nonzero((roi_bin > 0) & circ_mask))
+        return (dark_pixels / circ_count) * 100.0
 
     def get_mean_darkness(col_x, row_y, c_width, c_height):
         roi_x = int(col_x + c_width * SHRINK)
@@ -303,28 +427,38 @@ def process_omr_logic(image_bytes, corners=None):
     reg_no = process_info_block(reg_block)
 
     # --- 2. Extract Questions ---
-    # Calibrated against the ACTUAL cv2.boundingRect() output of a real
-    # scanned OMR sheet (not the idealized PDF coordinates) — the detected
-    # contour box includes a few pixels of the outer table border, which
-    # made the PDF-derived ratios drift (worse toward option D and toward
-    # later rows) once applied to a real photo's slightly-larger box.
-    # Measured directly from HoughCircles bubble centers vs. the real
-    # detected block rect on a sample scan: A/B/C/D sit at 0.2820 / 0.4797 /
-    # 0.6890 / 0.8866 of block width; row 0 starts at 5.278% of block height,
-    # each row is 3.767% of block height tall.
-    Q_ROW0_TOP_RATIO = 0.05278
-    Q_ROW_H_RATIO = 0.037670
-    Q_NUM_COL_RATIO = 0.18121
-    OPT_SPACING_RATIO = 0.20155
+    # Calibrated by directly detecting bubble centers with HoughCircles on a
+    # real scanned OMR sheet (not just idealized PDF coordinates) and
+    # measuring their exact position as a fraction of the detected block's
+    # bounding rect, averaged/verified across all 4 question blocks and all
+    # 25 rows. This replaced an earlier calibration that was significantly
+    # off on Q_NUM_COL_RATIO (was 0.18121, real value ~0.2805 of block
+    # width) — a ~10% block-width horizontal offset that sampled left of
+    # option A entirely, and a row-height ratio that was slightly too large
+    # so error compounded through the sheet (early rows read fine, later
+    # rows increasingly landed between bubbles). Measured: A/B/C/D sit at
+    # 0.2805 / 0.4854 / 0.6902 / 0.8902 of block width; row 0 center is at
+    # 7.206% of block height, each row is 3.777% of block height tall.
+    Q_ROW0_TOP_RATIO = 0.07206
+    Q_ROW_H_RATIO = 0.03777
+    Q_NUM_COL_RATIO = 0.2805
+    OPT_SPACING_RATIO = 0.20325
     current_q = 1
     labels = ['A', 'B', 'C', 'D']
 
     for qb in q_blocks:
         bx, by, bw, bh = qb
-        start_y = by + (bh * Q_ROW0_TOP_RATIO)
+        # Q_ROW0_TOP_RATIO / Q_NUM_COL_RATIO / OPT_SPACING_RATIO are bubble
+        # CENTER ratios (see calibration note above). get_fill_percent's ROI
+        # math (col_x/row_y + c_width*SHRINK) expects a cell TOP-LEFT corner,
+        # so we must subtract half a cell size here to convert center->corner
+        # — without this, every sample lands half a row too low/right.
+        start_y_center = by + (bh * Q_ROW0_TOP_RATIO)
         row_h = bh * Q_ROW_H_RATIO
         opt_w = bw * OPT_SPACING_RATIO
-        opt_start_x = bx + (bw * Q_NUM_COL_RATIO)
+        opt_start_x_center = bx + (bw * Q_NUM_COL_RATIO)
+        start_y = start_y_center - (row_h / 2.0)
+        opt_start_x = opt_start_x_center - (opt_w / 2.0)
 
         for r in range(25):
             row_y = start_y + (r * row_h)
@@ -335,34 +469,84 @@ def process_omr_logic(image_bytes, corners=None):
                 fill_pct = get_fill_percent(col_x, row_y, opt_w, row_h)
                 means.append({'opt': opt, 'val': fill_pct, 'x': col_x})
             
-            # Absolute rule: a bubble counts as marked if it's >=50% filled
-            # with ink, regardless of how the other 3 bubbles look. If more
-            # than one bubble in the same question is >=50% filled, the
-            # question is invalidated (no answer recorded) — matches how a
-            # real OMR scanner treats multi-marked rows as void.
-            FILL_THRESHOLD = 50.0
-            marked = [m for m in means if m['val'] >= FILL_THRESHOLD]
+            # A fixed absolute fill% threshold doesn't work across a real
+            # phone photo: per-ROI Otsu auto-thresholding produces a "blank
+            # bubble" baseline that shifts with lighting/shadow (can be
+            # ~30% in good light, ~40-45% in shadow) and a genuinely-marked
+            # bubble's fill% also varies with how fully the student filled
+            # it (a light/partial mark can read as low as ~55-60%, an
+            # emphatic one as ~95-100%). Comparing every bubble to one fixed
+            # cutoff either misses light real marks or false-triggers on
+            # shadowed blanks.
+            #
+            # What stays reliable regardless of lighting: a real mark is
+            # always MUCH darker than the other 3 (blank) options in the
+            # SAME row, because they share the same lighting conditions.
+            # So detect marks by relative gap within the row instead - same
+            # approach already used for roll/reg digit detection above.
+            min_v = min(m['val'] for m in means)
+            max_v = max(m['val'] for m in means)
+            marked = []
+            if max_v - min_v > 20:
+                # There's a meaningful gap between the darkest and lightest
+                # option - something stands out from the row's own blank
+                # baseline. Take every option that sits closer to the dark
+                # end of that gap (any real double-mark still surfaces here
+                # since both dark options would clear this line together).
+                gap_threshold = min_v + ((max_v - min_v) * 0.5)
+                marked = [m for m in means if m['val'] >= gap_threshold]
             selected = marked if len(marked) == 1 else []
-            
-            # Always record all 4 bubble positions for this question,
-            # including each bubble's actual fill % (rounded) so the
-            # frontend can explain exactly why a near-miss bubble (e.g.
-            # 38% filled) wasn't counted, instead of a generic message.
+
+            # Always record all 4 bubble positions for this question
             for m in means:
                 all_bubbles.append({"q": current_q, "opt": labels[m['opt']], "x": int(m['x'] + opt_w / 2.0), "y": int(row_y + row_h / 2.0), "fill_pct": round(m['val'], 1)})
-            
+
             ans_str = ""
+            reason = None
             if selected:
                 for m in selected:
                     bubble_map.append({"q": current_q, "opt": labels[m['opt']], "x": int(m['x'] + opt_w / 2.0), "y": int(row_y + row_h / 2.0)})
                 ans_str = ",".join(labels[m['opt']] for m in selected)
-            
+            elif len(marked) >= 2:
+                # More than one bubble looks dark enough -> void, ambiguous.
+                marked_opts = ", ".join(labels[m['opt']] for m in marked)
+                reason = f"একাধিক বৃত্ত ভরাট পাওয়া গেছে ({marked_opts}) — তাই এই প্রশ্নের উত্তর গণনা করা হয়নি।"
+            else:
+                # Nothing stood out from this row's own blank baseline via
+                # the relative-gap check above. Use the same relative logic
+                # on raw (color-inclusive) darkness to phrase the skip
+                # reason: was anything at all attempted here (even in a
+                # non-black color), or is the row genuinely untouched?
+                best_black = max(means, key=lambda m: m['val'])
+                raw_vals = [get_raw_dark_percent(opt_start_x + (opt * opt_w), row_y, opt_w, row_h) for opt in range(4)]
+                best_raw_idx = int(np.argmax(raw_vals))
+                best_raw_val = raw_vals[best_raw_idx]
+                raw_min = min(raw_vals)
+                raw_gap = best_raw_val - raw_min
+
+                if raw_gap <= 20:
+                    # No option's raw darkness stands out from the row's
+                    # baseline either - genuinely nothing was marked here.
+                    reason = "কোনো বৃত্ত ভরাট করা হয়নি (উত্তর মিস করা হয়েছে)।"
+                elif color_mode != "any_color" and (best_black['val'] - min(m['val'] for m in means)) <= 20:
+                    reason = (
+                        f"বৃত্ত ({labels[best_raw_idx]}) ভরাট করা হয়েছে কিন্তু কালো/গাঢ় কালিতে নয় (রঙিন কলম ব্যবহার হয়েছে) "
+                        f"— শুধুমাত্র কালো বল/জেল পেন বা পেন্সিল দিয়ে ভরাট করলে সেটি গণনা হবে।"
+                    )
+                else:
+                    reason = (
+                        f"বৃত্ত ({labels[best_black['opt']]}) ভরাট করার চেষ্টা করা হয়েছে কিন্তু কালি যথেষ্ট গাঢ়/কালো নয় "
+                        f"(মাত্র {best_black['val']:.0f}% কালো ভরাট মনে হয়েছে) — তাই এটি গণনা করা হয়নি। বৃত্ত সম্পূর্ণ কালো কলম/পেন্সিল দিয়ে ভরাট করতে হবে।"
+                    )
+
             # Formatted per your strict JSON requirements
             quiz_data.append({
                 "question": str(current_q),
                 "options": { "A": "", "B": "", "C": "", "D": "" },
                 "correct_answer": ans_str,
-                "explanation": ""
+                "explanation": "",
+                "skip_reason": reason,
+                "bubble_fills": {labels[m['opt']]: round(m['val'], 1) for m in means},
             })
             current_q += 1
 
@@ -409,7 +593,7 @@ def process_omr_logic(image_bytes, corners=None):
 
 
 @app.post("/api/v1/scan-omr", dependencies=[Depends(verify_api_key)])
-async def scan_omr(file: UploadFile = File(...), corners: str = Form(default=None)):
+async def scan_omr(file: UploadFile = File(...), corners: str = Form(default=None), mode: str = Form(default="strict")):
     parsed = None
     if corners:
         try: 
@@ -417,7 +601,8 @@ async def scan_omr(file: UploadFile = File(...), corners: str = Form(default=Non
         except: 
             pass
     contents = await file.read()
-    return process_omr_logic(contents, corners=parsed)
+    color_mode = "any_color" if mode == "any_color" else "strict"
+    return process_omr_logic(contents, corners=parsed, color_mode=color_mode)
 
 
 @app.get("/health")
