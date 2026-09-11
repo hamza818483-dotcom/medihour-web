@@ -787,6 +787,9 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
                     /100 answered
                   </span>
                 </div>
+                <div className="px-3 pt-2 pb-0.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10">
+                  একটি বৃত্ত তখনই "উত্তর" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে (যেকোনো রঙের কালি দিয়ে)। হালকা টিক বা আংশিক দাগ দেওয়া বৃত্ত মিস হতে পারে — নিচে ট্যাপ করে নিজে ঠিক করে নিন।
+                </div>
                 <div className="max-h-[440px] overflow-y-auto p-3">
                   <div className="grid grid-cols-5 gap-2">
                     {apiData.results
