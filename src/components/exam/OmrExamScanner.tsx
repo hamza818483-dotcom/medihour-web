@@ -74,6 +74,8 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
 
   // Image & crop
   const [rawImage, setRawImage] = useState<string | null>(null);
+  const [cleanedPreview, setCleanedPreview] = useState<string | null>(null);
+  const [isCleaning, setIsCleaning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -129,12 +131,58 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
     const reader = new FileReader();
     reader.onload = () => {
       setRawImage(reader.result as string);
+      setCleanedPreview(null);
       setScanError(null);
       setStep("preview");
     };
     reader.readAsDataURL(file);
     e.target.value = "";
   };
+
+  // As soon as a photo is selected, auto-crop it to the sheet's own edges
+  // and clean up lighting/contrast (CamScanner-style) purely for a nicer
+  // preview — the actual OMR scan below always runs on the original
+  // photo, not this cleaned version (see enhance-scan's own docs: the
+  // cleanup step can wash out the corner anchors that scan-omr's sheet
+  // detection relies on, so the two must stay on separate images).
+  useEffect(() => {
+    if (step !== "preview" || !rawImage || !imageRef.current) return;
+    let cancelled = false;
+
+    const runClean = () => {
+      if (!imageRef.current) return;
+      setIsCleaning(true);
+      getNormalizedImageBlob(imageRef.current, async (blob) => {
+        try {
+          const formData = new FormData();
+          formData.append("file", blob, "omr.jpg");
+          const response = await fetch(`${OMR_API_URL}/api/v1/enhance-scan`, {
+            method: "POST",
+            headers: { "X-API-Key": OMR_API_KEY },
+            body: formData,
+          });
+          const data = await response.json();
+          if (!cancelled && data?.cleaned_image) {
+            setCleanedPreview(data.cleaned_image);
+          }
+        } catch {
+          // Silent fallback — if cleaning fails for any reason, the raw
+          // photo stays visible and "Scan করুন" still works normally.
+        } finally {
+          if (!cancelled) setIsCleaning(false);
+        }
+      });
+    };
+
+    if (imageRef.current.complete) {
+      runClean();
+    } else {
+      imageRef.current.onload = runClean;
+    }
+
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, rawImage]);
 
   // Pointer events for dragging SVG points
   const handlePointerDown = (index: number) => {
@@ -762,15 +810,33 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
           </div>
         )}
 
-        {/* Step: Preview — image auto-normalized already, just needs a
-            single confirm tap before it's sent for scanning. */}
+        {/* Step: Preview — auto-crop + clean the photo (CamScanner-style)
+            as soon as it's selected, so the person sees a tidy version of
+            their sheet before confirming. The actual scan below always
+            runs on the original photo regardless of what's shown here. */}
         {step === "preview" && rawImage && (
           <div className="space-y-3">
-            <div className="rounded-xl border border-border/60 bg-black/5 overflow-hidden flex justify-center items-center p-3">
-              <img ref={imageRef} src={rawImage} alt="Selected OMR sheet" className="max-h-[420px] w-auto rounded-lg" />
+            <div className="rounded-xl border border-border/60 bg-black/5 overflow-hidden flex justify-center items-center p-3 relative">
+              <img
+                ref={imageRef}
+                src={rawImage}
+                alt="Selected OMR sheet"
+                className={`max-h-[420px] w-auto rounded-lg ${cleanedPreview ? "hidden" : ""}`}
+              />
+              {cleanedPreview && (
+                <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="max-h-[420px] w-auto rounded-lg" />
+              )}
+              {isCleaning && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
+                  <div className="flex flex-col items-center gap-2 text-white">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                    <p className="text-xs">শিট পরিষ্কার করা হচ্ছে...</p>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex items-center justify-center gap-2">
-              <Button variant="ghost" size="sm" onClick={() => { setRawImage(null); setStep("upload"); }} className="text-xs">
+              <Button variant="ghost" size="sm" onClick={() => { setRawImage(null); setCleanedPreview(null); setStep("upload"); }} className="text-xs">
                 <X className="h-3.5 w-3.5 mr-1" /> বাতিল
               </Button>
               <Button size="sm" onClick={handleSkipCrop} className="rounded-full px-6 text-xs bg-emerald-600 hover:bg-emerald-700">
