@@ -297,9 +297,15 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
                         roi_hsv = process_hsv[ry:ry+rh, rx:rx+rw]
                         hue = roi_hsv[:, :, 0]
                         sat = roi_hsv[:, :, 1]
+                        val = roi_hsv[:, :, 2]
                         is_red_hue = (hue <= 10) | (hue >= 170)
                         sat_cutoff = np.where(is_red_hue, 90, 115)
-                        dark_mask = dark_mask & (sat < sat_cutoff)
+                        # See get_fill_percent for why the saturation check
+                        # is gated by value: near-black pixels have
+                        # meaningless/unstable saturation and must never be
+                        # rejected as "colored" on that basis alone.
+                        is_colored_ink = (sat >= sat_cutoff) & (val > 60)
+                        dark_mask = dark_mask & ~is_colored_ink
                     denom = int(np.count_nonzero(circ_mask))
                     val = float(np.count_nonzero(dark_mask)) / denom if denom > 0 else 0.0
                     if val > best_val:
@@ -346,6 +352,7 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         roi_hsv = process_hsv[roi_y:roi_y+roi_h, roi_x:roi_x+roi_w]
         hue = roi_hsv[:, :, 0]
         saturation = roi_hsv[:, :, 1]
+        value = roi_hsv[:, :, 2]
         # Black/gray/graphite ink has LOW saturation regardless of hue.
         # Colored ink (red/blue/green pen) keeps enough saturation to be
         # detectable even when photographed/compressed and washed out —
@@ -353,9 +360,26 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         # poor lighting/JPEG compression. So: reject on saturation using a
         # stricter cutoff for red hues (OpenCV hue wraps at 0/180, red sits
         # at both ends) than for other colors.
+        #
+        # BUT saturation is only a meaningful signal when the pixel isn't
+        # already near-black: HSV saturation is mathematically undefined/
+        # unstable as Value approaches 0 (a 1-2 unit rounding difference
+        # between B/G/R channels on an almost-black pixel can swing
+        # "saturation" all the way to 255 even though the pixel is pure
+        # black). This shows up badly on enhanced/binarized scans (e.g.
+        # CamScanner output) where compression pushes truly black ink
+        # pixels to V<20 with wild, meaningless saturation spikes — the
+        # saturation filter was then misreading solid black bubbles as
+        # "colored ink" and wiping out detection almost entirely. So: only
+        # let the saturation check reject a pixel when it's bright enough
+        # (value_gate) for that saturation reading to actually mean
+        # something; sufficiently dark pixels always count as black ink
+        # regardless of what saturation says.
         is_red_hue = (hue <= 10) | (hue >= 170)
         sat_cutoff = np.where(is_red_hue, 90, 115)
-        black_mask = saturation < sat_cutoff
+        value_gate = 60
+        is_colored_ink = (saturation >= sat_cutoff) & (value > value_gate)
+        black_mask = ~is_colored_ink
 
         dark_pixels = int(np.count_nonzero((roi_bin > 0) & black_mask & circ_mask))
         return (dark_pixels / circ_count) * 100.0
