@@ -116,10 +116,25 @@ def crop_to_sheet(image, corners=None):
         processing_mat = image.copy()
 
     # Phase B: Precise Anchor Refinement (Always try this on processing_mat)
-    # Use adaptive threshold + morphology for shadow resilience
+    # Use adaptive threshold + morphology for shadow resilience.
     temp_gray = cv2.cvtColor(processing_mat, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(temp_gray, (5, 5), 0)
     thresh_dark = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 51, 10)
+    # A corner-anchor square that's a lighter brown/orange rather than
+    # solid black (or lit unevenly by shadow/desk glare) can end up only
+    # partially crossing the adaptive threshold — its outline/edge shows
+    # up as dark but its interior doesn't, leaving a thin HOLLOW ring
+    # contour instead of a solid filled square. A hollow ring has a much
+    # smaller contourArea than its bounding box, so it fails the
+    # solidity ("extent") check below and the corner gets silently
+    # dropped — which then skews the whole perspective warp using only
+    # 3 real corners plus a wrong 4th (a QR-code fragment or other noise
+    # blob). MORPH_CLOSE (dilate then erode) first fills in any such
+    # hollow ring into a solid blob before the open+contour step, so a
+    # lightly-printed or unevenly-lit corner square is detected exactly
+    # as reliably as a solid black one.
+    close_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))
+    thresh_dark = cv2.morphologyEx(thresh_dark, cv2.MORPH_CLOSE, close_kernel)
     morph_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     thresh_dark = cv2.morphologyEx(thresh_dark, cv2.MORPH_OPEN, morph_kernel)
     cnts, _ = cv2.findContours(thresh_dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -135,20 +150,34 @@ def crop_to_sheet(image, corners=None):
             x, y, w, h = cv2.boundingRect(c)
             aspect = w / float(h)
             extent = area / float(w * h)
-            if 0.7 < aspect < 1.3 and extent > 0.75:
+            if 0.7 < aspect < 1.3 and extent > 0.6:
                 anchor_rects.append((x, y, w, h))
 
     anchors_found = len(anchor_rects) >= 4
     paper_edge_used = False
 
     if anchors_found:
-        anchor_rects.sort(key=lambda r: r[0] + r[1])
-        tl_rect = anchor_rects[0]
-        br_rect = anchor_rects[-1]
+        # Pick the single best candidate for each of the 4 image corners
+        # by nearest-corner distance, rather than sorting the whole list
+        # by x+y / x-y and taking the extremes. With more than 4
+        # candidates in the list (QR-code sub-squares, stray dark blobs,
+        # noise) a plain sort-and-take-extremes can silently grab the
+        # wrong contour for a corner — nearest-corner-wins is far more
+        # robust to that noise since an unrelated blob near the middle
+        # of the page never wins against a real corner square.
+        img_h, img_w = p_h, p_w
+        corner_targets = {
+            "tl": (0, 0),
+            "tr": (img_w, 0),
+            "bl": (0, img_h),
+            "br": (img_w, img_h),
+        }
+        picked = {}
+        for name, (tx, ty) in corner_targets.items():
+            best = min(anchor_rects, key=lambda r: (r[0] - tx) ** 2 + (r[1] - ty) ** 2)
+            picked[name] = best
 
-        anchor_rects.sort(key=lambda r: r[0] - r[1])
-        bl_rect = anchor_rects[0]
-        tr_rect = anchor_rects[-1]
+        tl_rect, tr_rect, bl_rect, br_rect = picked["tl"], picked["tr"], picked["bl"], picked["br"]
 
         tl = [tl_rect[0], tl_rect[1]]
         tr = [tr_rect[0] + tr_rect[2], tr_rect[1]]
