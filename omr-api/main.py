@@ -710,6 +710,17 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         "roll_no": roll_no, 
         "reg_no": reg_no,
         "warning": warning,
+        # Diagnostic info to help tell apart "the deployed code is stale"
+        # from "the code ran but produced a different result than
+        # expected" when debugging a live-vs-local mismatch. Cheap to
+        # include on every response, never shown in the normal UI.
+        "debug_info": {
+            "opencv_version": cv2.__version__,
+            "numpy_version": np.__version__,
+            "anchors_found": anchors_found,
+            "paper_edge_used": paper_edge_used,
+            "used_manual_corners": used_manual_corners,
+        },
     }
 
 
@@ -769,3 +780,18 @@ async def enhance_scan_endpoint(file: UploadFile = File(...), corners: str = For
 @app.get("/health")
 async def health(): 
     return {"status": "ok"}
+
+
+@app.get("/debug/version")
+async def debug_version():
+    """Lightweight way to confirm what's actually running on this server
+    without needing to upload a photo — visit this URL directly in a
+    browser. git_commit reads from a GIT_COMMIT env var if the deploy
+    platform sets one (Render does not by default), so treat a missing
+    value as inconclusive rather than as evidence of anything."""
+    import os
+    return {
+        "opencv_version": cv2.__version__,
+        "numpy_version": np.__version__,
+        "git_commit": os.environ.get("RENDER_GIT_COMMIT", "not set by platform"),
+    }
