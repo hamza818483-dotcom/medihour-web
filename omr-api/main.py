@@ -89,17 +89,14 @@ def detect_paper_edges(img):
     return cv2.warpPerspective(img, M, (dstWidth, dstHeight))
 
 
-def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
-    np_arr = np.frombuffer(image_bytes, np.uint8)
-    image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-    if image is None: 
-        return {"error": "Could not read image"}
-
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # ==========================================
-    # STEP 1: PERFECT PERSPECTIVE WARP
-    # ==========================================
+def crop_to_sheet(image, corners=None):
+    """Shared cropping/perspective-correction pipeline used by both OMR
+    scanning and the standalone 'clean scan' feature. Tries, in order:
+    1) the corners the user manually dragged on the crop screen (if any),
+    2) the 4 printed corner anchor squares refined precisely, and
+    3) a CamScanner-style fallback that finds the sheet's own outer paper
+       edge against the background.
+    Returns (processing_mat, anchors_found, paper_edge_used)."""
     # Phase A: Initial Warp/Crop (if corners provided)
     if corners and len(corners) == 4:
         tl = [corners[0]['x'], corners[0]['y']]
@@ -126,11 +123,11 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
     morph_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     thresh_dark = cv2.morphologyEx(thresh_dark, cv2.MORPH_OPEN, morph_kernel)
     cnts, _ = cv2.findContours(thresh_dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
+
     anchor_rects = []
     p_h, p_w = processing_mat.shape[:2]
     p_area = p_h * p_w
-    
+
     for c in cnts:
         area = cv2.contourArea(c)
         # Use relaxed area constraints (0.02% to 10.0%) to handle both full and cropped photos
@@ -140,7 +137,7 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
             extent = area / float(w * h)
             if 0.7 < aspect < 1.3 and extent > 0.75:
                 anchor_rects.append((x, y, w, h))
-    
+
     anchors_found = len(anchor_rects) >= 4
     paper_edge_used = False
 
@@ -148,7 +145,7 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         anchor_rects.sort(key=lambda r: r[0] + r[1])
         tl_rect = anchor_rects[0]
         br_rect = anchor_rects[-1]
-        
+
         anchor_rects.sort(key=lambda r: r[0] - r[1])
         bl_rect = anchor_rects[0]
         tr_rect = anchor_rects[-1]
@@ -176,6 +173,74 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         if edge_warped is not None:
             processing_mat = edge_warped
             paper_edge_used = True
+
+    return processing_mat, anchors_found, paper_edge_used
+
+
+def enhance_scan(image):
+    """CamScanner-style visual cleanup on an already-cropped sheet: evens
+    out shadows/uneven lighting, boosts contrast so the printed grid and
+    ink stand out crisply, and lightly sharpens. Returns a BGR image sized
+    the same as the input. Does not binarize to pure black/white — the OMR
+    engine's own bubble-fill detection needs real grayscale gradients, and
+    a human reading the sheet also benefits from natural-looking output
+    rather than a harsh black/white scan.
+
+    IMPORTANT: this is a display/download-only transform, not a
+    scan-quality one. It normalizes away the illumination differences that
+    make the 4 corner anchor squares reliably "solid dark" for
+    process_omr_logic's own block-detection step — feeding this function's
+    output back into /api/v1/scan-omr can fail to re-detect the sheet
+    layout. Always run OMR detection on the original crop_to_sheet() output
+    (before this function), and only use enhance_scan() for the image the
+    person actually sees/downloads."""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Estimate and divide out the background illumination (shadows, uneven
+    # lighting from a phone photo) using a large-kernel median blur as the
+    # background estimate — this is the same core trick CamScanner-style
+    # "auto enhance" filters use to make a photo look like a flat scan.
+    # The kernel must be large relative to the biggest dark feature on the
+    # page (a filled OMR bubble, printed header bars, etc.) or those
+    # features leak into the "background" estimate and reappear as faint
+    # halos after division — so scale it to the image size rather than
+    # using a fixed pixel count that only works for one photo resolution.
+    bg_kernel = max(41, (min(gray.shape[:2]) // 15) | 1)  # odd, ~1/15th of the shorter side
+    bg = cv2.medianBlur(gray, bg_kernel)
+    bg = np.where(bg == 0, 1, bg).astype(np.float32)
+    normalized = (gray.astype(np.float32) / bg) * 255.0
+    normalized = np.clip(normalized, 0, 255).astype(np.uint8)
+
+    # Global contrast stretch (not CLAHE): after illumination-normalizing,
+    # the page is already close to flat white with dark text/marks, so a
+    # single global stretch crisps it up without the halo/ringing artifacts
+    # a tile-based local-contrast method (CLAHE) leaves around small dark
+    # shapes like filled OMR bubbles.
+    p_low, p_high = np.percentile(normalized, [2, 98])
+    if p_high <= p_low:
+        p_low, p_high = 0, 255
+    contrasted = np.clip((normalized.astype(np.float32) - p_low) * (255.0 / (p_high - p_low)), 0, 255).astype(np.uint8)
+
+    # Light unsharp-mask sharpening so printed text/grid lines look crisp,
+    # with a small sigma to keep it subtle rather than exaggerating edges.
+    blurred = cv2.GaussianBlur(contrasted, (0, 0), sigmaX=2)
+    sharpened = cv2.addWeighted(contrasted, 1.3, blurred, -0.3, 0)
+
+    return cv2.cvtColor(sharpened, cv2.COLOR_GRAY2BGR)
+
+
+def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
+    np_arr = np.frombuffer(image_bytes, np.uint8)
+    image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+    if image is None: 
+        return {"error": "Could not read image"}
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # ==========================================
+    # STEP 1: PERFECT PERSPECTIVE WARP
+    # ==========================================
+    processing_mat, anchors_found, paper_edge_used = crop_to_sheet(image, corners)
 
     # ==========================================
     # STEP 2: 6 MAIN BLOCKS EXTRACTION
@@ -627,6 +692,46 @@ async def scan_omr(file: UploadFile = File(...), corners: str = Form(default=Non
     contents = await file.read()
     color_mode = "any_color" if mode == "any_color" else "strict"
     return process_omr_logic(contents, corners=parsed, color_mode=color_mode)
+
+
+@app.post("/api/v1/enhance-scan", dependencies=[Depends(verify_api_key)])
+async def enhance_scan_endpoint(file: UploadFile = File(...), corners: str = Form(default=None)):
+    """Standalone 'clean scan' feature (CamScanner-style): auto-crops the
+    sheet to its own edges/corner markers and evens out lighting/contrast,
+    without running OMR detection. Returns a base64 JPEG for the frontend
+    to preview or let the user download.
+
+    Note: the returned cleaned_image is for viewing/downloading only —
+    do NOT re-submit it to /api/v1/scan-omr. The illumination-normalizing
+    step here can wash out the 4 corner anchor squares that scan-omr's own
+    sheet-layout detection depends on. If the person wants both a clean
+    copy AND OMR scanning from the same photo, call the two endpoints
+    separately on the original uploaded photo, not chained."""
+    parsed = None
+    if corners:
+        try:
+            parsed = json.loads(corners)
+        except:
+            pass
+    contents = await file.read()
+    np_arr = np.frombuffer(contents, np.uint8)
+    image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+    if image is None:
+        return {"error": "Could not read image"}
+
+    processing_mat, anchors_found, paper_edge_used = crop_to_sheet(image, parsed)
+    cleaned = enhance_scan(processing_mat)
+
+    _, buf = cv2.imencode('.jpg', cleaned, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+    cleaned_b64 = base64.b64encode(buf).decode('utf-8')
+
+    return {
+        "cleaned_image": f"data:image/jpeg;base64,{cleaned_b64}",
+        "anchors_found": anchors_found,
+        "paper_edge_used": paper_edge_used,
+        "width": int(processing_mat.shape[1]),
+        "height": int(processing_mat.shape[0]),
+    }
 
 
 @app.get("/health")
