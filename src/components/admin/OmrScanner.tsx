@@ -33,6 +33,8 @@ interface OmrResult {
   options: { A: string; B: string; C: string; D: string };
   correct_answer: string;
   explanation: string;
+  skip_reason?: string | null;
+  bubble_fills?: Record<string, number>;
 }
 
 interface BubbleData {
@@ -78,6 +80,7 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
 
   // Scanning
   const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
 
   // Results
@@ -191,6 +194,11 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
     setStep("scanning");
     setIsScanning(true);
     setScanError(null);
+    setScanProgress(0);
+
+    const progressTimer = setInterval(() => {
+      setScanProgress(p => (p >= 90 ? p : p + (90 - p) * 0.15));
+    }, 200);
 
     try {
       const formData = new FormData();
@@ -291,6 +299,8 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
         variant: "destructive",
       });
     } finally {
+      clearInterval(progressTimer);
+      setScanProgress(100);
       setIsScanning(false);
     }
   };
@@ -475,30 +485,10 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
     );
   }
 
-  // Bubbles that look like they were meant to be marked but fell short of
-  // the 50% fill threshold — surfaced by exact question + fill% instead of
-  // a generic message. Only flagged when that question has no answer at all.
-  const nearMissBubbles = apiData
-    ? apiData.bubble_map
-        .filter(b => {
-          if (b.fillPct === undefined) return false;
-          if (b.fillPct < 30 || b.fillPct >= 50) return false;
-          const result = apiData.results.find(r => parseInt(r.question) === b.q);
-          return result && result.correct_answer === "";
-        })
-        .sort((a, b) => a.q - b.q)
-    : [];
-
-  // Questions voided because 2+ bubbles were both >=50% filled.
-  const voidedMultiMarkQuestions = apiData
-    ? apiData.results
-        .filter(r => r.correct_answer === "" && parseInt(r.question) <= 100)
-        .map(r => {
-          const qNum = parseInt(r.question);
-          const opts = apiData.bubble_map.filter(b => b.q === qNum && (b.fillPct ?? 0) >= 50);
-          return opts.length >= 2 ? { q: qNum, opts } : null;
-        })
-        .filter((v): v is { q: number; opts: BubbleData[] } => v !== null)
+  // Backend returns a precise, ready-to-show Bengali skip_reason string per
+  // question — just collect the unanswered ones with a reason.
+  const skippedQuestions = apiData
+    ? apiData.results.filter(r => r.correct_answer === "" && r.skip_reason && parseInt(r.question) <= 100)
     : [];
 
   return (
@@ -816,37 +806,26 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
                     /100 answered
                   </span>
                 </div>
-                <div className="px-3 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-1">
-                  {nearMissBubbles.length === 0 && voidedMultiMarkQuestions.length === 0 && (
-                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে (যেকোনো রঙের কালি দিয়ে)। হালকা টিক বা আংশিক দাগ দেওয়া বৃত্ত মিস হতে পারে — নিচে ট্যাপ করে নিজে ঠিক করে নিন।"
-                  )}
-                  {nearMissBubbles.length > 0 && (
-                    <div>
-                      <span className="font-semibold text-amber-800 dark:text-amber-300">
-                        {nearMissBubbles.length}টি বৃত্তে হালকা দাগ পাওয়া গেছে কিন্তু ৫০% ভরাট না হওয়ায় গণনা হয়নি:
-                      </span>{" "}
-                      {nearMissBubbles.map((b, i) => (
-                        <span key={`${b.q}-${b.opt}`}>
-                          {i > 0 && ", "}
-                          Q{b.q} ({b.opt}: {b.fillPct}%)
-                        </span>
+                <div className="px-3 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-0.5">
+                  {skippedQuestions.length === 0 ? (
+                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে। কোনো প্রশ্ন বাদ পড়েনি।"
+                  ) : (
+                    <>
+                      {Object.entries(
+                        skippedQuestions.reduce((groups: Record<string, number[]>, r) => {
+                          const reason = r.skip_reason as string;
+                          const qNum = parseInt(r.question);
+                          (groups[reason] ??= []).push(qNum);
+                          return groups;
+                        }, {})
+                      ).map(([reason, qNums]) => (
+                        <div key={reason}>
+                          <span className="font-semibold text-amber-800 dark:text-amber-300">{reason}</span>{" "}
+                          <span className="text-muted-foreground">({qNums.map(q => `Q${q}`).join(", ")})</span>
+                        </div>
                       ))}
-                      {" — ট্যাপ করে নিজে সিলেক্ট করে দিন।"}
-                    </div>
-                  )}
-                  {voidedMultiMarkQuestions.length > 0 && (
-                    <div>
-                      <span className="font-semibold text-red-700 dark:text-red-400">
-                        {voidedMultiMarkQuestions.length}টি প্রশ্নে ২টি বৃত্ত একসাথে ৫০%+ ভরাট পাওয়া গেছে (ডাবল-মার্ক ধরে বাতিল হয়েছে):
-                      </span>{" "}
-                      {voidedMultiMarkQuestions.map((v, i) => (
-                        <span key={v.q}>
-                          {i > 0 && ", "}
-                          Q{v.q} ({v.opts.map(o => `${o.opt}: ${o.fillPct}%`).join(" / ")})
-                        </span>
-                      ))}
-                      {" — ট্যাপ করে সঠিকটা নিজে সিলেক্ট করে দিন।"}
-                    </div>
+                      <div className="pt-0.5">ট্যাপ করে নিজে সিলেক্ট করে দিন।</div>
+                    </>
                   )}
                 </div>
                 <div className="max-h-[440px] overflow-y-auto p-3">

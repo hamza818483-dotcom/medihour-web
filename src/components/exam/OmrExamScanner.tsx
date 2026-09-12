@@ -42,6 +42,8 @@ interface OmrResult {
   options: { A: string; B: string; C: string; D: string };
   correct_answer: string;
   explanation: string;
+  skip_reason?: string | null;
+  bubble_fills?: Record<string, number>;
 }
 
 interface BubbleData {
@@ -88,6 +90,7 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
 
   // Scanning
   const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
 
   // Results
@@ -236,6 +239,15 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
     setStep("scanning");
     setIsScanning(true);
     setScanError(null);
+    setScanProgress(0);
+
+    // Simulate progress while the single fetch is in flight — there are no
+    // real progress events from the API, so ease toward 90% over the
+    // typical ~2-4s scan time and only jump to 100% once the response
+    // actually arrives (or fails), so the bar never falsely claims "done".
+    const progressTimer = setInterval(() => {
+      setScanProgress(p => (p >= 90 ? p : p + (90 - p) * 0.15));
+    }, 200);
 
     try {
       const formData = new FormData();
@@ -350,6 +362,8 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
       setStep(rawImage ? "crop" : "upload");
       toast({ title: "Scan Failed", description: msg, variant: "destructive" });
     } finally {
+      clearInterval(progressTimer);
+      setScanProgress(100);
       setIsScanning(false);
     }
   };
@@ -652,36 +666,12 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
   // Compute verification status
   const verificationResult = apiData ? verifyCredentials(apiData.roll_no, apiData.reg_no) : null;
 
-  // Bubbles that look like they were meant to be marked (visibly darker than
-  // blank, e.g. a light or partial pen stroke) but fell short of the 50%
-  // fill threshold, so the question was left blank. Surfaced by exact
-  // question + fill% so the student knows precisely why, instead of a
-  // generic message — only flagged when the question has no detected
-  // answer at all (a genuinely blank bubble sits near 0-5%, not worth
-  // flagging).
-  const nearMissBubbles = apiData
-    ? apiData.bubble_map
-        .filter(b => {
-          if (b.fillPct === undefined) return false;
-          if (b.fillPct < 30 || b.fillPct >= 50) return false;
-          const qId = questionIds[b.q - 1];
-          return qId && !scannedAnswers[qId];
-        })
-        .sort((a, b) => a.q - b.q)
-    : [];
-
-  // Questions voided because 2+ bubbles were both >=50% filled (double-mark
-  // rule) — different root cause from a near-miss, so called out separately
-  // with the exact two options involved.
-  const voidedMultiMarkQuestions = apiData
-    ? questionIds
-        .map((qId, idx) => {
-          const qNum = idx + 1;
-          if (scannedAnswers[qId]) return null;
-          const opts = apiData.bubble_map.filter(b => b.q === qNum && (b.fillPct ?? 0) >= 50);
-          return opts.length >= 2 ? { q: qNum, opts } : null;
-        })
-        .filter((v): v is { q: number; opts: BubbleData[] } => v !== null)
+  // Backend now returns a precise, ready-to-show Bengali skip_reason string
+  // per question (blank / too-light / colored-ink / multi-marked) — just
+  // collect the ones with a non-empty answer-less result, no need to
+  // re-derive the reason from raw fill percentages on the frontend.
+  const skippedQuestions = apiData
+    ? apiData.results.filter(r => r.correct_answer === "" && r.skip_reason)
     : [];
 
   // Collapsed view
@@ -860,12 +850,19 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
 
         {/* Step: Scanning */}
         {step === "scanning" && (
-          <div className="flex flex-col items-center gap-3 py-8">
+          <div className="flex flex-col items-center gap-3 py-8 w-full">
             <Loader2 className="h-8 w-8 text-violet-500 animate-spin" />
             <div className="text-center">
               <p className="font-semibold text-sm">Scanning OMR Sheet...</p>
               <p className="text-xs text-muted-foreground mt-1">Detecting bubbles, reading Roll & Reg No</p>
             </div>
+            <div className="w-full max-w-[240px] h-1.5 bg-muted rounded-full overflow-hidden mt-1">
+              <div
+                className="h-full bg-violet-500 transition-all duration-200 ease-out rounded-full"
+                style={{ width: `${Math.round(scanProgress)}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-muted-foreground">{Math.round(scanProgress)}%</p>
           </div>
         )}
 
@@ -992,37 +989,26 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                     {Object.keys(scannedAnswers).length}/{questionIds.length} detected
                   </span>
                 </div>
-                <div className="px-2.5 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-1">
-                  {nearMissBubbles.length === 0 && voidedMultiMarkQuestions.length === 0 && (
-                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে (যেকোনো রঙের কালি দিয়ে)। হালকা টিক বা আংশিক দাগ দেওয়া বৃত্ত মিস হতে পারে — নিচে ট্যাপ করে নিজে ঠিক করে নিন।"
-                  )}
-                  {nearMissBubbles.length > 0 && (
-                    <div>
-                      <span className="font-semibold text-amber-800 dark:text-amber-300">
-                        {nearMissBubbles.length}টি বৃত্তে হালকা দাগ পাওয়া গেছে কিন্তু ৫০% ভরাট না হওয়ায় গণনা হয়নি:
-                      </span>{" "}
-                      {nearMissBubbles.map((b, i) => (
-                        <span key={`${b.q}-${b.opt}`}>
-                          {i > 0 && ", "}
-                          Q{b.q} ({b.opt}: {b.fillPct}%)
-                        </span>
+                <div className="px-2.5 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-0.5">
+                  {skippedQuestions.length === 0 ? (
+                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে। কোনো প্রশ্ন বাদ পড়েনি।"
+                  ) : (
+                    <>
+                      {Object.entries(
+                        skippedQuestions.reduce((groups: Record<string, number[]>, r) => {
+                          const reason = r.skip_reason as string;
+                          const qNum = parseInt(r.question);
+                          (groups[reason] ??= []).push(qNum);
+                          return groups;
+                        }, {})
+                      ).map(([reason, qNums]) => (
+                        <div key={reason}>
+                          <span className="font-semibold text-amber-800 dark:text-amber-300">{reason}</span>{" "}
+                          <span className="text-muted-foreground">({qNums.map(q => `Q${q}`).join(", ")})</span>
+                        </div>
                       ))}
-                      {" — ট্যাপ করে নিজে সিলেক্ট করে দিন।"}
-                    </div>
-                  )}
-                  {voidedMultiMarkQuestions.length > 0 && (
-                    <div>
-                      <span className="font-semibold text-red-700 dark:text-red-400">
-                        {voidedMultiMarkQuestions.length}টি প্রশ্নে ২টি বৃত্ত একসাথে ৫০%+ ভরাট পাওয়া গেছে (ডাবল-মার্ক ধরে বাতিল হয়েছে):
-                      </span>{" "}
-                      {voidedMultiMarkQuestions.map((v, i) => (
-                        <span key={v.q}>
-                          {i > 0 && ", "}
-                          Q{v.q} ({v.opts.map(o => `${o.opt}: ${o.fillPct}%`).join(" / ")})
-                        </span>
-                      ))}
-                      {" — ট্যাপ করে সঠিকটা নিজে সিলেক্ট করে দিন।"}
-                    </div>
+                      <div className="pt-0.5">ট্যাপ করে নিজে সিলেক্ট করে দিন।</div>
+                    </>
                   )}
                 </div>
                 <div className="max-h-[360px] overflow-y-auto p-2.5">
