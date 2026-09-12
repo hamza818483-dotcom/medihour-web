@@ -200,12 +200,15 @@ def enhance_scan(image):
     # lighting from a phone photo) using a large-kernel median blur as the
     # background estimate — this is the same core trick CamScanner-style
     # "auto enhance" filters use to make a photo look like a flat scan.
-    # The kernel must be large relative to the biggest dark feature on the
-    # page (a filled OMR bubble, printed header bars, etc.) or those
-    # features leak into the "background" estimate and reappear as faint
-    # halos after division — so scale it to the image size rather than
-    # using a fixed pixel count that only works for one photo resolution.
-    bg_kernel = max(41, (min(gray.shape[:2]) // 15) | 1)  # odd, ~1/15th of the shorter side
+    # The kernel must be large relative to the biggest dark FEATURE on the
+    # page — and on this sheet that's not a bubble, it's the solid printed
+    # header bars ("Q. No. / Answer"), which can be hundreds of pixels
+    # wide. A kernel only ~1/15th of the image's shorter side (previously
+    # tried) was big enough to stop bubble halos but still partly "saw
+    # through" those wide header bars, patchily washing out their text.
+    # 1/8th of the shorter side comfortably exceeds the header bar height
+    # on real photos of this sheet at typical phone-camera resolutions.
+    bg_kernel = max(41, (min(gray.shape[:2]) // 8) | 1)  # odd, ~1/8th of the shorter side
     bg = cv2.medianBlur(gray, bg_kernel)
     bg = np.where(bg == 0, 1, bg).astype(np.float32)
     normalized = (gray.astype(np.float32) / bg) * 255.0
