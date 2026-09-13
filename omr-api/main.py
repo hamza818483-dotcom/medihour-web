@@ -4,6 +4,7 @@ import numpy as np
 import base64
 import json
 import random
+import statistics
 from fastapi import FastAPI, File, UploadFile, Form, Header, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -581,14 +582,42 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         start_y = start_y_center - (row_h / 2.0)
         opt_start_x = opt_start_x_center - (opt_w / 2.0)
 
+        # PASS 1: sample every bubble in this 25-question block first,
+        # before deciding anything. This lets us compute each option
+        # column's (A/B/C/D) own median fill% ACROSS the whole block, which
+        # is needed for pass 2 below.
+        block_rows = []
         for r in range(25):
             row_y = start_y + (r * row_h)
             means = []
-            
             for opt in range(4):
                 col_x = opt_start_x + (opt * opt_w)
                 fill_pct = get_fill_percent(col_x, row_y, opt_w, row_h)
                 means.append({'opt': opt, 'val': fill_pct, 'x': col_x})
+            block_rows.append({'row_y': row_y, 'means': means})
+
+        # A real phone photo often has a mild but CONSISTENT lighting
+        # gradient across a block — e.g. option A's column reads several
+        # points darker than option D's column throughout, from uneven
+        # lighting/shadow/camera angle rather than any student's pen. A
+        # plain per-row (min vs max) gap check can't tell that apart from a
+        # genuine mark, and on a block with this kind of gradient it can
+        # misfire on multiple genuinely-blank rows (seen concretely: gaps
+        # up to ~21 on blank rows in one real test photo, closer to a real
+        # light mark's gap than to a normal blank row's ~10-15). Subtracting
+        # each column's own median across the block removes that
+        # structural per-column bias while leaving a real mark's deviation
+        # from ITS OWN column's typical value untouched.
+        col_baseline = [
+            statistics.median(row['means'][opt]['val'] for row in block_rows)
+            for opt in range(4)
+        ]
+
+        # PASS 2: now decide each row's answer using column-adjusted values.
+        for row in block_rows:
+            row_y = row['row_y']
+            means = row['means']
+            adjusted = [m['val'] - col_baseline[m['opt']] for m in means]
             
             # A fixed absolute fill% threshold doesn't work across a real
             # phone photo: per-ROI Otsu auto-thresholding produces a "blank
@@ -602,11 +631,10 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
             #
             # What stays reliable regardless of lighting: a real mark is
             # always MUCH darker than the other 3 (blank) options in the
-            # SAME row, because they share the same lighting conditions.
-            # So detect marks by relative gap within the row instead - same
-            # approach already used for roll/reg digit detection above.
-            min_v = min(m['val'] for m in means)
-            max_v = max(m['val'] for m in means)
+            # SAME row, once each option's own column-wide lighting bias
+            # (col_baseline, from pass 1) is subtracted out first.
+            min_v = min(adjusted)
+            max_v = max(adjusted)
             marked = []
             if max_v - min_v > 20:
                 # There's a meaningful gap between the darkest and lightest
@@ -615,7 +643,7 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
                 # end of that gap (any real double-mark still surfaces here
                 # since both dark options would clear this line together).
                 gap_threshold = min_v + ((max_v - min_v) * 0.5)
-                marked = [m for m in means if m['val'] >= gap_threshold]
+                marked = [m for m, a in zip(means, adjusted) if a >= gap_threshold]
             selected = marked if len(marked) == 1 else []
 
             # Always record all 4 bubble positions for this question

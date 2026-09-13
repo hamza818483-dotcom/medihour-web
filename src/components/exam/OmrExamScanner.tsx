@@ -1109,7 +1109,15 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                             </span>
                           </button>
                           {isEditing && (
-                            <div className="absolute z-30 top-full left-1/2 -translate-x-1/2 mt-1 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1.5">
+                            <div
+                              className={`absolute z-30 top-full mt-1 flex gap-1 bg-background border border-border rounded-lg shadow-lg p-1.5 ${
+                                idx % 5 === 0
+                                  ? "left-0"
+                                  : idx % 5 === 4
+                                  ? "right-0"
+                                  : "left-1/2 -translate-x-1/2"
+                              }`}
+                            >
                               {["A", "B", "C", "D"].map((opt) => (
                                 <button
                                   key={opt}
