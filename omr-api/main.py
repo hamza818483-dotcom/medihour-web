@@ -673,30 +673,51 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
                 reason = f"একাধিক বৃত্ত ভরাট পাওয়া গেছে ({marked_opts}) — তাই এই প্রশ্নের উত্তর গণনা করা হয়নি।"
             else:
                 # Nothing stood out from this row's own blank baseline via
-                # the relative-gap check above. Use the same relative logic
-                # on raw (color-inclusive) darkness to phrase the skip
-                # reason: was anything at all attempted here (even in a
-                # non-black color), or is the row genuinely untouched?
-                best_black = max(means, key=lambda m: m['val'])
-                raw_vals = [get_raw_dark_percent(opt_start_x + (opt * opt_w), row_y, opt_w, row_h) for opt in range(4)]
-                best_raw_idx = int(np.argmax(raw_vals))
-                best_raw_val = raw_vals[best_raw_idx]
-                raw_min = min(raw_vals)
-                raw_gap = best_raw_val - raw_min
+                # the relative-gap check above (using column-adjusted
+                # values). Only phrase a specific "something was attempted
+                # here" message when the COLUMN-ADJUSTED signal itself
+                # shows something — using raw (un-adjusted) darkness for
+                # this decision let the same per-column lighting-gradient
+                # bias that motivated the adjustment above sneak back in
+                # through this fallback path, incorrectly claiming a
+                # specific option was "attempted" (or was in a colored
+                # pen) on a genuinely blank row that just had one column
+                # read a few points darker than the others. When even the
+                # adjusted values don't show a clear standout, the honest
+                # answer is simply "nothing was marked" — guessing an
+                # option here does more harm than good.
+                best_adj_idx = int(np.argmax(adjusted))
+                best_adj_val = adjusted[best_adj_idx]
+                best_adj_gap = best_adj_val - min(adjusted)
 
-                if raw_gap <= 20:
-                    # No option's raw darkness stands out from the row's
-                    # baseline either - genuinely nothing was marked here.
+                if best_adj_gap <= 20:
                     reason = "কোনো বৃত্ত ভরাট করা হয়নি (উত্তর মিস করা হয়েছে)।"
-                elif color_mode != "any_color" and (best_black['val'] - min(m['val'] for m in means)) <= 20:
-                    reason = (
-                        f"বৃত্ত ({labels[best_raw_idx]}) ভরাট করা হয়েছে কিন্তু কালো/গাঢ় কালিতে নয় (রঙিন কলম ব্যবহার হয়েছে) "
-                        f"— শুধুমাত্র কালো বল/জেল পেন বা পেন্সিল দিয়ে ভরাট করলে সেটি গণনা হবে।"
-                    )
+                elif color_mode != "any_color":
+                    # Something stands out even after removing the
+                    # column's lighting bias, but not enough to count as a
+                    # confident mark (the >20 relative-gap check above).
+                    # Distinguish "attempted in a non-black colour" from
+                    # "attempted but too faint" using the same raw-color
+                    # darkness check as the main detector, since that
+                    # distinction genuinely does depend on colour/ink
+                    # information the column-adjusted grayscale values
+                    # don't carry.
+                    raw_vals = [get_raw_dark_percent(opt_start_x + (opt * opt_w), row_y, opt_w, row_h) for opt in range(4)]
+                    raw_gap = raw_vals[best_adj_idx] - min(raw_vals)
+                    if raw_gap > 20 and (best_adj_val - min(m['val'] for m in means)) <= 20:
+                        reason = (
+                            f"বৃত্ত ({labels[best_adj_idx]}) ভরাট করা হয়েছে কিন্তু কালো/গাঢ় কালিতে নয় (রঙিন কলম ব্যবহার হয়েছে) "
+                            f"— শুধুমাত্র কালো বল/জেল পেন বা পেন্সিল দিয়ে ভরাট করলে সেটি গণনা হবে।"
+                        )
+                    else:
+                        reason = (
+                            f"বৃত্ত ({labels[best_adj_idx]}) ভরাট করার চেষ্টা করা হয়েছে কিন্তু কালি যথেষ্ট গাঢ়/কালো নয় "
+                            f"(মাত্র {means[best_adj_idx]['val']:.0f}% কালো ভরাট মনে হয়েছে) — তাই এটি গণনা করা হয়নি। বৃত্ত সম্পূর্ণ কালো কলম/পেন্সিল দিয়ে ভরাট করতে হবে।"
+                        )
                 else:
                     reason = (
-                        f"বৃত্ত ({labels[best_black['opt']]}) ভরাট করার চেষ্টা করা হয়েছে কিন্তু কালি যথেষ্ট গাঢ়/কালো নয় "
-                        f"(মাত্র {best_black['val']:.0f}% কালো ভরাট মনে হয়েছে) — তাই এটি গণনা করা হয়নি। বৃত্ত সম্পূর্ণ কালো কলম/পেন্সিল দিয়ে ভরাট করতে হবে।"
+                        f"বৃত্ত ({labels[best_adj_idx]}) ভরাট করার চেষ্টা করা হয়েছে কিন্তু কালি যথেষ্ট গাঢ়/কালো নয় "
+                        f"(মাত্র {means[best_adj_idx]['val']:.0f}% কালো ভরাট মনে হয়েছে) — তাই এটি গণনা করা হয়নি। বৃত্ত সম্পূর্ণ কালো কলম/পেন্সিল দিয়ে ভরাট করতে হবে।"
                     )
 
             # Formatted per your strict JSON requirements
