@@ -816,22 +816,44 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
                 </div>
                 <div className="px-3 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-0.5">
                   {skippedQuestions.length === 0 ? (
-                    "একটি বৃত্ত তখনই \"উত্তর\" হিসেবে গণ্য হবে যখন সেটি কমপক্ষে ৫০% ভরাট থাকবে। কোনো প্রশ্ন বাদ পড়েনি।"
+                    "কোনো প্রশ্ন বাদ পড়েনি।"
                   ) : (
                     <>
-                      {Object.entries(
-                        skippedQuestions.reduce((groups: Record<string, number[]>, r) => {
-                          const reason = r.skip_reason as string;
+                      {(() => {
+                        // Two buckets only — not-marked vs multi-marked —
+                        // with just a question-number list per bucket, no
+                        // per-question explanatory sentence.
+                        const notMarked: number[] = [];
+                        const multiMarked: number[] = [];
+                        skippedQuestions.forEach(r => {
                           const qNum = parseInt(r.question);
-                          (groups[reason] ??= []).push(qNum);
-                          return groups;
-                        }, {})
-                      ).map(([reason, qNums]) => (
-                        <div key={reason}>
-                          <span className="font-semibold text-amber-800 dark:text-amber-300">{reason}</span>{" "}
-                          <span className="text-muted-foreground">({qNums.map(q => `Q${q}`).join(", ")})</span>
-                        </div>
-                      ))}
+                          if ((r.skip_reason || "").includes("একাধিক")) {
+                            multiMarked.push(qNum);
+                          } else {
+                            notMarked.push(qNum);
+                          }
+                        });
+                        return (
+                          <>
+                            {notMarked.length > 0 && (
+                              <div>
+                                <span className="font-semibold text-amber-800 dark:text-amber-300">
+                                  ভরাট করা হয়নি ({notMarked.length}টি):
+                                </span>{" "}
+                                <span className="text-muted-foreground">{notMarked.map(q => `Q${q}`).join(", ")}</span>
+                              </div>
+                            )}
+                            {multiMarked.length > 0 && (
+                              <div>
+                                <span className="font-semibold text-red-700 dark:text-red-400">
+                                  একাধিক বৃত্ত ভরাট ({multiMarked.length}টি):
+                                </span>{" "}
+                                <span className="text-muted-foreground">{multiMarked.map(q => `Q${q}`).join(", ")}</span>
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                       <div className="pt-0.5">ট্যাপ করে নিজে সিলেক্ট করে দিন।</div>
                     </>
                   )}
