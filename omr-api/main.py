@@ -608,6 +608,17 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         # each column's own median across the block removes that
         # structural per-column bias while leaving a real mark's deviation
         # from ITS OWN column's typical value untouched.
+        #
+        # A lower-quartile baseline was tried instead (more resistant in
+        # theory to a block where most rows genuinely share one answer),
+        # but it measurably regressed on the real photo that motivated this
+        # fix in the first place — it sits low enough that ordinary blank-
+        # row noise/gradient crossed the gap threshold again, resurrecting
+        # the exact false "multiple bubbles filled" bug this is meant to
+        # fix. Median is the value actually verified against real data;
+        # the failure mode it doesn't cover (60%+ of one block sharing an
+        # answer) is a much rarer, more hypothetical case than the concrete
+        # bug reproduced here, so it stays the safer default.
         col_baseline = [
             statistics.median(row['means'][opt]['val'] for row in block_rows)
             for opt in range(4)
