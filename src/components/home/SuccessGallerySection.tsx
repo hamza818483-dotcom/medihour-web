@@ -72,9 +72,6 @@ export const SuccessGallerySection = () => {
               সাফল্যের পথে এগিয়ে চলেছে
             </span>
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-white/58">
-            আমাদের শিক্ষার্থীদের অর্জন ও স্মরণীয় মুহূর্তগুলো
-          </p>
         </div>
         <div className="hidden h-px w-[70px] flex-none bg-gradient-to-l from-transparent to-[#6877ff] sm:block" />
       </div>
