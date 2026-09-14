@@ -8,7 +8,7 @@ import { ChevronLeft, FileText, PlayCircle } from "lucide-react";
 import PublicHeader from "@/components/PublicHeader";
 import { DemoContentItem } from "@/types/admin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ClassPlayer from "@/components/ClassPlayer";
+import { getEmbedUrl } from "@/lib/videoUtils";
 
 const DemoClassPlayerPage = () => {
   const { courseId, demoIndex } = useParams<{ courseId: string; demoIndex: string }>();
@@ -74,17 +74,6 @@ const DemoClassPlayerPage = () => {
       );
   }
 
-  // Helper to extract YouTube ID if possible for embedding, else fallback to generic iframe/link
-  const getEmbedUrl = (url: string) => {
-      // Basic youtube ID extraction
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = url.match(regExp);
-      if (match && match[2].length === 11) {
-          return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
-      }
-      return url;
-  };
-
   const hasVideo = !!currentItem.video_url;
   const hasNote = !!currentItem.note_url;
 
@@ -133,9 +122,12 @@ const DemoClassPlayerPage = () => {
                   <CardContent className="p-0 min-h-[400px]">
                       {view === 'video' && hasVideo && currentItem.video_url ? (
                            <div className="aspect-video bg-black w-full">
-                               <ClassPlayer
-                                  videoId={currentItem.video_url}
+                               <iframe
+                                  src={getEmbedUrl(currentItem.video_url) || currentItem.video_url}
                                   title={currentItem.title}
+                                  className="w-full h-full"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
                                />
                            </div>
                       ) : view === 'note' && hasNote && currentItem.note_url ? (
