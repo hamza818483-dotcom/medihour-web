@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft, Users, CheckCircle2, Star, Gift, PlayCircle, Check, Loader2, Copy, Download, Eye } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -19,7 +18,6 @@ import { trackPixelEvent } from "@/lib/metaPixel";
 const CountdownTimer = ({ deadline }: { deadline: string }) => {
   const [time, setTime] = useState<{ d: number; h: number; m: number; s: number } | null>(null);
   const [expired, setExpired] = useState(false);
-  const [extraLinkVideo, setExtraLinkVideo] = useState<{ label: string; url: string } | null>(null);
 
   useEffect(() => {
     const update = () => {
@@ -81,6 +79,7 @@ const CountdownTimer = ({ deadline }: { deadline: string }) => {
 const CourseDetails = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const [couponCode, setCouponCode] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
@@ -732,13 +731,11 @@ const CourseDetails = () => {
             <h2 className="mb-3 text-lg font-bold">এই কোর্স সম্পর্কে আরো:</h2>
             <div className="flex flex-col gap-3">
               {((course as any).extra_links as { label: string; url: string }[]).map((l, i) => {
-                const rawUrl = (l.url || "").trim();
-                const safeUrl = /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
                 return (
                   <button
                     key={i}
                     type="button"
-                    onClick={() => setExtraLinkVideo({ label: l.label, url: safeUrl })}
+                    onClick={() => navigate(`/courses/${courseId}/extra-link/${i}`)}
                     className="group flex w-full items-center gap-4 rounded-2xl border bg-gradient-to-br from-card to-secondary/40 p-4 shadow-sm transition hover:shadow-md hover:border-primary/40 text-left"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -751,28 +748,6 @@ const CourseDetails = () => {
             </div>
           </div>
         )}
-
-      <Dialog open={!!extraLinkVideo} onOpenChange={(open) => !open && setExtraLinkVideo(null)}>
-        <DialogContent className="max-w-3xl p-0 overflow-hidden bg-black">
-          {extraLinkVideo && (
-            (() => {
-              const embed = getEmbedUrl(extraLinkVideo.url);
-              const src = embed || extraLinkVideo.url;
-              return (
-                <div className="aspect-video w-full">
-                  <iframe
-                    src={src}
-                    title={extraLinkVideo.label}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              );
-            })()
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

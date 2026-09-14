@@ -62,6 +62,7 @@ import AdmissionTest from "./pages/dashboard/AdmissionTest";
 import AdmissionTestPlay from "./pages/dashboard/AdmissionTestPlay";
 import ClassPlayerPage from "./pages/dashboard/ClassPlayerPage";
 import DemoClassPlayerPage from "./pages/dashboard/DemoClassPlayerPage";
+import ExtraLinkPlayerPage from "./pages/public/ExtraLinkPlayerPage";
 import AdminDashboardHome from "./pages/dashboard/admin/AdminDashboardHome";
 import AdminCourses from "./pages/dashboard/admin/AdminCourses";
 import AdminStudents from "./pages/dashboard/admin/AdminStudents";
@@ -129,6 +130,7 @@ const App = () => {
                 <Route path="/reset-password" element={<ErrorBoundary><ResetPassword /></ErrorBoundary>} />
                 <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
                 <Route path="/courses/:courseId" element={<ErrorBoundary><CourseDetails /></ErrorBoundary>} />
+                <Route path="/courses/:courseId/extra-link/:linkIndex" element={<ErrorBoundary><ExtraLinkPlayerPage /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/buy" element={<ErrorBoundary><CourseBuy /></ErrorBoundary>} />
                 <Route path="/free-class" element={<ErrorBoundary><FreeClass /></ErrorBoundary>} />
                 <Route path="/free-exam" element={<ErrorBoundary><FreeExam /></ErrorBoundary>} />
