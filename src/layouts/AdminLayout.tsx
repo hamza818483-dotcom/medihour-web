@@ -53,7 +53,7 @@ export const AdminLayout = () => {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div className="flex items-center gap-2">
-                <div className="bg-white rounded p-1 hidden xs:block">
+                <div className="bg-black rounded p-1 hidden xs:block">
                   <img src="/logo.png" alt="Atlas Logo" className="h-8 w-auto object-contain" />
                 </div>
                 <Link to="/dashboard" className="text-sm font-semibold hover:underline">Dashboard</Link>

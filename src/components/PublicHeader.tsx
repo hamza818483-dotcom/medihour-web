@@ -52,8 +52,8 @@ export const PublicHeader = () => {
       <div className="mx-auto w-full max-w-[1180px] px-3 sm:px-5">
         <nav className="flex h-[62px] items-center gap-5">
           {/* Logo */}
-          <a href="/" className="flex flex-shrink-0 items-center">
-            <img src="/logo.png" alt="MediHour" className="h-[45px] w-[135px] object-contain" />
+          <a href="/" className="flex flex-shrink-0 items-center rounded-lg bg-black px-2.5 py-1.5">
+            <img src="/logo.png" alt="MediHour" className="h-[38px] w-auto object-contain" />
           </a>
 
           {/* Desktop Nav */}

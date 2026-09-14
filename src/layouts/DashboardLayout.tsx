@@ -277,7 +277,7 @@ export const DashboardLayout = () => {
               </Button>
               <div className="flex items-center gap-2">
                 {location.pathname === "/dashboard" ? (
-                  <Link to="/" className="bg-white rounded p-1 shrink-0" aria-label="Go to homepage">
+                  <Link to="/" className="bg-black rounded p-1 shrink-0" aria-label="Go to homepage">
                     <img src="/logo.png" alt="Atlas Logo" className="h-8 w-auto object-contain" />
                   </Link>
                 ) : (
