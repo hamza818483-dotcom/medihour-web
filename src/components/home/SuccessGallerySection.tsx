@@ -50,6 +50,19 @@ export const SuccessGallerySection = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: links } = useQuery({
+    queryKey: ["success-gallery-heading-public"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("official_links")
+        .select("success_gallery_title, success_gallery_subtitle")
+        .eq("id", 1)
+        .maybeSingle();
+      return data;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   const row1 = useDragScroll();
   const row2 = useDragScroll();
 
@@ -67,11 +80,22 @@ export const SuccessGallerySection = () => {
         <div className="hidden h-px w-[70px] flex-none bg-gradient-to-r from-transparent to-[#ff4081] sm:block" />
         <div className="max-w-[850px]">
           <h2 className="m-0 text-[clamp(24px,4vw,40px)] font-extrabold leading-[1.35] tracking-[-0.4px] text-white">
-            MediHour-এর হাত ধরে{" "}
-            <span className="bg-gradient-to-r from-[#ff5a91] via-[#ef55d7] to-[#6978ff] bg-clip-text text-transparent">
-              সাফল্যের পথে এগিয়ে চলেছে
-            </span>
+            {links?.success_gallery_title ? (
+              links.success_gallery_title
+            ) : (
+              <>
+                MediHour-এর হাত ধরে{" "}
+                <span className="bg-gradient-to-r from-[#ff5a91] via-[#ef55d7] to-[#6978ff] bg-clip-text text-transparent">
+                  সাফল্যের পথে এগিয়ে চলেছে
+                </span>
+              </>
+            )}
           </h2>
+          {links?.success_gallery_subtitle && (
+            <p className="mt-2 text-sm leading-relaxed text-white/58">
+              {links.success_gallery_subtitle}
+            </p>
+          )}
         </div>
         <div className="hidden h-px w-[70px] flex-none bg-gradient-to-l from-transparent to-[#6877ff] sm:block" />
       </div>

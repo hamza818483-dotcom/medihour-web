@@ -36,6 +36,13 @@ const gallerySchema = z.object({
 
 type GalleryFormValues = z.infer<typeof gallerySchema>;
 
+const headingSchema = z.object({
+  success_gallery_title: z.string().optional(),
+  success_gallery_subtitle: z.string().optional(),
+});
+
+type HeadingFormValues = z.infer<typeof headingSchema>;
+
 const AdminSuccessGallery = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -49,6 +56,44 @@ const AdminSuccessGallery = () => {
   const form = useForm<GalleryFormValues>({
     resolver: zodResolver(gallerySchema),
     defaultValues: { image_url: "", caption: "", display_order: 0 },
+  });
+
+  const { data: links } = useQuery({
+    queryKey: ["admin-official-links-gallery"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("official_links").select("*").eq("id", 1).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const headingForm = useForm<HeadingFormValues>({
+    resolver: zodResolver(headingSchema),
+    values: {
+      success_gallery_title: links?.success_gallery_title || "",
+      success_gallery_subtitle: links?.success_gallery_subtitle || "",
+    },
+  });
+
+  const headingMutation = useMutation({
+    mutationFn: async (values: HeadingFormValues) => {
+      const { error } = await supabase
+        .from("official_links")
+        .update({
+          success_gallery_title: values.success_gallery_title || null,
+          success_gallery_subtitle: values.success_gallery_subtitle || null,
+        })
+        .eq("id", 1);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: "Heading updated" });
+      queryClient.invalidateQueries({ queryKey: ["admin-official-links-gallery"] });
+      queryClient.invalidateQueries({ queryKey: ["success-gallery-heading-public"] });
+    },
+    onError: (error) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
   });
 
   const { data: photos, isLoading } = useQuery({
@@ -192,6 +237,49 @@ const AdminSuccessGallery = () => {
           </DialogContent>
         </Dialog>
       </div>
+
+      <Card>
+        <CardContent className="space-y-4 p-4">
+          <div>
+            <h3 className="text-base font-bold">Section Heading</h3>
+            <p className="text-sm text-muted-foreground">Title & subtitle shown above the gallery on the homepage.</p>
+          </div>
+          <Form {...headingForm}>
+            <form onSubmit={headingForm.handleSubmit((v) => headingMutation.mutate(v))} className="space-y-3">
+              <FormField
+                control={headingForm.control}
+                name="success_gallery_title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. আমাদের সাফল্যের গ্যালারি" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={headingForm.control}
+                name="success_gallery_subtitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Subtitle (optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. আমাদের শিক্ষার্থীদের অর্জন ও স্মরণীয় মুহূর্তগুলো" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" disabled={headingMutation.isPending}>
+                {headingMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Heading
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardContent className="p-0">
