@@ -326,6 +326,12 @@ const AdminCourses = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      const { error: promoError } = await (supabase as any)
+        .from("promo_codes")
+        .delete()
+        .eq("course_id", id);
+      if (promoError) throw promoError;
+
       const { error } = await supabase.from("courses").delete().eq("id", id);
       if (error) throw error;
     },
