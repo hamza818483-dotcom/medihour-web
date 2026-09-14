@@ -86,7 +86,7 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
   if (isImageOnly) {
     return (
       <section className="min-w-0 flex-[0_0_100%]">
-        <a href={hero.cta_link || "#"} className="block relative w-full h-auto aspect-video md:h-[700px] overflow-hidden bg-background cursor-pointer hover:opacity-95 transition-opacity">
+        <div className="block relative w-full h-auto aspect-video md:h-[700px] overflow-hidden bg-background">
           {heroEmbed ? (
             <iframe
               src={`${heroEmbed}&autoplay=1&mute=0`}
@@ -122,7 +122,7 @@ const HeroCarouselItem: React.FC<HeroCarouselItemProps> = ({ hero }) => {
               </div>
             </div>
           )}
-        </a>
+        </div>
       </section>
     );
   }
