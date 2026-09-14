@@ -130,6 +130,7 @@ const App = () => {
                 <Route path="/reset-password" element={<ErrorBoundary><ResetPassword /></ErrorBoundary>} />
                 <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
                 <Route path="/courses/:courseId" element={<ErrorBoundary><CourseDetails /></ErrorBoundary>} />
+                <Route path="/courses/:courseId/demo/:demoIndex" element={<ErrorBoundary><DemoClassPlayerPage /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/extra-link/:linkIndex" element={<ErrorBoundary><ExtraLinkPlayerPage /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/buy" element={<ErrorBoundary><CourseBuy /></ErrorBoundary>} />
                 <Route path="/free-class" element={<ErrorBoundary><FreeClass /></ErrorBoundary>} />

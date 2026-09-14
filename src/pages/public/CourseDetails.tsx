@@ -682,11 +682,11 @@ const CourseDetails = () => {
       {/* Demo content list — grouped by sub-course, matching reference layout */}
       {Array.isArray((course as any).demo_content) && (course as any).demo_content.length > 0 && (() => {
         const items = (course as any).demo_content as DemoContentItem[];
-        const groups = new Map<string, DemoContentItem[]>();
-        items.forEach((d) => {
+        const groups = new Map<string, { item: DemoContentItem; index: number }[]>();
+        items.forEach((d, idx) => {
           const key = d.sub_course_name?.trim() || "ডেমো ক্লাস";
           if (!groups.has(key)) groups.set(key, []);
-          groups.get(key)!.push(d);
+          groups.get(key)!.push({ item: d, index: idx });
         });
         return (
           <div className="mb-6 space-y-6">
@@ -697,13 +697,13 @@ const CourseDetails = () => {
                   <p className="text-sm text-muted-foreground">No demo videos for this course.</p>
                 ) : (
                   <div className="space-y-3">
-                    {list.map((d, i) => (
-                      <a
-                        key={i}
-                        href={d.is_locked ? undefined : d.video_url || undefined}
-                        target={d.video_url ? "_blank" : undefined}
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-3 rounded-xl border p-3 ${d.is_locked ? "opacity-60 pointer-events-none" : "hover:border-blue-300 hover:shadow-sm transition"}`}
+                    {list.map(({ item: d, index: idx }) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        disabled={d.is_locked || !d.video_url}
+                        onClick={() => navigate(`/courses/${courseId}/demo/${idx}`)}
+                        className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left ${d.is_locked || !d.video_url ? "opacity-60 pointer-events-none" : "hover:border-blue-300 hover:shadow-sm transition"}`}
                       >
                         {d.lecture_number && (
                           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-600">
@@ -712,7 +712,7 @@ const CourseDetails = () => {
                         )}
                         <span className="flex-1 truncate text-sm font-semibold">{d.title}</span>
                         <PlayCircle className="h-5 w-5 shrink-0 text-blue-600" />
-                      </a>
+                      </button>
                     ))}
                   </div>
                 )}
