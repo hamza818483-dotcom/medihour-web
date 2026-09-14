@@ -48,11 +48,11 @@ export const PublicHeader = () => {
   ];
 
   return (
-    <header className="w-full border-b bg-white/95 backdrop-blur dark:bg-slate-900/95 dark:border-white/10">
+    <header className="w-full border-b border-white/10 bg-black">
       <div className="mx-auto w-full max-w-[1180px] px-3 sm:px-5">
         <nav className="flex h-[62px] items-center gap-5">
           {/* Logo */}
-          <a href="/" className="flex flex-shrink-0 items-center rounded-lg bg-black px-2.5 py-1.5">
+          <a href="/" className="flex flex-shrink-0 items-center">
             <img src="/logo.png" alt="MediHour" className="h-[38px] w-auto object-contain" />
           </a>
 
@@ -62,10 +62,10 @@ export const PublicHeader = () => {
               <a
                 key={item.href}
                 href={item.href}
-                className={`group relative inline-flex items-center gap-[7px] rounded-[11px] px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:origin-left after:scale-x-0 after:rounded-full after:bg-[#2563eb] after:transition-transform after:duration-200 hover:bg-[#eff6ff] hover:text-[#2563eb] hover:after:scale-x-100 dark:hover:bg-blue-500/10 ${
+                className={`group relative inline-flex items-center gap-[7px] rounded-[11px] px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:origin-left after:scale-x-0 after:rounded-full after:bg-[#ef2d75] after:transition-transform after:duration-200 hover:bg-white/5 hover:text-[#ef2d75] hover:after:scale-x-100 ${
                   item.active
-                    ? "bg-[#fff2f7] text-[#2563eb] font-bold after:scale-x-100"
-                    : "text-[#777] dark:text-slate-300"
+                    ? "bg-white/5 text-[#ef2d75] font-bold after:scale-x-100"
+                    : "text-white/70"
                 }`}
               >
                 <span className="inline-flex w-[17px] items-center justify-center">
@@ -81,16 +81,16 @@ export const PublicHeader = () => {
             {/* Hotline box */}
             <a
               href={`tel:${hotline}`}
-              className="hidden items-center gap-2 rounded-[13px] border border-[#eee] bg-white py-[5px] pl-[7px] pr-[11px] transition-all duration-200 hover:-translate-y-px hover:border-[#bfdbfe] hover:bg-[#eff6ff] hover:shadow-[0_5px_15px_rgba(37,99,235,0.1)] sm:flex dark:bg-slate-800/70 dark:border-white/10"
+              className="hidden items-center gap-2 rounded-[13px] border border-white/10 bg-white/5 py-[5px] pl-[7px] pr-[11px] transition-all duration-200 hover:-translate-y-px hover:bg-white/10 sm:flex"
             >
-              <span className="flex h-[31px] w-[31px] flex-shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] text-white shadow-[0_4px_10px_rgba(239,45,117,0.2)]">
+              <span className="flex h-[31px] w-[31px] flex-shrink-0 items-center justify-center rounded-[9px] bg-gradient-to-br from-[#ef2d75] to-[#c81e5f] text-white shadow-[0_4px_10px_rgba(239,45,117,0.3)]">
                 <Phone className="h-3 w-3" strokeWidth={2.5} />
               </span>
               <span className="flex flex-col whitespace-nowrap leading-[1.1]">
-                <span className="mb-[3px] text-[9px] font-semibold text-[#888] dark:text-slate-400">
+                <span className="mb-[3px] text-[9px] font-semibold text-white/50">
                   হটলাইন (সকাল ১০টা – রাত ৮টা)
                 </span>
-                <strong className="text-[11px] font-extrabold tracking-[0.1px] text-[#333] dark:text-white">
+                <strong className="text-[11px] font-extrabold tracking-[0.1px] text-white">
                   {hotline}
                 </strong>
               </span>
@@ -99,7 +99,7 @@ export const PublicHeader = () => {
             {/* Login / Dashboard */}
             <a
               href={user ? "/dashboard" : "/login"}
-              className="inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full bg-gradient-to-br from-[#2563eb] to-[#1d4ed8] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
+              className="inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full bg-gradient-to-br from-[#ef2d75] to-[#c81e5f] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.3)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.4)]"
             >
               {user && <LayoutDashboard className="h-3.5 w-3.5" strokeWidth={2.5} />}
               {user ? "Dashboard" : "লগইন"}
@@ -109,7 +109,7 @@ export const PublicHeader = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" aria-label="Menu">
+                  <Button variant="ghost" size="icon" aria-label="Menu" className="text-white hover:bg-white/10 hover:text-white">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
