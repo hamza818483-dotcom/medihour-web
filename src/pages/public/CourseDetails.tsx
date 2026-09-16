@@ -474,21 +474,22 @@ const CourseDetails = () => {
           )}
         </div>
         <Button
-          asChild={!isEnrolled}
-          disabled={isEnrolled}
+          asChild
           className={
             isEnrolled
-              ? "bg-green-600 font-bold text-white opacity-100 hover:bg-green-600"
+              ? "bg-green-600 font-bold text-white hover:bg-green-700"
               : "bg-gradient-to-br from-[#2563eb] to-[#3b82f6] font-bold"
           }
         >
-          {isEnrolled ? (
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4" /> Already Enrolled
-            </span>
-          ) : (
-            <Link to={getEnrollUrl()}>ভর্তি হন</Link>
-          )}
+          <Link to={isEnrolled ? "/dashboard" : getEnrollUrl()}>
+            {isEnrolled ? (
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4" /> Enter Course
+              </span>
+            ) : (
+              "ভর্তি হন"
+            )}
+          </Link>
         </Button>
       </div>
       </div>
