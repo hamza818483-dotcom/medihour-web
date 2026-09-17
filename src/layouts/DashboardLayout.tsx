@@ -253,7 +253,7 @@ export const DashboardLayout = () => {
     <SidebarProvider>
       <div className="min-h-screen w-full bg-[#e6e9fd] dark:bg-background text-foreground flex flex-col print:block print:h-auto print:overflow-visible">
         {/* <PushPermissionPrompt /> */}
-        <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-[#e6e9fd]/95 dark:bg-background/95 backdrop-blur px-4 supports-[backdrop-filter]:bg-[#e6e9fd]/60 dark:supports-[backdrop-filter]:bg-background/60 print:hidden">
+        <header className="sticky top-0 z-10 flex h-14 items-center border-b bg-white/95 dark:bg-background/95 backdrop-blur px-4 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-background/60 print:hidden">
           <SidebarTrigger className="mr-3 hidden sm:inline-flex" />
           <div className="flex flex-1 items-center justify-between gap-3">
             <div className="flex items-center gap-3">
@@ -277,8 +277,8 @@ export const DashboardLayout = () => {
               </Button>
               <div className="flex items-center gap-2">
                 {location.pathname === "/dashboard" ? (
-                  <Link to="/" className="bg-black rounded p-1 shrink-0" aria-label="Go to homepage">
-                    <img src="/logo.png" alt="Atlas Logo" className="h-8 w-auto object-contain" />
+                  <Link to="/" className="flex items-center shrink-0" aria-label="Go to homepage">
+                    <img src="/logo.png" alt="MediHour Logo" className="h-8 w-auto object-contain" />
                   </Link>
                 ) : (
                   <button

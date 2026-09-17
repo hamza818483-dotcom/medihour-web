@@ -56,8 +56,8 @@ const Footer = () => {
         {/* Top: Brand + Tagline */}
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <a href="/" className="flex h-12 w-12 items-center justify-center rounded-[13px] border border-white/10 bg-white/[0.07] transition-transform hover:-translate-y-0.5 hover:bg-white/[0.11]">
-              <img src="/logo.png" alt="MediHour Logo" className="h-[34px] w-[34px] object-contain" />
+            <a href="/" className="flex h-12 w-12 items-center justify-center rounded-[13px] bg-white p-1.5 transition-transform hover:-translate-y-0.5">
+              <img src="/logo.png" alt="MediHour Logo" className="h-full w-full object-contain" />
             </a>
             <div>
               <h3 className="m-0 text-lg font-extrabold leading-tight text-white sm:text-xl">MediHour</h3>
