@@ -99,7 +99,11 @@ export const PublicHeader = () => {
             {/* Login / Dashboard */}
             <a
               href={user ? "/dashboard" : "/login"}
-              className="inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full bg-gradient-to-br from-[#ef2d75] to-[#c81e5f] px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(239,45,117,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
+              className={`inline-flex h-[38px] items-center justify-center gap-1.5 rounded-full px-[19px] text-[13px] font-bold text-white shadow-[0_6px_16px_rgba(37,99,235,0.22)] transition-transform duration-200 hover:scale-[1.03] hover:shadow-[0_9px_22px_rgba(37,99,235,0.3)] ${
+                user
+                  ? "bg-gradient-to-br from-[#2563eb] to-[#1d4ed8]"
+                  : "bg-gradient-to-br from-[#ef2d75] to-[#c81e5f] shadow-[0_6px_16px_rgba(239,45,117,0.22)] hover:shadow-[0_9px_22px_rgba(239,45,117,0.3)]"
+              }`}
             >
               {user && <LayoutDashboard className="h-3.5 w-3.5" strokeWidth={2.5} />}
               {user ? "Dashboard" : "লগইন"}
