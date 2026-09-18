@@ -24,6 +24,51 @@ import { QuestionData } from "@/components/admin/QuestionEditor";
 const OMR_API_URL = import.meta.env.VITE_OMR_API_URL || "http://127.0.0.1:8000";
 const OMR_API_KEY = import.meta.env.VITE_OMR_API_KEY || "";
 
+// Free-tier Render instance has very limited RAM/CPU (512MB / 0.1 vCPU),
+// so if several people hit it at the exact same moment it can return a
+// 503/502 (overloaded) or the request can simply time out/fail at the
+// network level. Retry a few times with a short, increasing delay rather
+// than failing outright the first time — a lightweight "queue" purely on
+// the worst-case overload path.
+const OVERLOAD_RETRY_DELAYS_MS = [1500, 3000, 6000];
+
+const isOverloadError = (err: unknown, response?: Response) => {
+  if (response && (response.status === 503 || response.status === 502 || response.status === 429)) {
+    return true;
+  }
+  if (err instanceof Error && (err.message === "Failed to fetch" || err.name === "TypeError")) {
+    return true;
+  }
+  return false;
+};
+
+async function fetchWithOverloadRetry(
+  doFetch: () => Promise<Response>,
+  onRetrying?: (attempt: number, total: number) => void
+): Promise<Response> {
+  let lastErr: unknown;
+  let lastResponse: Response | undefined;
+  for (let attempt = 0; attempt <= OVERLOAD_RETRY_DELAYS_MS.length; attempt++) {
+    try {
+      const response = await doFetch();
+      if (response.ok) return response;
+      lastResponse = response;
+      if (!isOverloadError(undefined, response) || attempt === OVERLOAD_RETRY_DELAYS_MS.length) {
+        return response;
+      }
+    } catch (err) {
+      lastErr = err;
+      if (!isOverloadError(err) || attempt === OVERLOAD_RETRY_DELAYS_MS.length) {
+        throw err;
+      }
+    }
+    onRetrying?.(attempt + 1, OVERLOAD_RETRY_DELAYS_MS.length);
+    await new Promise((r) => setTimeout(r, OVERLOAD_RETRY_DELAYS_MS[attempt]));
+  }
+  if (lastResponse) return lastResponse;
+  throw lastErr;
+}
+
 interface OmrScannerProps {
   onImportQuestions: (questions: QuestionData[]) => void;
 }
@@ -82,6 +127,7 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [retryMessage, setRetryMessage] = useState<string | null>(null);
 
   // Results
   const [apiData, setApiData] = useState<ApiData | null>(null);
@@ -215,13 +261,20 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
         formData.append("corners", JSON.stringify(corners));
       }
 
-      const response = await fetch(`${OMR_API_URL}/api/v1/scan-omr`, {
-        method: "POST",
-        headers: {
-          "X-API-Key": OMR_API_KEY,
-        },
-        body: formData,
-      });
+      const response = await fetchWithOverloadRetry(
+        () =>
+          fetch(`${OMR_API_URL}/api/v1/scan-omr`, {
+            method: "POST",
+            headers: {
+              "X-API-Key": OMR_API_KEY,
+            },
+            body: formData,
+          }),
+        (attempt, total) => {
+          setRetryMessage(`Server is busy, retrying... (${attempt}/${total})`);
+        }
+      );
+      setRetryMessage(null);
 
       const data = await response.json();
 
@@ -291,12 +344,13 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
       toast({ title: "Scan Complete", description: `Detected ${data.extracted_nodes.length} questions.` });
     } catch (err) {
       console.error("OMR scan error:", err);
+      setRetryMessage(null);
       let msg =
         err instanceof Error
           ? err.message
           : "Could not connect to OMR server.";
       if (msg === "Failed to fetch") {
-        msg = `Could not reach OMR server at ${OMR_API_URL}. Possible causes: (1) server is down/sleeping, (2) CORS is blocking this domain, (3) the API URL is misconfigured. Configured URL: ${OMR_API_URL || "(not set)"}`;
+        msg = `Server is very busy right now (many people may be scanning at once) or offline. Please try again in a moment. Configured URL: ${OMR_API_URL || "(not set)"}`;
       }
       setScanError(msg);
       // Stay on crop to show warped image
@@ -310,6 +364,7 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
       clearInterval(progressTimer);
       setScanProgress(100);
       setIsScanning(false);
+      setRetryMessage(null);
     }
   };
 
@@ -706,10 +761,14 @@ export const OmrScanner = ({ onImportQuestions }: OmrScannerProps) => {
           <div className="flex flex-col items-center gap-4 py-12">
             <Loader2 className="h-10 w-10 text-primary animate-spin" />
             <div className="text-center">
-              <p className="font-semibold">Scanning OMR Sheet...</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Detecting bubbles, reading Roll No & Reg No
+              <p className="font-semibold">
+                {retryMessage ? retryMessage : "Scanning OMR Sheet..."}
               </p>
+              {!retryMessage && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Detecting bubbles, reading Roll No & Reg No
+                </p>
+              )}
             </div>
           </div>
         )}
