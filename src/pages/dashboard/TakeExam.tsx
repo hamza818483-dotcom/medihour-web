@@ -1423,6 +1423,8 @@ const TakeExam = () => {
                           {isSecondTimerAttempt && (
                               <span className="text-[9px] text-muted-foreground">৩% নম্বর কাটা যাবে</span>
                           )}
+                      </div>
+                      <div className="flex flex-col gap-1.5 rounded-lg border bg-muted/40 px-2.5 py-2">
                           <div className="flex items-center gap-1.5">
                               <span className="text-[10px] font-bold text-muted-foreground">OMR এ পরীক্ষা</span>
                               <button
