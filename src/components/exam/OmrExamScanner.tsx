@@ -788,14 +788,6 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
   // Compute verification status
   const verificationResult = apiData ? verifyCredentials(apiData.roll_no, apiData.reg_no) : null;
 
-  // Backend now returns a precise, ready-to-show Bengali skip_reason string
-  // per question (blank / too-light / colored-ink / multi-marked) — just
-  // collect the ones with a non-empty answer-less result, no need to
-  // re-derive the reason from raw fill percentages on the frontend.
-  const skippedQuestions = apiData
-    ? apiData.results.filter(r => r.correct_answer === "" && r.skip_reason)
-    : [];
-
   // Collapsed view
   if (!isExpanded) {
     return (
@@ -1145,55 +1137,6 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                   <span className="text-[10px] text-muted-foreground">
                     {Object.keys(scannedAnswers).length}/{questionIds.length} detected
                   </span>
-                </div>
-                <div className="px-2.5 pt-2 pb-1.5 text-[10px] text-muted-foreground leading-snug border-b border-border/30 bg-amber-50/50 dark:bg-amber-900/10 space-y-0.5">
-                  {skippedQuestions.length === 0 ? (
-                    "কোনো প্রশ্ন বাদ পড়েনি।"
-                  ) : (
-                    <>
-                      {(() => {
-                        // Group into just two buckets the person actually
-                        // asked for — not-marked-at-all vs multi-marked —
-                        // with only a question-number list per bucket. The
-                        // backend's full explanatory sentence per question
-                        // is useful for debugging but is not wanted here;
-                        // only the "একাধিক" (multiple bubbles) wording
-                        // reliably identifies that bucket across every
-                        // skip_reason variant, so that's what's matched on.
-                        const notMarked: number[] = [];
-                        const multiMarked: number[] = [];
-                        skippedQuestions.forEach(r => {
-                          const qNum = parseInt(r.question);
-                          if ((r.skip_reason || "").includes("একাধিক")) {
-                            multiMarked.push(qNum);
-                          } else {
-                            notMarked.push(qNum);
-                          }
-                        });
-                        return (
-                          <>
-                            {notMarked.length > 0 && (
-                              <div>
-                                <span className="font-semibold text-amber-800 dark:text-amber-300">
-                                  ভরাট করা হয়নি ({notMarked.length}টি):
-                                </span>{" "}
-                                <span className="text-muted-foreground">{notMarked.map(q => `Q${q}`).join(", ")}</span>
-                              </div>
-                            )}
-                            {multiMarked.length > 0 && (
-                              <div>
-                                <span className="font-semibold text-red-700 dark:text-red-400">
-                                  একাধিক বৃত্ত ভরাট ({multiMarked.length}টি):
-                                </span>{" "}
-                                <span className="text-muted-foreground">{multiMarked.map(q => `Q${q}`).join(", ")}</span>
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-                      <div className="pt-0.5">ট্যাপ করে নিজে সিলেক্ট করে দিন।</div>
-                    </>
-                  )}
                 </div>
                 <div className="max-h-[360px] overflow-y-auto p-2.5">
                   <div className="grid grid-cols-5 gap-1.5">
