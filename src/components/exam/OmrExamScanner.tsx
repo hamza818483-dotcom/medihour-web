@@ -913,8 +913,21 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
               <Button variant="ghost" size="sm" onClick={() => { setRawImage(null); setCleanedPreview(null); setStep("upload"); }} className="text-xs">
                 <X className="h-3.5 w-3.5 mr-1" /> বাতিল
               </Button>
-              <Button size="sm" onClick={handleSkipCrop} className="rounded-full px-6 text-xs bg-emerald-600 hover:bg-emerald-700">
-                <ScanLine className="h-3.5 w-3.5 mr-1.5" /> Scan করুন
+              <Button
+                size="sm"
+                onClick={handleSkipCrop}
+                disabled={isCleaning}
+                className="rounded-full px-6 text-xs bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50"
+              >
+                {isCleaning ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" /> পরিষ্কার করা হচ্ছে...
+                  </>
+                ) : (
+                  <>
+                    <ScanLine className="h-3.5 w-3.5 mr-1.5" /> Scan করুন
+                  </>
+                )}
               </Button>
             </div>
           </div>
