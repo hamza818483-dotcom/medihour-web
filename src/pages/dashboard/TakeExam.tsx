@@ -1408,38 +1408,40 @@ const TakeExam = () => {
 
               {/* Card 2: Instructions */}
               <Card className="w-full rounded-xl shadow-sm border relative">
-                  <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
-                      <div className="flex items-center gap-1.5">
-                          <label htmlFor="secondTimer" className="text-[10px] font-medium text-muted-foreground cursor-pointer">
-                              2nd Timer?
-                          </label>
-                          <Switch
-                              id="secondTimer"
-                              checked={isSecondTimerAttempt}
-                              onCheckedChange={(c) => setIsSecondTimerAttempt(!!c)}
-                          />
-                      </div>
-                      {isSecondTimerAttempt && (
-                          <span className="text-[9px] text-muted-foreground">৩% নম্বর কাটা যাবে</span>
-                      )}
-                      <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] font-bold text-muted-foreground">OMR এ পরীক্ষা</span>
-                          <button
-                              type="button"
-                              role="switch"
-                              aria-checked={omrMode}
-                              onClick={() => {
-                                  const next = !omrMode;
-                                  setOmrMode(next);
-                                  if (next) setShowOmrPopup(true);
-                              }}
-                              className={cn(
-                                  "h-5 w-9 rounded-full border-2 transition-colors flex items-center px-0.5",
-                                  omrMode ? "bg-emerald-500 border-emerald-500 justify-end" : "bg-muted border-border justify-start"
-                              )}
-                          >
-                              <span className="h-3.5 w-3.5 rounded-full bg-white shadow-sm" />
-                          </button>
+                  <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
+                      <div className="flex flex-col gap-1.5 rounded-lg border bg-muted/40 px-2.5 py-2">
+                          <div className="flex items-center gap-1.5">
+                              <label htmlFor="secondTimer" className="text-[10px] font-medium text-muted-foreground cursor-pointer">
+                                  2nd Timer?
+                              </label>
+                              <Switch
+                                  id="secondTimer"
+                                  checked={isSecondTimerAttempt}
+                                  onCheckedChange={(c) => setIsSecondTimerAttempt(!!c)}
+                              />
+                          </div>
+                          {isSecondTimerAttempt && (
+                              <span className="text-[9px] text-muted-foreground">৩% নম্বর কাটা যাবে</span>
+                          )}
+                          <div className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold text-muted-foreground">OMR এ পরীক্ষা</span>
+                              <button
+                                  type="button"
+                                  role="switch"
+                                  aria-checked={omrMode}
+                                  onClick={() => {
+                                      const next = !omrMode;
+                                      setOmrMode(next);
+                                      if (next) setShowOmrPopup(true);
+                                  }}
+                                  className={cn(
+                                      "h-5 w-9 rounded-full border-2 transition-colors flex items-center px-0.5",
+                                      omrMode ? "bg-emerald-500 border-emerald-500 justify-end" : "bg-muted border-border justify-start"
+                                  )}
+                              >
+                                  <span className="h-3.5 w-3.5 rounded-full bg-white shadow-sm" />
+                              </button>
+                          </div>
                       </div>
                   </div>
                   <div className="p-3 md:p-4 pr-28 space-y-1.5">
@@ -1447,7 +1449,7 @@ const TakeExam = () => {
                           <AlertTriangle className="h-4 w-4 text-amber-500" />
                           Instructions
                       </h3>
-                      <div className="text-xs text-muted-foreground leading-snug max-h-20 overflow-y-auto">
+                      <div className="text-xs text-muted-foreground leading-snug max-h-20 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                           {exam.instructions ? (
                               <div className="prose prose-sm max-w-none dark:prose-invert">
                                   <MathText text={exam.instructions} />
