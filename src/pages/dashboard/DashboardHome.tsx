@@ -701,7 +701,7 @@ const DashboardHome = () => {
                         className={`group hover:shadow-md transition-all cursor-pointer ${
                             item.isExternal
                                 ? 'border-2 border-violet-500 hover:border-violet-600 shadow-[0_0_10px_rgba(139,92,246,0.2)] dark:shadow-[0_0_15px_rgba(139,92,246,0.3)]'
-                                : 'border-2 border-slate-400 dark:border-slate-500 shadow-sm hover:border-primary hover:shadow-md'
+                                : `border-2 ${item.border || 'border-slate-400'} shadow-sm hover:shadow-lg hover:brightness-95`
                         }`}
                         onClick={() => {
                             if (item.isExternal) {
