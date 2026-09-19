@@ -744,28 +744,40 @@ const AdminSyllabusTracker = () => {
 };
 
 const fmtPct = (n: number) => (Math.round(n * 10) / 10).toString();
-const PctInput = ({ value, eff, onSave, cls }: { value: number | null; eff: number; onSave: (v: number | null) => void; cls?: string }) => (
-  <div className={cn("flex items-center gap-0.5 flex-shrink-0", cls)} onClick={(e) => e.stopPropagation()}>
-    <Input
-      key={String(value) + "|" + fmtPct(eff)}
-      type="number"
-      inputMode="decimal"
-      min={0}
-      max={100}
-      step={0.1}
-      defaultValue={value != null ? value : ""}
-      placeholder={fmtPct(eff)}
-      title="% (ফাঁকা = Auto)"
-      className={cn("h-6 w-14 text-[10px] text-center px-1", value == null && "text-muted-foreground")}
-      onBlur={(e) => {
-        const raw = e.target.value.trim();
-        const v = raw === "" ? null : Math.min(100, Math.max(0, parseFloat(raw)));
-        if (v !== null && Number.isNaN(v)) return;
-        if (v !== value) onSave(v);
-      }}
-    />
-    <span className="text-[10px] text-muted-foreground">%</span>
-  </div>
-);
+const PctInput = ({ value, eff, onSave, cls }: { value: number | null; eff: number; onSave: (v: number | null) => void; cls?: string }) => {
+  const initial = value != null ? String(value) : "";
+  const [text, setText] = useState(initial);
+  useEffect(() => { setText(initial); }, [initial]);
+  const dirty = text.trim() !== initial;
+  const commit = () => {
+    const raw = text.trim();
+    const v = raw === "" ? null : Math.min(100, Math.max(0, parseFloat(raw)));
+    if (v !== null && Number.isNaN(v)) return;
+    onSave(v);
+  };
+  return (
+    <div className={cn("flex items-center gap-0.5 flex-shrink-0", cls)} onClick={(e) => e.stopPropagation()}>
+      <Input
+        type="number"
+        inputMode="decimal"
+        min={0}
+        max={100}
+        step={0.1}
+        value={text}
+        placeholder={fmtPct(eff)}
+        title="% (ফাঁকা = Auto)"
+        className={cn("h-6 w-14 text-[10px] text-center px-1", value == null && !dirty && "text-muted-foreground")}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); if (dirty) commit(); } }}
+      />
+      <span className="text-[10px] text-muted-foreground">%</span>
+      {dirty && (
+        <Button type="button" size="icon" className="h-6 w-6 bg-emerald-500 hover:bg-emerald-600 text-white" title="Save" onClick={commit}>
+          <Check className="h-3.5 w-3.5" />
+        </Button>
+      )}
+    </div>
+  );
+};
 
 export default AdminSyllabusTracker;
