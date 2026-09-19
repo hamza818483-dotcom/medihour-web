@@ -603,7 +603,7 @@ const DashboardHome = () => {
         <div className="space-y-3">
           <div className="rounded-lg border p-4">
             <h2 className="text-lg font-semibold tracking-tight text-center">Telegram Support</h2>
-            <hr className="mt-3 border-border" />
+            <hr className="mt-3 border-primary/40" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {telegramSupportCards.map((card: any) => (
@@ -643,9 +643,9 @@ const DashboardHome = () => {
 
       {/* 3. Navigation Cards Section */}
       <div className="space-y-4">
-           <div className="rounded-lg border p-4">
+           <div className="rounded-lg border-2 border-primary bg-primary/5 shadow-sm p-4">
              <div className="flex items-center justify-center relative">
-               <h2 className="text-lg font-semibold tracking-tight text-center">Quick Access</h2>
+               <h2 className="text-lg font-bold tracking-tight text-center text-primary">Quick Access</h2>
                {isAdmin && !showQuickAccessSort && (
                  <Button
                    size="sm"
