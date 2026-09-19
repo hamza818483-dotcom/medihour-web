@@ -668,20 +668,20 @@ const DashboardHome = () => {
            <>
            <Link
              to="/dashboard/routine"
-             className="flex items-center justify-center gap-2 w-full rounded-lg border bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors py-3 font-medium text-indigo-600 dark:text-indigo-300"
+             className="flex items-center justify-center gap-2 w-full rounded-lg border-2 border-indigo-400 bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors py-3 font-medium text-indigo-600 dark:text-indigo-300"
            >
              <Calendar className="h-4 w-4" /> Routine
            </Link>
            <div className="grid grid-cols-2 gap-3">
              <Link
                to="/focus-timer"
-               className="flex items-center justify-center gap-2 w-full rounded-lg border border-violet-500/30 bg-violet-50 dark:bg-violet-950 hover:bg-violet-100 dark:hover:bg-violet-900 transition-colors py-3 font-semibold text-violet-600 dark:text-violet-300"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border-2 border-violet-500 bg-violet-50 dark:bg-violet-950 hover:bg-violet-100 dark:hover:bg-violet-900 transition-colors py-3 font-semibold text-violet-600 dark:text-violet-300"
              >
                <Timer className="h-4 w-4" /> Live Study Room
              </Link>
              <Link
                to="/syllabus-tracker"
-               className="flex items-center justify-center gap-2 w-full rounded-lg border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors py-3 font-semibold text-emerald-600 dark:text-emerald-300"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors py-3 font-semibold text-emerald-600 dark:text-emerald-300"
              >
                <BookMarked className="h-4 w-4" /> Syllabus Tracker
              </Link>
@@ -689,7 +689,7 @@ const DashboardHome = () => {
            {hasRevisionPlanner && (
              <Link
                to="/revision-planner"
-               className="flex items-center justify-center gap-2 w-full rounded-lg border border-purple-500/30 bg-purple-50 dark:bg-purple-950 hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors py-3 font-semibold text-purple-600 dark:text-purple-300"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border-2 border-purple-500 bg-purple-50 dark:bg-purple-950 hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors py-3 font-semibold text-purple-600 dark:text-purple-300"
              >
                <RefreshCw className="h-4 w-4" /> Revision Planner
              </Link>
@@ -700,8 +700,8 @@ const DashboardHome = () => {
                         key={index}
                         className={`group hover:shadow-md transition-all cursor-pointer ${
                             item.isExternal
-                                ? 'border-violet-500/50 hover:border-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.2)] dark:shadow-[0_0_15px_rgba(139,92,246,0.3)]'
-                                : 'border-muted-foreground/20 hover:border-primary/50'
+                                ? 'border-2 border-violet-500 hover:border-violet-600 shadow-[0_0_10px_rgba(139,92,246,0.2)] dark:shadow-[0_0_15px_rgba(139,92,246,0.3)]'
+                                : 'border-2 border-slate-400 dark:border-slate-500 shadow-sm hover:border-primary hover:shadow-md'
                         }`}
                         onClick={() => {
                             if (item.isExternal) {
