@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, ChevronUp, Trash2, Plus, BarChart3, Pencil, Check, X, Layers, BookOpen, Trophy, RefreshCw, Calendar, ArrowLeft, Copy } from "lucide-react";
+import { ChevronDown, ChevronUp, Trash2, Plus, BarChart3, Pencil, Check, X, Layers, BookOpen, Trophy, RefreshCw, ArrowLeft, Copy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { StudyTrackerProgress } from "@/components/admin/StudyTrackerProgress";
 import { StudyTrackerRevision } from "@/components/admin/StudyTrackerRevision";
 
 type Mode = "hsc" | "medical" | "varsity";
-type StBox = "dashboard" | "syllabus" | "routine" | "progress" | "revision";
+type StBox = "dashboard" | "syllabus" | "revision";
 
 const AdminSyllabusTracker = () => {
   const { toast } = useToast();
@@ -360,7 +359,7 @@ const AdminSyllabusTracker = () => {
           <BarChart3 className="h-5 w-5 text-sky-600" /> Study Tracker ম্যানেজার
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Syllabus, Progress এবং Revision কন্টেন্ট এখান থেকে ম্যানেজ করুন।
+          Syllabus এবং Revision কন্টেন্ট এখান থেকে ম্যানেজ করুন।
         </p>
       </div>
 
@@ -380,28 +379,6 @@ const AdminSyllabusTracker = () => {
           </button>
 
           <button
-            onClick={() => setStBox("routine")}
-            className="text-left bg-card border rounded-xl p-4 cursor-pointer border-t-[3px]"
-            style={{ borderTopColor: "#22C55E" }}
-          >
-            <Calendar className="h-5 w-5 mb-1.5" />
-            <div className="font-bold text-sm mb-1">Routine Maker</div>
-            <div className="text-xs text-muted-foreground">Daily ও Target রুটিন কন্টেন্ট</div>
-            <div className="text-xs mt-2" style={{ color: "#22C55E" }}>শীঘ্রই আসছে</div>
-          </button>
-
-          <button
-            onClick={() => setStBox("progress")}
-            className="text-left bg-card border rounded-xl p-4 cursor-pointer border-t-[3px]"
-            style={{ borderTopColor: "#F59E0B" }}
-          >
-            <Trophy className="h-5 w-5 mb-1.5" />
-            <div className="font-bold text-sm mb-1">Weak &amp; Progress</div>
-            <div className="text-xs text-muted-foreground">Student activity analytics</div>
-            <div className="text-xs mt-2" style={{ color: "#F59E0B" }}>Leaderboard দেখুন</div>
-          </button>
-
-          <button
             onClick={() => setStBox("revision")}
             className="text-left bg-card border rounded-xl p-4 cursor-pointer border-t-[3px]"
             style={{ borderTopColor: "#A855F7" }}
@@ -413,28 +390,6 @@ const AdminSyllabusTracker = () => {
               {dashCounts ? `HSC: ${dashCounts.hsc} · Medical: ${dashCounts.medical} · Varsity: ${dashCounts.varsity} বিষয়` : "লোড হচ্ছে..."}
             </div>
           </button>
-        </div>
-      )}
-
-      {stBox === "routine" && (
-        <div className="space-y-4">
-          <Button variant="outline" size="sm" onClick={() => setStBox("dashboard")} className="gap-1.5">
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-          <Card>
-            <CardContent className="text-center py-12 text-muted-foreground">
-              শীঘ্রই এখানে Routine কন্টেন্ট ম্যানেজ করা যাবে।
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {stBox === "progress" && (
-        <div className="space-y-4">
-          <Button variant="outline" size="sm" onClick={() => setStBox("dashboard")} className="gap-1.5">
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-          <StudyTrackerProgress />
         </div>
       )}
 
