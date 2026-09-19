@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CalendarClock, Calendar, FileText, ListChecks, Video, BookOpen, History, StickyNote, Files, Trophy, User, AlertCircle, Bookmark, Sparkles, Bell, CheckCircle, AlertTriangle, Trash2, ChevronDown, ChevronUp, Infinity, Flag, Megaphone, BarChart3, Zap, TrendingUp, Target, ClipboardCheck, Send, Timer, BookMarked } from "lucide-react";
+import { CalendarClock, Calendar, FileText, ListChecks, Video, BookOpen, History, StickyNote, Files, Trophy, User, AlertCircle, Bookmark, Sparkles, Bell, CheckCircle, AlertTriangle, Trash2, ChevronDown, ChevronUp, Infinity, Flag, Megaphone, BarChart3, Zap, TrendingUp, Target, ClipboardCheck, Send, Timer, BookMarked, RefreshCw } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { quickAccessItems } from "@/config/dashboardCardItems";
@@ -57,6 +57,14 @@ const DashboardHome = () => {
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { data: hasRevisionPlanner } = useQuery({
+    queryKey: ["has-revision-planner"],
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const { count } = await (supabase.from as any)("rv_subjects").select("id", { count: "exact", head: true });
+      return (count || 0) > 0;
+    },
+  });
   const [expandedNotifIds, setExpandedNotifIds] = useState<string[]>([]);
   const [unreadNoticeCount, setUnreadNoticeCount] = useState(0);
   const [showTutorialVideo, setShowTutorialVideo] = useState(false);
@@ -678,6 +686,14 @@ const DashboardHome = () => {
                <BookMarked className="h-4 w-4" /> Syllabus Tracker
              </Link>
            </div>
+           {hasRevisionPlanner && (
+             <Link
+               to="/revision-planner"
+               className="flex items-center justify-center gap-2 w-full rounded-lg border border-purple-500/30 bg-purple-50 dark:bg-purple-950 hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors py-3 font-semibold text-purple-600 dark:text-purple-300"
+             >
+               <RefreshCw className="h-4 w-4" /> Revision Planner
+             </Link>
+           )}
            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                {orderedNavigationItems.map((item, index) => (
                    <Card

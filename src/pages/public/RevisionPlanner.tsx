@@ -1,0 +1,304 @@
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronRight,
+  CheckCircle2,
+} from "lucide-react";
+import PublicHeader from "@/components/PublicHeader";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+
+type Mode = "hsc" | "medical" | "varsity";
+
+interface Topic {
+  id: number;
+  name: string;
+  weight: number;
+}
+interface Chapter {
+  id: number;
+  name: string;
+  weight?: number | null;
+  topics: Topic[];
+}
+interface Subject {
+  id: number;
+  name: string;
+  short_name: string | null;
+  weight?: number | null;
+  chapters: Chapter[];
+}
+
+function progressKey(userId?: string | null) {
+  return `rv_progress_${userId || "guest"}`;
+}
+function loadMap(key: string): Record<string, boolean> {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+function saveMap(key: string, map: Record<string, boolean>) {
+  try {
+    localStorage.setItem(key, JSON.stringify(map));
+  } catch {
+    /* ignore */
+  }
+}
+function topicKey(mode: Mode, subjectId: number, chapterId: number, topicId: number) {
+  return `${mode}|${subjectId}|${chapterId}|${topicId}`;
+}
+
+const RevisionPlanner = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [mode, setMode] = useState<Mode>("medical");
+  const [openSubjectId, setOpenSubjectId] = useState<number | null>(null);
+  const [openChapterId, setOpenChapterId] = useState<number | null>(null);
+
+  // Chrome/Android's back-forward cache (bfcache) can restore this page from
+  // a frozen snapshot instead of re-mounting it, which would otherwise leave
+  // stale view state (e.g. stuck on the leaderboard) when the user navigates
+  // back here. Force a reset to the always-Dashboard/Medical default whenever
+  // the page is restored from bfcache.
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        setMode("medical");
+        setOpenSubjectId(null);
+        setOpenChapterId(null);
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  const [progress, setProgress] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    document.title = "Revision Planner — MediHour";
+    setProgress(loadMap(progressKey(user?.id)));
+  }, [user?.id]);
+
+  async function fetchSubjects(m: Mode): Promise<Subject[]> {
+    const { data: subs, error: e1 } = await (supabase.from as any)("rv_subjects")
+      .select("id, name, short_name, weight")
+      .eq("mode", m)
+      .order("sort_order", { ascending: true });
+    if (e1) throw e1;
+    if (!subs?.length) return [];
+    const subjIds = subs.map((s: any) => s.id);
+    const { data: chaps, error: e2 } = await (supabase.from as any)("rv_chapters")
+      .select("id, name, subject_id, weight")
+      .in("subject_id", subjIds)
+      .order("sort_order", { ascending: true });
+    if (e2) throw e2;
+    let topics: any[] = [];
+    if (chaps?.length) {
+      const chapIds = chaps.map((c: any) => c.id);
+      const { data: tps, error: e3 } = await (supabase.from as any)("rv_topics")
+        .select("id, name, weight, chapter_id")
+        .in("chapter_id", chapIds)
+        .order("sort_order", { ascending: true });
+      if (e3) throw e3;
+      topics = tps || [];
+    }
+    const topicsByChap: Record<number, Topic[]> = {};
+    for (const t of topics) (topicsByChap[t.chapter_id] ||= []).push(t);
+    const chaptersBySubj: Record<number, Chapter[]> = {};
+    for (const c of chaps || []) {
+      (chaptersBySubj[c.subject_id] ||= []).push({ id: c.id, name: c.name, weight: c.weight ?? null, topics: topicsByChap[c.id] || [] });
+    }
+    return subs.map((s: any) => ({ ...s, chapters: chaptersBySubj[s.id] || [] }));
+  }
+
+  const { data: subjectsHsc, isLoading: loadingHsc } = useQuery({
+    queryKey: ["public-rv-subjects", "hsc"],
+    queryFn: () => fetchSubjects("hsc"),
+  });
+  const { data: subjectsMedical, isLoading: loadingMedical } = useQuery({
+    queryKey: ["public-rv-subjects", "medical"],
+    queryFn: () => fetchSubjects("medical"),
+  });
+  const { data: subjectsVarsity, isLoading: loadingVarsity } = useQuery({
+    queryKey: ["public-rv-subjects", "varsity"],
+    queryFn: () => fetchSubjects("varsity"),
+  });
+
+  const subjectsByMode: Record<Mode, Subject[] | undefined> = { hsc: subjectsHsc, medical: subjectsMedical, varsity: subjectsVarsity };
+  const subjects = subjectsByMode[mode];
+  const isLoading = mode === "hsc" ? loadingHsc : mode === "varsity" ? loadingVarsity : loadingMedical;
+
+  // Manual % kept as set; remaining % split equally among auto (null) items.
+  const shares = (items: { weight?: number | null }[]): number[] => {
+    const manual = items.reduce((a, x) => a + (x.weight != null ? Number(x.weight) : 0), 0);
+    const autoN = items.filter((x) => x.weight == null).length;
+    const each = autoN ? Math.max(0, 100 - manual) / autoN : 0;
+    const raw = items.map((x) => (x.weight != null ? Number(x.weight) : each));
+    const sum = raw.reduce((a, b) => a + b, 0);
+    return sum > 0 ? raw.map((r) => r / sum) : raw.map(() => 0);
+  };
+  // fraction (0..1) of a chapter completed, weighted by topic %
+  const chapFrac = (m: Mode, s: Subject, c: Chapter) => {
+    const sh = shares(c.topics);
+    let f = 0;
+    c.topics.forEach((tp, i) => { if (progress[topicKey(m, s.id, c.id, tp.id)]) f += sh[i]; });
+    return f;
+  };
+  const subjFrac = (m: Mode, s: Subject) => {
+    const sh = shares(s.chapters);
+    let f = 0;
+    s.chapters.forEach((c, i) => { f += sh[i] * chapFrac(m, s, c); });
+    return f;
+  };
+  const subjPct = (m: Mode, s: Subject): [number, number, number] => {
+    let t = 0, d = 0;
+    for (const c of s.chapters) for (const tp of c.topics) {
+      t++;
+      if (progress[topicKey(m, s.id, c.id, tp.id)]) d++;
+    }
+    return [Math.round(subjFrac(m, s) * 100), t, d];
+  };
+  const chapPct = (s: Subject, c: Chapter) => Math.round(chapFrac(mode, s, c) * 1000) / 10;
+
+  const overall = useMemo(() => {
+    if (!subjects) return { pct: 0, totalChaps: 0, t: 0, d: 0 };
+    let totalChaps = 0, t = 0, d = 0;
+    for (const s of subjects) {
+      totalChaps += s.chapters.length;
+      const [, st, sd] = subjPct(mode, s);
+      t += st; d += sd;
+    }
+    const sh = shares(subjects);
+    let f = 0;
+    subjects.forEach((s, i) => { f += sh[i] * subjFrac(mode, s); });
+    return { pct: Math.round(f * 100), totalChaps, t, d };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subjects, progress, mode]);
+
+  const toggleTopic = (s: Subject, c: Chapter, tp: Topic) => {
+    const key = topicKey(mode, s.id, c.id, tp.id);
+    const next = { ...progress, [key]: !progress[key] };
+    setProgress(next);
+    saveMap(progressKey(user?.id), next);
+  };
+
+  const openSubject = subjects?.find((s) => s.id === openSubjectId) || null;
+
+  const goBack = () => {
+    if (openSubject) { setOpenSubjectId(null); return; }
+    navigate(user ? "/dashboard" : "/");
+  };
+
+  const panelTitle = openSubject ? openSubject.name : "Revision Planner";
+
+  return (
+    <div className="min-h-screen bg-background text-foreground pb-16">
+      <PublicHeader />
+      <div className="sticky top-0 z-30 flex items-center gap-3 px-4 py-3 bg-card border-b">
+        <button onClick={goBack} className="h-9 w-9 rounded-full border flex items-center justify-center hover:bg-muted flex-shrink-0">
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <h1 className="flex-1 font-extrabold text-[17px] truncate">{panelTitle}</h1>
+
+      </div>
+
+      <div className="max-w-2xl mx-auto px-4 pt-5 space-y-5">
+        {openSubject && (
+          <div className="space-y-3">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black">{openSubject.chapters.length}</div><div className="text-[10px] text-muted-foreground font-bold">অধ্যায়</div></div>
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black">{subjPct(mode, openSubject)[2]}</div><div className="text-[10px] text-muted-foreground font-bold">সম্পন্ন</div></div>
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black text-primary">{subjPct(mode, openSubject)[0]}%</div><div className="text-[10px] text-muted-foreground font-bold">অগ্রগতি</div></div>
+            </div>
+            <div className="space-y-2">
+              {openSubject.chapters.map((c, i) => {
+                const pct = chapPct(openSubject, c);
+                const done = c.topics.filter((tp) => progress[topicKey(mode, openSubject.id, c.id, tp.id)]).length;
+                const isOpen = openChapterId === c.id;
+                return (
+                  <div key={c.id} className="rounded-xl border bg-card overflow-hidden">
+                    <button onClick={() => setOpenChapterId(isOpen ? null : c.id)} className="w-full flex items-center gap-3 p-3 text-left">
+                      <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-xs flex-shrink-0">{i + 1}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold truncate">{c.name}</div>
+                        <div className="text-[10px] text-muted-foreground">{done}/{c.topics.length} টপিক · <span className="text-primary font-bold">{pct}%</span></div>
+                        <div className="h-1.5 rounded-full bg-muted mt-1 overflow-hidden"><div className={cn("h-full rounded-full", pct === 100 ? "bg-emerald-500" : "bg-primary")} style={{ width: `${pct}%` }} /></div>
+                      </div>
+                      <span className={cn("text-[11px] font-black px-1.5 py-0.5 rounded-md flex-shrink-0", pct === 100 ? "bg-emerald-500/15 text-emerald-600" : "bg-muted text-muted-foreground")}>{pct}%</span>
+                      {isOpen ? <ChevronDown className="h-4 w-4 flex-shrink-0" /> : <ChevronRight className="h-4 w-4 flex-shrink-0" />}
+                    </button>
+                    {isOpen && (
+                      <div className="border-t divide-y">
+                        {c.topics.map((tp) => {
+                          const tDone = !!progress[topicKey(mode, openSubject.id, c.id, tp.id)];
+                          return (
+                            <button key={tp.id} onClick={() => toggleTopic(openSubject, c, tp)} className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left hover:bg-muted/40">
+                              <div className={cn("h-5 w-5 rounded-md border-2 flex items-center justify-center flex-shrink-0", tDone ? "bg-emerald-500 border-emerald-500" : "border-border")}>{tDone && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}</div>
+                              <span className={cn("text-xs font-semibold", tDone && "line-through text-muted-foreground")}>{tp.name}</span>
+                            </button>
+                          );
+                        })}
+                        {c.topics.length === 0 && <p className="text-center text-xs text-muted-foreground py-3">কোনো টপিক নেই</p>}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {!openSubject && (
+          <>
+            <div className="grid grid-cols-3 gap-2">
+              <button onClick={() => setMode("medical")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "medical" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Medical</button>
+              <button onClick={() => setMode("hsc")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "hsc" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>HSC</button>
+              <button onClick={() => setMode("varsity")} className={cn("py-2.5 rounded-xl text-xs sm:text-sm font-bold border-2", mode === "varsity" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground")}>Varsity</button>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black">{subjects?.length ?? "—"}</div><div className="text-[10px] text-muted-foreground font-bold">বিষয়</div></div>
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black">{overall.totalChaps}</div><div className="text-[10px] text-muted-foreground font-bold">অধ্যায়</div></div>
+              <div className="rounded-xl border bg-card py-2.5 text-center"><div className="text-lg font-black text-primary">{overall.pct}%</div><div className="text-[10px] text-muted-foreground font-bold">সম্পন্ন</div></div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs font-bold text-muted-foreground"><span>সামগ্রিক অগ্রগতি</span><span>{overall.pct}%</span></div>
+              <div className="h-2 rounded-full bg-muted overflow-hidden"><div className="h-full bg-primary rounded-full transition-all" style={{ width: `${overall.pct}%` }} /></div>
+            </div>
+            {isLoading && <p className="text-center text-sm text-muted-foreground py-10">লোড হচ্ছে...</p>}
+            {!isLoading && (!subjects || subjects.length === 0) && (
+              <div className="flex flex-col items-center text-center gap-3 pt-10">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center shadow-lg"><CheckCircle2 className="h-7 w-7 text-white" /></div>
+                <p className="text-sm text-muted-foreground max-w-xs">কোনো বিষয় পাওয়া যায়নি।</p>
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-2.5">
+              {subjects?.map((s) => {
+                const [pct, t] = subjPct(mode, s);
+                const full = pct === 100;
+                return (
+                  <button key={s.id} onClick={() => setOpenSubjectId(s.id)} className={cn("relative text-left rounded-xl border-2 p-2.5 transition-colors", full ? "border-emerald-500/50 bg-emerald-500/5" : "border-border bg-card hover:border-primary/30")}>
+                    {full && <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-emerald-600 bg-emerald-500/15 px-1.5 py-0.5 rounded-full mb-1"><CheckCircle2 className="h-2.5 w-2.5" /> সম্পন্ন</span>}
+                    <div className="text-[13px] font-bold leading-snug whitespace-nowrap">{s.name}</div>
+                    <div className="flex items-center gap-2 mt-2"><span className="text-sm font-black text-primary">{pct}%</span><div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden"><div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} /></div></div>
+                    <div className="text-[10px] text-muted-foreground mt-1.5">{s.chapters.length} অধ্যায় · {t} টপিক</div>
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default RevisionPlanner;

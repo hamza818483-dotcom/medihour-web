@@ -17,6 +17,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import SyllabusTracker from "./pages/public/SyllabusTracker";
+import RevisionPlanner from "./pages/public/RevisionPlanner";
 import CourseDetails from "./pages/public/CourseDetails";
 import CourseBuy from "./pages/public/CourseBuy";
 import FreeClass from "./pages/public/FreeClass";
@@ -129,6 +130,7 @@ const App = () => {
                 <Route path="/forgot-password" element={<ErrorBoundary><ForgotPassword /></ErrorBoundary>} />
                 <Route path="/reset-password" element={<ErrorBoundary><ResetPassword /></ErrorBoundary>} />
                 <Route path="/syllabus-tracker" element={<ErrorBoundary><SyllabusTracker /></ErrorBoundary>} />
+                <Route path="/revision-planner" element={<ErrorBoundary><RevisionPlanner /></ErrorBoundary>} />
                 <Route path="/courses/:courseId" element={<ErrorBoundary><CourseDetails /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/demo/:demoIndex" element={<ErrorBoundary><DemoClassPlayerPage /></ErrorBoundary>} />
                 <Route path="/courses/:courseId/extra-link/:linkIndex" element={<ErrorBoundary><ExtraLinkPlayerPage /></ErrorBoundary>} />
