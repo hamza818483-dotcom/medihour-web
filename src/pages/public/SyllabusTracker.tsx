@@ -23,12 +23,14 @@ interface Topic {
 interface Chapter {
   id: number;
   name: string;
+  weight?: number | null;
   topics: Topic[];
 }
 interface Subject {
   id: number;
   name: string;
   short_name: string | null;
+  weight?: number | null;
   chapters: Chapter[];
 }
 
@@ -92,14 +94,14 @@ const SyllabusTracker = () => {
 
   async function fetchSubjects(m: Mode): Promise<Subject[]> {
     const { data: subs, error: e1 } = await (supabase.from as any)("st_subjects")
-      .select("id, name, short_name")
+      .select("id, name, short_name, weight")
       .eq("mode", m)
       .order("sort_order", { ascending: true });
     if (e1) throw e1;
     if (!subs?.length) return [];
     const subjIds = subs.map((s: any) => s.id);
     const { data: chaps, error: e2 } = await (supabase.from as any)("st_chapters")
-      .select("id, name, subject_id")
+      .select("id, name, subject_id, weight")
       .in("subject_id", subjIds)
       .order("sort_order", { ascending: true });
     if (e2) throw e2;
@@ -117,7 +119,7 @@ const SyllabusTracker = () => {
     for (const t of topics) (topicsByChap[t.chapter_id] ||= []).push(t);
     const chaptersBySubj: Record<number, Chapter[]> = {};
     for (const c of chaps || []) {
-      (chaptersBySubj[c.subject_id] ||= []).push({ id: c.id, name: c.name, topics: topicsByChap[c.id] || [] });
+      (chaptersBySubj[c.subject_id] ||= []).push({ id: c.id, name: c.name, weight: c.weight ?? null, topics: topicsByChap[c.id] || [] });
     }
     return subs.map((s: any) => ({ ...s, chapters: chaptersBySubj[s.id] || [] }));
   }
@@ -149,24 +151,37 @@ const SyllabusTracker = () => {
     },
   });
 
+  // Manual % kept as set; remaining % split equally among auto (null) items.
+  const shares = (items: { weight?: number | null }[]): number[] => {
+    const manual = items.reduce((a, x) => a + (x.weight != null ? Number(x.weight) : 0), 0);
+    const autoN = items.filter((x) => x.weight == null).length;
+    const each = autoN ? Math.max(0, 100 - manual) / autoN : 0;
+    const raw = items.map((x) => (x.weight != null ? Number(x.weight) : each));
+    const sum = raw.reduce((a, b) => a + b, 0);
+    return sum > 0 ? raw.map((r) => r / sum) : raw.map(() => 0);
+  };
+  // fraction (0..1) of a chapter completed, weighted by topic %
+  const chapFrac = (m: Mode, s: Subject, c: Chapter) => {
+    const sh = shares(c.topics);
+    let f = 0;
+    c.topics.forEach((tp, i) => { if (progress[topicKey(m, s.id, c.id, tp.id)]) f += sh[i]; });
+    return f;
+  };
+  const subjFrac = (m: Mode, s: Subject) => {
+    const sh = shares(s.chapters);
+    let f = 0;
+    s.chapters.forEach((c, i) => { f += sh[i] * chapFrac(m, s, c); });
+    return f;
+  };
   const subjPct = (m: Mode, s: Subject): [number, number, number] => {
-    let totalW = 0, doneW = 0, t = 0, d = 0;
+    let t = 0, d = 0;
     for (const c of s.chapters) for (const tp of c.topics) {
-      const w = tp.weight || 1;
-      t++; totalW += w;
-      if (progress[topicKey(m, s.id, c.id, tp.id)]) { d++; doneW += w; }
+      t++;
+      if (progress[topicKey(m, s.id, c.id, tp.id)]) d++;
     }
-    return [totalW ? Math.round((doneW / totalW) * 100) : 0, t, d];
+    return [Math.round(subjFrac(m, s) * 100), t, d];
   };
-  const chapPct = (s: Subject, c: Chapter) => {
-    let totalW = 0, doneW = 0;
-    for (const tp of c.topics) {
-      const w = tp.weight || 1;
-      totalW += w;
-      if (progress[topicKey(mode, s.id, c.id, tp.id)]) doneW += w;
-    }
-    return totalW ? Math.round((doneW / totalW) * 1000) / 10 : 0;
-  };
+  const chapPct = (s: Subject, c: Chapter) => Math.round(chapFrac(mode, s, c) * 1000) / 10;
 
   const overall = useMemo(() => {
     if (!subjects) return { pct: 0, totalChaps: 0, t: 0, d: 0 };
@@ -176,7 +191,10 @@ const SyllabusTracker = () => {
       const [, st, sd] = subjPct(mode, s);
       t += st; d += sd;
     }
-    return { pct: t ? Math.round((d / t) * 100) : 0, totalChaps, t, d };
+    const sh = shares(subjects);
+    let f = 0;
+    subjects.forEach((s, i) => { f += sh[i] * subjFrac(mode, s); });
+    return { pct: Math.round(f * 100), totalChaps, t, d };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjects, progress, mode]);
 

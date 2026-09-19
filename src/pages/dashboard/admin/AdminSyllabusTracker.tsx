@@ -59,7 +59,7 @@ const AdminSyllabusTracker = () => {
     queryKey: ["admin-st-subjects", mode],
     queryFn: async () => {
       const { data, error } = await (supabase.from as any)("st_subjects")
-        .select("id, name, short_name, sort_order")
+        .select("id, name, short_name, sort_order, weight")
         .eq("mode", mode)
         .order("sort_order", { ascending: true });
       if (error) throw error;
@@ -72,7 +72,7 @@ const AdminSyllabusTracker = () => {
     enabled: expandedSubject !== null,
     queryFn: async () => {
       const { data, error } = await (supabase.from as any)("st_chapters")
-        .select("id, name, subject_id")
+        .select("id, name, subject_id, weight")
         .eq("subject_id", expandedSubject!)
         .order("sort_order", { ascending: true });
       if (error) throw error;
@@ -226,14 +226,22 @@ const AdminSyllabusTracker = () => {
     refreshTopics();
   };
 
-  const updateWeight = async (id: number, weight: number) => {
-    const { error } = await (supabase.from as any)("st_topics").update({ weight }).eq("id", id);
+  const updateWeightOf = async (table: "st_topics" | "st_chapters" | "st_subjects", id: number, weight: number | null, refresh: () => void) => {
+    const { error } = await (supabase.from as any)(table).update({ weight }).eq("id", id);
     if (error) {
       toast({ title: "ব্যর্থ হয়েছে", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: "Weight আপডেট হয়েছে" });
-    refreshTopics();
+    toast({ title: weight === null ? "Auto (সমান ভাগ)" : "% সেট হয়েছে" });
+    refresh();
+  };
+  const updateWeight = (id: number, weight: number | null) => updateWeightOf("st_topics", id, weight, refreshTopics);
+  // Effective % list: manual values kept, remaining % split equally among auto items.
+  const effPcts = (list: any[]): number[] => {
+    const manual = list.reduce((a, x) => a + (x.weight != null ? Number(x.weight) : 0), 0);
+    const autoN = list.filter((x) => x.weight == null).length;
+    const each = autoN ? Math.max(0, 100 - manual) / autoN : 0;
+    return list.map((x) => (x.weight != null ? Number(x.weight) : each));
   };
 
   const applyTopicsToAllChapters = async (sourceChapId: number, subjId: number) => {
@@ -488,7 +496,7 @@ const AdminSyllabusTracker = () => {
           {!isLoading && (!subjects || subjects.length === 0) && (
             <p className="text-sm text-muted-foreground">কোনো বিষয় নেই। উপরে যোগ করুন।</p>
           )}
-          {subjects?.map((s: any) => {
+          {(() => { const subjEff = effPcts(subjects || []); return subjects?.map((s: any, subjIdx: number) => {
             const isOpen = expandedSubject === s.id;
             return (
               <div key={s.id} className="border rounded-xl overflow-hidden">
@@ -512,6 +520,9 @@ const AdminSyllabusTracker = () => {
                       <ChevronDown className={cn("h-4 w-4 transition-transform", isOpen && "rotate-180")} />
                       <span className="font-semibold text-sm">{s.name}</span>
                     </button>
+                  )}
+                  {editSubjectId !== s.id && (
+                    <PctInput value={s.weight ?? null} eff={subjEff[subjIdx]} onSave={(v) => void updateWeightOf("st_subjects", s.id, v, refreshSubjects)} />
                   )}
                   {editSubjectId !== s.id && (
                     <Button
@@ -551,7 +562,7 @@ const AdminSyllabusTracker = () => {
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    {chaptersOfSubject?.map((ch: any) => {
+                    {(() => { const chEff = effPcts(chaptersOfSubject || []); return chaptersOfSubject?.map((ch: any, chIdx: number) => {
                       const chOpen = expandedChapter === ch.id;
                       return (
                         <div key={ch.id} className="border rounded-lg bg-card overflow-hidden">
@@ -578,6 +589,9 @@ const AdminSyllabusTracker = () => {
                                 <span className="font-medium">{ch.name}</span>
                                 <span className="text-muted-foreground">({ch.topicCount} টপিক)</span>
                               </button>
+                            )}
+                            {editChapterId !== ch.id && (
+                              <PctInput value={ch.weight ?? null} eff={chEff[chIdx]} onSave={(v) => void updateWeightOf("st_chapters", ch.id, v, refreshChapters)} />
                             )}
                             {editChapterId !== ch.id && (
                               <Button
@@ -628,10 +642,9 @@ const AdminSyllabusTracker = () => {
                                 </Button>
                               )}
                               {(() => {
-                                const totalW = (topicsOfChapter || []).reduce((s2: number, t: any) => s2 + (t.weight || 1), 0);
                                 const list = topicsOfChapter || [];
+                                const eff = effPcts(list);
                                 return list.map((t: any, idx: number) => {
-                                  const pct = totalW > 0 ? Math.round(((t.weight || 1) / totalW) * 100) : 0;
                                   return (
                                 <div
                                   key={t.id}
@@ -669,7 +682,6 @@ const AdminSyllabusTracker = () => {
                                   ) : (
                                     <span className="flex-1">{t.name}</span>
                                   )}
-                                  <span className="text-[9.5px] text-primary font-bold min-w-[26px] text-right">{pct}%</span>
                                   <Button
                                     variant="ghost"
                                     size="icon"
@@ -682,19 +694,7 @@ const AdminSyllabusTracker = () => {
                                   >
                                     <Copy className="h-3 w-3" />
                                   </Button>
-                                  <Input
-                                    type="number"
-                                    min={0.1}
-                                    max={20}
-                                    step={0.1}
-                                    defaultValue={t.weight || 1}
-                                    title="Weight"
-                                    className="h-6 w-12 text-[10px] text-center px-1"
-                                    onBlur={(e) => {
-                                      const v = parseFloat(e.target.value) || 1;
-                                      if (v !== (t.weight || 1)) void updateWeight(t.id, v);
-                                    }}
-                                  />
+                                  <PctInput value={t.weight ?? null} eff={eff[idx]} onSave={(v) => void updateWeight(t.id, v)} />
                                   {editTopicId !== t.id && (
                                     <Button
                                       variant="ghost"
@@ -726,7 +726,7 @@ const AdminSyllabusTracker = () => {
                           )}
                         </div>
                       );
-                    })}
+                    }); })()}
                     {chaptersOfSubject?.length === 0 && (
                       <p className="text-xs text-muted-foreground text-center py-2">কোনো অধ্যায় নেই</p>
                     )}
@@ -734,7 +734,7 @@ const AdminSyllabusTracker = () => {
                 )}
               </div>
             );
-          })}
+          }); })()}
         </CardContent>
       </Card>
         </div>
@@ -742,5 +742,30 @@ const AdminSyllabusTracker = () => {
     </div>
   );
 };
+
+const fmtPct = (n: number) => (Math.round(n * 10) / 10).toString();
+const PctInput = ({ value, eff, onSave, cls }: { value: number | null; eff: number; onSave: (v: number | null) => void; cls?: string }) => (
+  <div className={cn("flex items-center gap-0.5 flex-shrink-0", cls)} onClick={(e) => e.stopPropagation()}>
+    <Input
+      key={String(value) + "|" + fmtPct(eff)}
+      type="number"
+      inputMode="decimal"
+      min={0}
+      max={100}
+      step={0.1}
+      defaultValue={value != null ? value : ""}
+      placeholder={fmtPct(eff)}
+      title="% (ফাঁকা = Auto)"
+      className={cn("h-6 w-14 text-[10px] text-center px-1", value == null && "text-muted-foreground")}
+      onBlur={(e) => {
+        const raw = e.target.value.trim();
+        const v = raw === "" ? null : Math.min(100, Math.max(0, parseFloat(raw)));
+        if (v !== null && Number.isNaN(v)) return;
+        if (v !== value) onSave(v);
+      }}
+    />
+    <span className="text-[10px] text-muted-foreground">%</span>
+  </div>
+);
 
 export default AdminSyllabusTracker;
