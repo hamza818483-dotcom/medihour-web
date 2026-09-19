@@ -1433,7 +1433,7 @@ const TakeExam = () => {
                           )}
                       </div>
                       <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-muted/40 px-2.5 py-1.5 shadow-sm">
-                          <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">OMR এ পরীক্ষা</span>
+                          <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">OMR</span>
                           <button
                               type="button"
                               role="switch"
