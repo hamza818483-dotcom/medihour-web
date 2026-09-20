@@ -1113,6 +1113,28 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
+                  onWheel={(e) => {
+                    if (!e.ctrlKey && !e.shiftKey) return;
+                    setZoom(prev => {
+                      const nz = Math.min(5, Math.max(1, prev * (e.deltaY < 0 ? 1.15 : 0.87)));
+                      if (nz <= 1.05) setPan({ x: 0, y: 0 });
+                      return nz;
+                    });
+                  }}
+                  onMouseDown={(e) => {
+                    if (zoom <= 1) return;
+                    isPanning.current = true;
+                    lastPanPoint.current = { x: e.clientX, y: e.clientY };
+                  }}
+                  onMouseMove={(e) => {
+                    if (!isPanning.current || !lastPanPoint.current || zoom <= 1) return;
+                    const dx = e.clientX - lastPanPoint.current.x;
+                    const dy = e.clientY - lastPanPoint.current.y;
+                    lastPanPoint.current = { x: e.clientX, y: e.clientY };
+                    setPan(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+                  }}
+                  onMouseUp={() => { isPanning.current = false; lastPanPoint.current = null; }}
+                  onMouseLeave={() => { isPanning.current = false; lastPanPoint.current = null; }}
                 >
                   <canvas
                     ref={canvasRef}
