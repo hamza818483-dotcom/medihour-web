@@ -304,6 +304,7 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
     
     canvas.width = width;
     canvas.height = height;
+    ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, 0, 0, width, height);
     
     canvas.toBlob((blob) => {
@@ -396,15 +397,6 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
       const data = await response.json();
       
       if (data.error) {
-        if (data.warped_image) {
-          setRawImage(data.warped_image);
-          setPoints([
-            { x: 0, y: 0 },
-            { x: 100, y: 0 },
-            { x: 100, y: 100 },
-            { x: 0, y: 100 },
-          ]);
-        }
         throw new Error(data.error);
       }
 
@@ -896,7 +888,7 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                 ref={imageRef}
                 src={rawImage}
                 alt="Selected OMR sheet"
-                className={`h-full w-full object-contain rounded-lg ${cleanedPreview ? "hidden" : ""}`}
+                className={`h-full w-full object-contain rounded-lg ${cleanedPreview ? "absolute opacity-0 pointer-events-none -z-10" : ""}`}
               />
               {cleanedPreview && (
                 <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="h-full w-full object-contain rounded-lg" />
