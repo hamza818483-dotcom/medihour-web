@@ -1108,8 +1108,8 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                 </div>
                 <div
                   ref={zoomContainerRef}
-                  className="overflow-hidden max-h-[400px] relative"
-                  style={{ touchAction: "none" }}
+                  className="overflow-hidden relative flex justify-center items-center"
+                  style={{ touchAction: "none", height: "min(80vh, 900px)", minHeight: 420 }}
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
@@ -1117,9 +1117,13 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                   <canvas
                     ref={canvasRef}
                     onClick={handleCanvasClick}
-                    className="cursor-crosshair w-full"
+                    className="cursor-crosshair"
                     style={{
                       maxWidth: "100%",
+                      maxHeight: "100%",
+                      width: "auto",
+                      height: "auto",
+                      objectFit: "contain",
                       transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
                       transformOrigin: "center center",
                       transition: zoom === 1 ? "transform 0.2s ease" : "none",
