@@ -1024,16 +1024,6 @@ const Leaderboard = () => {
                     <span className="hidden sm:inline">Admin PDF</span>
                 </Button>
             )}
-            {isAdmin && (
-                <Button
-                    size="sm"
-                    onClick={handleDownloadStudentCards}
-                    className="bg-amber-500 hover:bg-amber-600 text-white border-0"
-                >
-                    <FileText className="h-4 w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Student Cards PDF</span>
-                </Button>
-            )}
           </div>
       </div>
 
