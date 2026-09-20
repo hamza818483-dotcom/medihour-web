@@ -219,16 +219,7 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
           );
           const data = await response.json();
           if (!cancelled && data?.cleaned_image) {
-            // Accept cleaned preview only if it still shows the FULL sheet
-            // (aspect ratio close to original). Otherwise keep the original.
-            const probe = new Image();
-            probe.onload = () => {
-              if (cancelled || !imageRef.current) return;
-              const orig = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
-              const cl = probe.naturalWidth / probe.naturalHeight;
-              if (Math.abs(cl - orig) / orig < 0.15) setCleanedPreview(data.cleaned_image);
-            };
-            probe.src = data.cleaned_image;
+            setCleanedPreview(data.cleaned_image);
           }
         } catch {
           // Silent fallback — if cleaning fails for any reason, the raw
@@ -1086,7 +1077,7 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
             </div>
 
             {/* Canvas + Answers Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               {/* Canvas with pinch-to-zoom */}
               <div className="rounded-xl overflow-hidden border border-border/60 bg-black/5">
                 {/* Zoom controls */}
