@@ -1,0 +1,27 @@
+name: Deploy OMR API (Render)
+
+# Render's own GitHub auto-deploy can silently miss pushes. This triggers a
+# deploy through Render's Deploy Hook whenever omr-api/ changes on main.
+# Setup (one time): Render dashboard -> medihour-omr-api -> Settings ->
+# Deploy Hook -> copy URL -> GitHub repo Settings -> Secrets and variables ->
+# Actions -> New secret named RENDER_DEPLOY_HOOK_URL.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "omr-api/**"
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret not set — skipping."; exit 0
+          fi
+          curl -fsS -X POST --max-time 30 "$HOOK" && echo "Deploy triggered"
