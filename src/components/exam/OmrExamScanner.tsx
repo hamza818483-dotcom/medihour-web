@@ -891,15 +891,15 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
             runs on the original photo regardless of what's shown here. */}
         {step === "preview" && rawImage && (
           <div className="space-y-3">
-            <div className="rounded-xl border border-border/60 bg-black/5 overflow-hidden flex justify-center items-center p-3 relative">
+            <div className="rounded-xl border border-border/60 bg-black/5 overflow-hidden flex justify-center items-center p-3 relative h-[80vh] min-h-[480px]">
               <img
                 ref={imageRef}
                 src={rawImage}
                 alt="Selected OMR sheet"
-                className={`max-h-[75vh] max-w-full w-auto object-contain rounded-lg ${cleanedPreview ? "hidden" : ""}`}
+                className={`h-full w-full object-contain rounded-lg ${cleanedPreview ? "hidden" : ""}`}
               />
               {cleanedPreview && (
-                <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="max-h-[75vh] max-w-full w-auto object-contain rounded-lg" />
+                <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="h-full w-full object-contain rounded-lg" />
               )}
               {isCleaning && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
@@ -938,12 +938,12 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
         {step === "crop" && rawImage && (
           <div className="space-y-3">
             <div className="rounded-xl border border-border/60 bg-black/5 relative select-none flex justify-center items-center p-3">
-              <div className="relative inline-flex max-w-full max-h-[60vh] shadow-sm ring-1 ring-border/50">
+              <div className="relative inline-flex max-w-full max-h-[80vh] shadow-sm ring-1 ring-border/50">
                 <img
                   ref={imageRef}
                   src={rawImage}
                   alt="Upload preview"
-                  className="max-h-[60vh] w-auto max-w-full pointer-events-none block"
+                  className="max-h-[80vh] w-auto max-w-full pointer-events-none block"
                   style={{ userSelect: "none" }}
                 />
                 <svg
