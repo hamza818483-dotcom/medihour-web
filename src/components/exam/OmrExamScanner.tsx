@@ -219,7 +219,16 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
           );
           const data = await response.json();
           if (!cancelled && data?.cleaned_image) {
-            setCleanedPreview(data.cleaned_image);
+            // Accept cleaned preview only if it still shows the FULL sheet
+            // (aspect ratio close to original). Otherwise keep the original.
+            const probe = new Image();
+            probe.onload = () => {
+              if (cancelled || !imageRef.current) return;
+              const orig = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
+              const cl = probe.naturalWidth / probe.naturalHeight;
+              if (Math.abs(cl - orig) / orig < 0.15) setCleanedPreview(data.cleaned_image);
+            };
+            probe.src = data.cleaned_image;
           }
         } catch {
           // Silent fallback — if cleaning fails for any reason, the raw
@@ -887,10 +896,10 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
                 ref={imageRef}
                 src={rawImage}
                 alt="Selected OMR sheet"
-                className={`max-h-[420px] w-auto rounded-lg ${cleanedPreview ? "hidden" : ""}`}
+                className={`max-h-[75vh] max-w-full w-auto object-contain rounded-lg ${cleanedPreview ? "hidden" : ""}`}
               />
               {cleanedPreview && (
-                <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="max-h-[420px] w-auto rounded-lg" />
+                <img src={cleanedPreview} alt="Auto-cropped & cleaned OMR sheet" className="max-h-[75vh] max-w-full w-auto object-contain rounded-lg" />
               )}
               {isCleaning && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px]">
