@@ -183,28 +183,6 @@ const MyMistakes = () => {
                         <p className="text-xs text-muted-foreground">Practice questions you missed or skipped.</p>
                     </div>
                 </div>
-                <div className="flex flex-col gap-1.5 shrink-0">
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 text-[11px] px-2"
-                        disabled={pdfLoading !== null}
-                        onClick={() => generateMistakesPdf("wrong")}
-                    >
-                        {pdfLoading === "wrong" ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <FileDown className="h-3 w-3 mr-1" />}
-                        All Wrong PDF
-                    </Button>
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 text-[11px] px-2"
-                        disabled={pdfLoading !== null}
-                        onClick={() => generateMistakesPdf("both")}
-                    >
-                        {pdfLoading === "both" ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <FileDown className="h-3 w-3 mr-1" />}
-                        All Wrong+Skip PDF
-                    </Button>
-                </div>
             </div>
 
             {/* Stat Row */}
