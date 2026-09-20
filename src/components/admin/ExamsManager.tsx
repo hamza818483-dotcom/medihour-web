@@ -198,8 +198,11 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
       await supabase.from("exam_questions").delete().eq("exam_id", id);
       await supabase.from("exam_attempts").delete().eq("exam_id", id);
 
-      const { error } = await supabase.from("exams").delete().eq("id", id);
+      const { data: deleted, error } = await supabase.from("exams").delete().eq("id", id).select("id");
       if (error) throw error;
+      if (!deleted || deleted.length === 0) {
+        throw new Error("Delete permission denied or exam not found");
+      }
     },
     onSuccess: () => {
       toast({ title: "Exam deleted" });
@@ -744,7 +747,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                         <RotateCw className="h-4 w-4" />
                                     </Button>
                                 )}
-                                {(isAdmin || isTeacher) && (
+                                {true && (
                                   <Button
                                       type="button"
                                       size="icon"
@@ -883,11 +886,11 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                         <RotateCw className="mr-2 h-4 w-4 text-orange-600" /> Recalculate
                                                     </DropdownMenuItem>
                                                 )}
-                                                {(isAdmin || isTeacher) && (
+                                                {true && (
                                                   <>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => {
-                                                        if (window.confirm("Delete this exam?")) deleteExamMutation.mutate(exam.id);
+                                                        if (window.confirm("Delete this exam? This cannot be undone. Questions and results will be deleted.")) deleteExamMutation.mutate(exam.id);
                                                     }}>
                                                         <Trash2 className="mr-2 h-4 w-4" /> Delete
                                                     </DropdownMenuItem>
