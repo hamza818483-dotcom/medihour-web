@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Video, PenTool, BookOpen,
   History, StickyNote, Files, Calendar,
   User, BarChart, Bell, HelpCircle,
-  Settings, Users, Library, Trophy, CreditCard, Bookmark, VolumeX, Volume2, ShieldAlert,
+  Settings, Users, Library, Trophy, CreditCard, Bookmark, VolumeX, Volume2,
   Tag, LayoutTemplate, AlertCircle, Archive, Database, GraduationCap, Images, BarChart3, Timer
 } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -307,25 +307,6 @@ export const DashboardLayout = () => {
               </Button>
               {isAdmin && (
                 <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="hidden sm:inline-flex"
-                    aria-label={isDevMode ? "Disable Dev Mode" : "Enable Dev Mode"}
-                    onClick={async () => {
-                        const newVal = !isDevMode;
-                        setIsDevMode(newVal);
-                        localStorage.setItem("dev_mode", String(newVal));
-
-                        // Update Global Setting in Database
-                        await supabase.rpc('toggle_anti_cheat', { p_enabled: !newVal }); // Logic inverted: if devMode ON, anti-cheat OFF.
-
-                        window.location.reload();
-                    }}
-                    title={isDevMode ? "Disable Developer Mode (Enable Anti-Cheat Global)" : "Enable Developer Mode (Disable Anti-Cheat Global)"}
-                  >
-                    <ShieldAlert className={`h-4 w-4 ${isDevMode ? 'text-red-500' : 'text-muted-foreground'}`} />
-                  </Button>
                   <Button
                     variant="outline"
                     size="icon"
