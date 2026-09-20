@@ -41,7 +41,7 @@ interface ExamsManagerProps {
 
 const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
   const navigate = useNavigate();
-  const { isAdmin } = useAuth();
+  const { isAdmin, isTeacher } = useAuth();
   const [searchParams] = useSearchParams();
   const editId = searchParams.get("editId");
   const [editingExam, setEditingExam] = useState<any>(null);
@@ -744,7 +744,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                         <RotateCw className="h-4 w-4" />
                                     </Button>
                                 )}
-                                {isAdmin && (
+                                {(isAdmin || isTeacher) && (
                                   <Button
                                       type="button"
                                       size="icon"
@@ -883,7 +883,7 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                         <RotateCw className="mr-2 h-4 w-4 text-orange-600" /> Recalculate
                                                     </DropdownMenuItem>
                                                 )}
-                                                {isAdmin && (
+                                                {(isAdmin || isTeacher) && (
                                                   <>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => {
