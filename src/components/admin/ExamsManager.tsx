@@ -875,12 +875,6 @@ const ExamsManager = ({ isFreeMode = false }: ExamsManagerProps) => {
                                                 }}>
                                                     <ExternalLink className="mr-2 h-4 w-4" /> Open Exam
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => handleDownloadCSV(exam.id, exam.title)}>
-                                                    <Download className="mr-2 h-4 w-4 text-blue-600" /> Download CSV
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => duplicateExamMutation.mutate(exam)}>
-                                                    <Copy className="mr-2 h-4 w-4 text-purple-600" /> Duplicate
-                                                </DropdownMenuItem>
                                                 {isAdmin && (
                                                     <DropdownMenuItem onClick={() => handleRecalculateResults(exam.id)}>
                                                         <RotateCw className="mr-2 h-4 w-4 text-orange-600" /> Recalculate
