@@ -219,7 +219,15 @@ export const OmrExamScanner = ({ questionIds, answers, onFillAnswers }: OmrExamS
           );
           const data = await response.json();
           if (!cancelled && data?.cleaned_image) {
-            setCleanedPreview(data.cleaned_image);
+            // Show the cleaned version only when it still contains the WHOLE
+            // sheet (header + QR + roll/reg + tables). If the auto-crop
+            // latched onto just the answer tables (wide, short crop), keep
+            // the original full-sheet photo visible instead.
+            const cw = Number(data.width) || 0;
+            const ch = Number(data.height) || 0;
+            const ratio = ch > 0 ? cw / ch : 0;
+            // Full sheet is portrait (~0.65-0.80 w/h). Tables-only crop is ~0.9+.
+            if (ratio > 0 && ratio < 0.85) setCleanedPreview(data.cleaned_image);
           }
         } catch {
           // Silent fallback — if cleaning fails for any reason, the raw
