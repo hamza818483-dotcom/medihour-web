@@ -262,7 +262,7 @@ def enhance_scan(image):
     return cv2.cvtColor(sharpened, cv2.COLOR_GRAY2BGR)
 
 
-def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
+def _process_omr_logic_core(image_bytes, corners=None, color_mode="strict"):
     np_arr = np.frombuffer(image_bytes, np.uint8)
     image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
     if image is None: 
@@ -783,6 +783,50 @@ def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
         },
     }
 
+
+
+def process_omr_logic(image_bytes, corners=None, color_mode="strict"):
+    """Robust wrapper: if the sheet's 6 tables can't be isolated, retry with
+    (a) landscape->portrait rotations, (b) illumination-normalized image
+    (fixes shadows/dim desktop-webcam/scan photos). First success wins."""
+    res = _process_omr_logic_core(image_bytes, corners, color_mode)
+    if not (isinstance(res, dict) and "Could not isolate" in str(res.get("error", ""))):
+        return res
+    try:
+        arr = np.frombuffer(image_bytes, np.uint8)
+        img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+        if img is None:
+            return res
+        h, w = img.shape[:2]
+        variants = []
+        rots = [None]
+        if w > h:
+            rots = [cv2.ROTATE_90_CLOCKWISE, cv2.ROTATE_90_COUNTERCLOCKWISE]
+        rots.append(cv2.ROTATE_180)
+        for rot in rots:
+            base = img if rot is None else cv2.rotate(img, rot)
+            variants.append(base)
+            try:
+                variants.append(enhance_scan(base))
+            except Exception:
+                pass
+        # unrotated enhanced first when already portrait
+        if w <= h:
+            try:
+                variants.insert(0, enhance_scan(img))
+            except Exception:
+                pass
+        # use corners only for the original orientation attempt
+        for v in variants:
+            ok, buf = cv2.imencode(".jpg", v, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+            if not ok:
+                continue
+            r = _process_omr_logic_core(buf.tobytes(), None, color_mode)
+            if not (isinstance(r, dict) and "error" in r):
+                return r
+    except Exception:
+        pass
+    return res
 
 @app.post("/api/v1/scan-omr", dependencies=[Depends(verify_api_key)])
 async def scan_omr(file: UploadFile = File(...), corners: str = Form(default=None), mode: str = Form(default="strict")):
