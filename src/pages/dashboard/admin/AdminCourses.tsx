@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
+import { NoteUploader } from "@/components/admin/NoteUploader";
 import { ChecklistEditor, ChecklistLine } from "@/components/ChecklistEditor";
 import { RichTextEditor } from "@/components/RichTextEditor";
 import { supabase } from "@/integrations/supabase/client";
@@ -995,6 +996,13 @@ const AdminCourses = () => {
                                         </div>
                                         <div>
                                             <Label className="text-xs text-muted-foreground mb-1 block">Note/PDF URL</Label>
+                                            <NoteUploader
+                                                onUploaded={(url) => {
+                                                    const updated = [...(form.demo_content || [])];
+                                                    updated[idx] = { ...updated[idx], note_url: url };
+                                                    setForm({ ...form, demo_content: updated });
+                                                }}
+                                            />
                                             <Input
                                                 value={item.note_url || ""}
                                                 onChange={(e) => {
