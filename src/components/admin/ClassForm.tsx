@@ -211,6 +211,17 @@ export const ClassForm = ({ classItem, onSuccess, onCancel, isArchiveMode = fals
     const upsertClassMutation = useMutation({
         mutationFn: async (values: z.infer<typeof classSchema>) => {
             const parsed = classSchema.parse(values);
+            if (parsed.is_archive) {
+                if (!parsed.archive_course_ids || parsed.archive_course_ids.length === 0) {
+                    throw new Error("Archive For Courses: kom pokkhe ekta course select koro");
+                }
+                if (!parsed.subject || parsed.subject.length === 0) {
+                    throw new Error("Archive class e Subject select korte hobe (nahole student Archive e dekhbe na)");
+                }
+                if (!parsed.chapter || !parsed.chapter.trim()) {
+                    throw new Error("Archive class e Chapter dite hobe (nahole student Archive e dekhbe na)");
+                }
+            }
             const payload = {
                 course_id: parsed.course_id || null, // Allow null if logic permits, but typically required unless archive-only flow
                 // @ts-ignore

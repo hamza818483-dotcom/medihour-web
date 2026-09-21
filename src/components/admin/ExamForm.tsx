@@ -353,6 +353,21 @@ export const ExamForm = ({ exam, onSuccess, onCancel, isFreeMode = false, isArch
         mutationFn: async (values: z.infer<typeof examSchema>) => {
           const parsed = examSchema.parse(values);
 
+          if (parsed.is_archive) {
+            if (!parsed.archive_course_ids || parsed.archive_course_ids.length === 0) {
+              throw new Error("Archive For Courses: kom pokkhe ekta course select koro");
+            }
+            if (!parsed.subject || (Array.isArray(parsed.subject) && parsed.subject.length === 0)) {
+              throw new Error("Archive exam e Subject select korte hobe (nahole student Archive e dekhbe na)");
+            }
+            if (!parsed.chapter || !String(parsed.chapter).trim()) {
+              throw new Error("Archive exam e Chapter dite hobe (nahole student Archive e dekhbe na)");
+            }
+            if (!parsed.is_published) {
+              throw new Error("Archive exam Published na korle student dekhbe na. 'Published' on koro");
+            }
+          }
+
           const payload: any = {
             course_id: isFreeMode ? null : (parsed.course_id || null),
             // @ts-ignore
