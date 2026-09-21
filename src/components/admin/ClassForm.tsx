@@ -13,6 +13,7 @@ import { fromDhakaTimeToUTC, toDhakaTimeISO } from "@/lib/dateUtils";
 import { SUBJECTS } from "@/lib/constants";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { CreatableSelect } from "@/components/ui/creatable-select";
+import { NoteUploader } from "@/components/admin/NoteUploader";
 import { useGlobalMetadata, useAddGlobalMetadata } from "@/hooks/useGlobalMetadata";
 
 const classSchema = z.object({
@@ -493,12 +494,13 @@ export const ClassForm = ({ classItem, onSuccess, onCancel, isArchiveMode = fals
                     </div>
 
                     <div className="space-y-2 min-w-0">
-                        <Label htmlFor="notes_url">Notes URL</Label>
+                        <Label htmlFor="notes_url">Notes (PDF / Images / Link)</Label>
+                        <NoteUploader onUploaded={(url) => setForm((prev) => ({ ...prev, notes_url: url }))} />
                         <Input
                             id="notes_url"
                             value={form.notes_url}
                             onChange={(e) => setForm((prev) => ({ ...prev, notes_url: e.target.value }))}
-                            placeholder="https://..."
+                            placeholder="ba link paste koro: https://..."
                             className="w-full"
                         />
                     </div>
