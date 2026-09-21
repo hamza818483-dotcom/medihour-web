@@ -136,10 +136,18 @@ const ClassPlayerPage = () => {
         <div className="p-8 max-w-2xl mx-auto text-center space-y-6">
             <div className="p-6 border rounded-lg bg-destructive/5 text-destructive">
                 <h2 className="text-xl font-bold mb-2">Access Denied</h2>
-                <p>You are not enrolled in <strong>{classItem.course?.name}</strong>.</p>
+                <p>You are not enrolled in {classItem.course?.name ? <strong>{classItem.course.name}</strong> : "the required course"}.</p>
                 <p className="text-sm mt-2">Please purchase the course to access this content.</p>
             </div>
-            <Button onClick={() => navigate(`/courses/${classItem.course_id}`)}>
+            <Button
+                onClick={() => {
+                    const target =
+                        classItem.course_id ||
+                        (Array.isArray(classItem.archive_course_ids) && classItem.archive_course_ids[0]) ||
+                        (Array.isArray(classItem.shared_course_ids) && classItem.shared_course_ids[0]);
+                    navigate(target ? `/courses/${target}` : "/dashboard/my-courses");
+                }}
+            >
                 View Course Details
             </Button>
         </div>
