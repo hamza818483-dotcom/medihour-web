@@ -48,7 +48,7 @@ export const PublicHeader = () => {
   ];
 
   return (
-    <header className="w-full border-b bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
       <div className="mx-auto w-full max-w-[1180px] px-3 sm:px-5">
         <nav className="flex h-[62px] items-center gap-5">
           {/* Logo */}
