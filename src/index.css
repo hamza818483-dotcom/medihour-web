@@ -154,7 +154,11 @@
   html {
       /* Fluid typography: base 16px, scales with viewport, max 22px */
       font-size: clamp(16px, 1.2vw + 12px, 22px);
-      overflow-x: hidden;
+      /* NOTE: overflow-x must NOT be set here — Chrome/Safari drop
+         `position: sticky` for any descendant when html/body has any
+         `overflow` (even overflow-x only) set. Horizontal-scroll
+         prevention is done on #root below instead, which does not
+         break sticky headers. */
   }
   * {
     @apply border-border;
@@ -162,8 +166,8 @@
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
-    overflow-x: hidden;
   }
+
 }
 
 @layer components {
