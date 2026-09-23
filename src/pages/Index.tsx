@@ -122,7 +122,10 @@ const Index = () => {
   });
 
   const displayHeroes = heroes && heroes.length > 0 ? heroes : [];
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, direction: "ltr" },
+    [Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: false })]
+  );
 
   return (
     <div className="min-h-screen bg-[#d3d8fb] text-foreground flex flex-col dark:bg-background">
